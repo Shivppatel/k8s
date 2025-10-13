@@ -11,7 +11,8 @@ argo-cd:
       minReplicas: 2
     service:
       type: NodePort
-      NodePort: 32000
+      nodePortHttp: 32000
+      nodePortHttps: 32001
 
   repoServer:
     autoscaling:
