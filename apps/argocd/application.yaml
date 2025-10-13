@@ -12,8 +12,6 @@ spec:
     helm:
       valueFiles:
         - values.yaml
-      directory:
-        recurese: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
