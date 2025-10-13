@@ -5,14 +5,10 @@ controller:
   replicas: 1
 
 server:
-  autoscaling:
-    enabled: true
-    minReplicas: 2
+  replicas: 2
 
 repoServer:
-  autoscaling:
-    enabled: true
-    minReplicas: 2
+  replicas: 2
 
 applicationSet:
   replicas: 2
