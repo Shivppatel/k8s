@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: argocd
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -21,3 +23,15 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+  # --- CRITICAL PART FOR TRANSITION ---
+  # This tells ArgoCD to ignore fields that will differ between the
+  # minimal Helm bootstrap and the final HA state in Git.
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/replicas
+  - group: ""
+    kind: Service
+    jsonPointers:
+    - /spec/ports
