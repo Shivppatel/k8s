@@ -1,12 +1,8 @@
 redis-ha:
   enabled: true
-  replicaCount: 3
 
 controller:
-  autoscaling:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 5
+  replicas: 1
 
 server:
   autoscaling:
