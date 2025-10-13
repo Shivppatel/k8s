@@ -18,8 +18,6 @@ argo-cd:
         # Ensure traffic is not redirected to HTTPS (since you don't have Cert-Manager yet)
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
       hostname: "argocd.192.168.86.243.xip.io"
-    extraArgs:
-      - --insecure
 
   repoServer:
     autoscaling:
