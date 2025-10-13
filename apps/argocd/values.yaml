@@ -11,6 +11,12 @@ argo-cd:
       minReplicas: 2
     ingress:
       enabled: true
+      ingressClassName: "nginx"
+      annotations:
+        # Add the legacy annotation for max compatibility
+        kubernetes.io/ingress.class: nginx
+        # Ensure traffic is not redirected to HTTPS (since you don't have Cert-Manager yet)
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
       hostname: "argocd.192.168.86.243.xip.io"
 
   repoServer:
