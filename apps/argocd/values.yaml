@@ -1,18 +1,19 @@
-redis-ha:
-  enabled: true
-  replicaCount: 3
+argo-cd:
+  redis-ha:
+    enabled: true
 
-controller:
-  replicas: 2
+  controller:
+    replicas: 1
 
-server:
-  replicas: 2
+  server:
+    autoscaling:
+      enabled: true
+      minReplicas: 2
 
-repoServer:
-  replicas: 2
-  extraEnv:
-    - name: HA_DEPLOY_CONFIRMED
-      value: "TRUE"
+  repoServer:
+    autoscaling:
+      enabled: true
+      minReplicas: 2
 
-applicationSet:
-  replicas: 2
+  applicationSet:
+    replicas: 2
