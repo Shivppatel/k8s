@@ -1,73 +1,22 @@
-# Enable Redis HA for ArgoCD's HA setup
 redis-ha:
   enabled: true
   replicaCount: 3
 
-# Controller configuration with HA and autoscaling
 controller:
-  replicas: 1  # Initial replica, autoscaling handles scaling
   autoscaling:
     enabled: true
     minReplicas: 2
     maxReplicas: 5
-    targetCPUUtilizationPercentage: 80
-    targetMemoryUtilizationPercentage: 80
 
-# Server configuration with HA, autoscaling, and Ingress
 server:
   autoscaling:
     enabled: true
     minReplicas: 2
-    maxReplicas: 5
-    targetCPUUtilizationPercentage: 80
-    targetMemoryUtilizationPercentage: 80
-  ingress:
-    enabled: true
-    hosts:
-      - argocd.192.168.86.243.xip.io
-    tls:
-      - hosts:
-          - argocd.192.168.86.243.xip.io
-        secretName: argocd-tls
-    service:
-      type: ClusterIP
-  extraArgs:
-    - --insecure  # Temporary for local testing; remove after Cert-Manager setup
 
-# Repository server with HA and autoscaling
 repoServer:
   autoscaling:
     enabled: true
     minReplicas: 2
-    maxReplicas: 5
-    targetCPUUtilizationPercentage: 80
-    targetMemoryUtilizationPercentage: 80
 
-# ApplicationSet controller with HA
 applicationSet:
   replicas: 2
-  autoscaling:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 5
-    targetCPUUtilizationPercentage: 80
-    targetMemoryUtilizationPercentage: 80
-
-# Enable Dex for OIDC authentication
-dex:
-  enabled: true
-  config: |
-    connectors:
-      - type: github
-        id: github
-        name: GitHub
-        config:
-          clientId: $dex.github.clientId
-          clientSecret: $dex.github.clientSecret
-          orgs:
-            - name: your-github-org
-
-# Global settings
-global:
-  image:
-    tag: v3.1.8  # Use a stable version; check latest at argoproj.github.io/argo-cd
