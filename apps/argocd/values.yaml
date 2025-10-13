@@ -10,6 +10,9 @@ server:
 
 repoServer:
   replicas: 2
+  extraEnv:
+    - name: HA_DEPLOY_CONFIRMED
+      value: "TRUE"
 
 applicationSet:
   replicas: 2
