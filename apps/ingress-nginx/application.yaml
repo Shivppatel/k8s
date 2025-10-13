@@ -2,20 +2,17 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: ingress-nginx
-  namespace: ingress-nginx
+  namespace: argocd # Managed by the ArgoCD controller
   finalizers: [resources-finalizer.argocd.argoproj.io]
 spec:
   project: default
   source:
-    repoURL: https://kubernetes.github.io/ingress-nginx
-    targetRevision: controller-1.11.2 # Use a stable version
-    chart: ingress-nginx
+    repoURL: git@github.com:shivppatel/k8s.git
+    targetRevision: main
+    path: apps/ingress-nginx
     helm:
-      values: |
-        controller:
-          replicaCount: 2 # HA NGINX
-          service:
-            type: LoadBalancer # Expose NGINX externally (K3s will use MetalLB or its own LB)
+      valueFiles:
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
