@@ -1,8 +1,9 @@
 redis-ha:
   enabled: true
+  replicaCount: 3
 
 controller:
-  replicas: 1
+  replicas: 2
 
 server:
   replicas: 2
