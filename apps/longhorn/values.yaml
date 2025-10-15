@@ -3,7 +3,7 @@ longhorn:
     pullPolicy: Always
   defaultSettings:
     defaultDataPath: "/mnt/storage/longhorn"
-    defaultReplicaCount: 1
+    defaultReplicaCount: "1"
   # metrics:
   #   serviceMonitor:
   #     enabled: true
