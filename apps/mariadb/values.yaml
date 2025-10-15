@@ -1,0 +1,4 @@
+mariadb:
+  metrics:
+    serviceMonitor:
+      enabled: true

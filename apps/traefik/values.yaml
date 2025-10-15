@@ -1,0 +1,5 @@
+traefik:
+  metrics:
+    prometheus:
+      serviceMonitor:
+        enabled: true

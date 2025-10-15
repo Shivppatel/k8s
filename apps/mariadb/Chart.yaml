@@ -1,0 +1,14 @@
+apiVersion: v2
+name: mariadb
+description: A Helm chart for MariaDB
+
+type: application
+
+version: 0.1.0
+
+appVersion: "12.0.2"
+
+dependencies:
+  - name: mariadb
+    repository: https://charts.bitnami.com/bitnami
+    version: 23.0.5
