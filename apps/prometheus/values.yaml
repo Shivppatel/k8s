@@ -1,0 +1,4 @@
+prometheus:
+  server:
+    image:
+      pullPolicy: Always
