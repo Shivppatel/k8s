@@ -1,4 +1,6 @@
 longhorn:
-  metrics:
-    serviceMonitor:
-      enabled: true
+  image:
+    pullPolicy: Always
+  # metrics:
+  #   serviceMonitor:
+  #     enabled: true
