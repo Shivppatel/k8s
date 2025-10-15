@@ -1,17 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager
+  name: longhorn
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: git@github.com:shivppatel/k8s.git
     targetRevision: main
-    path: apps/cert-manager
+    path: apps/longhorn
     helm:
       valueFiles:
         - values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: cert-manager
+    namespace: longhorn-system
+

@@ -1,0 +1,4 @@
+longhorn:
+  metrics:
+    serviceMonitor:
+      enabled: true
