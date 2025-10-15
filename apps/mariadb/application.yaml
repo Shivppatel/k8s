@@ -1,20 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: traefik
+  name: mariadb
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: git@github.com:shivppatel/k8s.git
     targetRevision: main
-    path: apps/traefik
+    path: apps/mariadb
     helm:
       valueFiles:
         - values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: traefik
+    namespace: mariadb
   syncPolicy:
     automated:
       prune: true
