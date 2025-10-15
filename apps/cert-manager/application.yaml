@@ -1,23 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ingress-nginx
-  namespace: argocd # Managed by the ArgoCD controller
-  finalizers: [resources-finalizer.argocd.argoproj.io]
+  name: cert-manager
+  namespace: cert-manager
 spec:
   project: default
   source:
     repoURL: git@github.com:shivppatel/k8s.git
     targetRevision: main
-    path: apps/ingress-nginx
+    path: apps/cert-manager
     helm:
       valueFiles:
         - values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: ingress-nginx
+    namespace: cert-manager
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions: [CreateNamespace=true]
+    syncOptions:
+      - CreateNamespace=true
