@@ -1,5 +1,3 @@
 traefik:
   persistence:
     enabled: true
-  serviceMonitor:
-    enabled: true
