@@ -9,9 +9,6 @@ spec:
     repoURL: git@github.com:shivppatel/k8s.git
     targetRevision: main
     path: apps/kube-state-metrics
-    helm:
-      valueFiles:
-        - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: observability
