@@ -4,6 +4,8 @@ longhorn:
   defaultSettings:
     defaultDataPath: "/mnt/storage/longhorn"
     defaultReplicaCount: "1"
+  persistence:
+    defaultClassReplicaCount: "1"
   preUpgradeChecker:
     jobEnabled: false
   # metrics:
