@@ -1,0 +1,3 @@
+kube-state-metrics:
+  image:
+    repository: bitnamilegacy/kube-state-metrics
