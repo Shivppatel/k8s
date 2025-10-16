@@ -6,7 +6,7 @@ spec:
   acme:
     email: mail@shivpatel.xyz
     profile: tlsserver
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: cloudflare-clusterissuer-account-key
     solvers:
