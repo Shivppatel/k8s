@@ -1,5 +1,3 @@
 traefik:
-  metrics:
-    prometheus:
-      serviceMonitor:
-        enabled: true
+  persistence:
+    enabled: true
