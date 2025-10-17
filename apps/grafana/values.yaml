@@ -1,3 +1,6 @@
 grafana:
+  service:
+    enabled: true
+    port: 3000
   persistence:
     enabled: true
