@@ -1,4 +1,8 @@
 traefik:
+  ingressRoute:
+    dashboard:
+      enabled: true
+      
   logs:
     general:
       level: "INFO" # DEBUG if needed
@@ -16,5 +20,6 @@ traefik:
     default:
       defaultCertificate:
         secretName: wildcard-cert-tls
+        
   persistence:
     enabled: true
