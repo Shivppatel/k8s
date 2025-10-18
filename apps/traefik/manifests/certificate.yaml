@@ -7,7 +7,9 @@ spec:
   secretName: wildcard-cert-tls
   duration: 2160h # 90d
   renewBefore: 360h # 15d
-
+  subject:
+    organizations:
+      - cert-managerv
   isCA: false
   usages:
     - server auth
@@ -15,6 +17,8 @@ spec:
   dnsNames:
     - "*.shivpatel.xyz"
     - "shivpatel.xyz"
+  ipAddresses:
+    - 192.168.86.10
   issuerRef:
     name: cloudflare-clusterissuer
     kind: ClusterIssuer
