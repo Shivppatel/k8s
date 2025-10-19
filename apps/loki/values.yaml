@@ -1,4 +1,3 @@
-loki:
-  monitoring:
-    dashboards:
-      enabled: true
+monitoring:
+  dashboards:
+    enabled: true
