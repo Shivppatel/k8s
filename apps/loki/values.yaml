@@ -1,2 +1,1 @@
-loki:
-  deploymentMode: SingleBinary
+deploymentMode: SingleBinary
