@@ -6,9 +6,9 @@ type: application
 
 version: 0.1.0
 
-appVersion: "v3.18.0"
+appVersion: "v3.19.0"
 
 dependencies:
   - name: argo-cd
     repository: https://argoproj.github.io/argo-helm
-    version: 9.0.0
+    version: 9.0.1
