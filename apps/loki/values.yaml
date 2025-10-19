@@ -1,3 +1,4 @@
 loki:
-  image:
-    pullPolicy: Always
+  loki:
+    image:
+      pullPolicy: Always
