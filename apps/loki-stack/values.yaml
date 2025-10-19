@@ -1,3 +1,5 @@
 loki-stack:
-  test_pod:
+  loki:
+    enabled: true
+  promtail:
     enabled: true
