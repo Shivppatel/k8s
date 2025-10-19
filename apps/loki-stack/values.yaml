@@ -1,0 +1,3 @@
+loki-stack:
+  test_pod:
+    enabled: true
