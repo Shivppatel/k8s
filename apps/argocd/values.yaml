@@ -2,6 +2,3 @@ argo-cd:
   configs:
     params:
       server.insecure: true
-  server:
-  ingress:
-    enabled: false
