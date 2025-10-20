@@ -12,5 +12,5 @@ spec:
     middlewares:
     - name: add-trailing-slash
     services:
-    - name: traefik
-      port:  30118
+    - name: api@internal
+      kind: TraefikService
