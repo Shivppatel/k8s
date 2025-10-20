@@ -11,4 +11,4 @@ spec:
     kind: Rule
     services:
     - name: postgresql
-      port: 80
+      port: 5432
