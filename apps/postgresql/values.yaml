@@ -1,0 +1,3 @@
+postgresql:
+  image:
+    repository: bitnamilegacy/postgresql
