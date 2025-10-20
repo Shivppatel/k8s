@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: uptime-kuma
+  name: argocd-apps
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: git@github.com:shivppatel/k8s.git
     targetRevision: main
-    path: apps/uptime-kuma
+    path: apps/argocd-apps
     helm:
       valueFiles:
         - values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: uptime-kuma
+    namespace: argocd

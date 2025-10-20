@@ -1,0 +1,37 @@
+argocd-apps:
+  applications:
+    - name: root
+      namespace: argocd
+      destination:
+        namespace: argocd
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/argocd-apps-of-apps
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+        helm:
+          valueFiles:
+            - values.yaml
+      syncPolicy:
+        {}
+        #automated:
+        #prune: false
+        #selfHeal: false
+  
+  projects:
+    - name: default
+      namespace: argocd
+      description: "default applications"
+      destinations:
+        - namespace: "*"
+          server: "*"
+      sourceRepos:
+        - "*"
+      clusterResourceWhitelist:
+        - group: "*"
+          kind: "*"
+  
+  applicationsets: []
+
+  extensions: []

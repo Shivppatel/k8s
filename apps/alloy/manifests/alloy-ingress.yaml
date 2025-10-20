@@ -7,8 +7,8 @@ spec:
   entryPoints:
   - websecure
   routes:
-  - match: Host(`loki.shivpatel.xyz`)
+  - match: Host(`alloy.shivpatel.xyz`)
     kind: Rule
     services:
-    - name: loki-gateway
-      port: 80
+    - name: alloy
+      port: 12345

@@ -1,3 +1,0 @@
-uptime-kuma:
-  serviceMonitor:
-    enabled: true
