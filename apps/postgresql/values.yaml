@@ -2,5 +2,4 @@ postgresql:
   image:
     repository: bitnamilegacy/postgresql
   metrics:
-    serviceMonitor:
-      enabled: true
+    enabled: true
