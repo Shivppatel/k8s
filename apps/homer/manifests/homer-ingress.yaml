@@ -1,0 +1,14 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: homer-ingress
+  namespace: homer
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - match: Host(`homer.shivpatel.xyz`)
+    kind: Rule
+    services:
+    - name: homer
+      port: 8080
