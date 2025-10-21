@@ -1,0 +1,14 @@
+apiVersion: v2
+name: homer
+description: A Helm chart for Homer
+
+type: application
+
+version: 0.1.0
+
+appVersion: "v25.02.1"
+
+dependencies:
+  - name: homer
+    repository: https://charts.gabe565.com
+    version: 0.13.0
