@@ -1,0 +1,4 @@
+vault:
+  global:
+    serverTelemetry:
+      prometheusOperator: true
