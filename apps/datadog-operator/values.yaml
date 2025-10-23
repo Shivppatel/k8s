@@ -1,3 +1,0 @@
-datadog-operator:
-  image:
-    pullPolicy: Always
