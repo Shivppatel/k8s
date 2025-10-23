@@ -1,7 +1,6 @@
 datadog:
-  site: "datadoghq.com"
+  site: "app.datadoghq.com"
   apiKeyExistingSecret: "datadog-secret"
-  appKeyExistingSecret: "datadog-secret"
   otelCollector:
     enabled: true
     ports:
