@@ -1,27 +1,3 @@
 datadog:
-  site: "app.datadoghq.com"
+  site: "datadoghq.com"
   apiKeyExistingSecret: "datadog-secret"
-  otelCollector:
-    enabled: true
-    ports:
-      - containerPort: 4317
-        hostPort: 4317
-        name: "otel-grpc"
-      - containerPort: 4318
-        hostPort: 4318
-        name: "otel-http"
-  apm:
-    instrumentation:
-      enabled: true
-      targets:
-        - name: "default-target"
-          ddTraceVersions:
-            java: "1"
-            python: "3"
-            js: "5"
-            php: "1"
-            dotnet: "3"
-            ruby: "2"
-  logs:
-    enabled: true
-    containerCollectAll: true
