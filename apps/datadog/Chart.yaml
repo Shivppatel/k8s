@@ -1,0 +1,14 @@
+apiVersion: v2
+name: datadog
+description: A Helm chart for Datadog
+
+type: application
+
+version: 0.1.0
+
+appVersion: "7"
+
+dependencies:
+  - name: datadog
+    repository: https://helm.datadoghq.com
+    version: 3.139.0
