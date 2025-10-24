@@ -1,5 +1,6 @@
 datadog:
   site: "datadoghq.com"
+  clusterName: "kubernetes"
   apiKeyExistingSecret: "datadog-secret"
   otelCollector:
     enabled: true
@@ -22,6 +23,9 @@ datadog:
             php: "1"
             dotnet: "3"
             ruby: "2"
+          ddTraceConfigs:
+            - name: "DD_PROFILING_ENABLED"
+              value: "auto"
   logs:
     enabled: true
     containerCollectAll: true
@@ -42,6 +46,8 @@ datadog:
       enabled: true
     host:
       enabled: true
+  serviceMonitoring:
+    enabled: true
   networkMonitoring:
     enabled: true
   processAgent:
