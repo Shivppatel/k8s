@@ -1,3 +1,3 @@
-datadog-operator:
+datadog:
   site: "datadoghq.com"
   apiKeyExistingSecret: "datadog-secret"
