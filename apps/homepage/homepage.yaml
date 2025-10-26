@@ -37,9 +37,8 @@ data:
     quicklaunch:
       searchDescriptions: true
       hideInternetSearch: true
-      showSearchSuggestions: true
+      showSearchSuggestions: false
       hideVisitURL: true
-      provider: google
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |
