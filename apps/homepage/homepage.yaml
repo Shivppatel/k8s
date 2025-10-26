@@ -81,6 +81,15 @@ data:
             description: Homepage and stuff
 
   widgets.yaml: |
+    - longhorn:
+        # Show the expanded view
+        expanded: true
+        # Shows a node representing the aggregate values
+        total: true
+        # Shows the node names as labels
+        labels: true
+        # Show the nodes
+        nodes: true
     - kubernetes:
         cluster:
           show: true
