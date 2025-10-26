@@ -263,7 +263,7 @@ spec:
   entryPoints:
   - websecure
   routes:
-  - match: Host(`homepage.shivpatel.xyz`)
+  - match: Host(`shivpatel.xyz`)
     kind: Rule
     services:
     - name: homepage
