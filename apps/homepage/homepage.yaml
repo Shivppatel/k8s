@@ -91,7 +91,7 @@ data:
               type: pihole
               url: https://pihole.shivpatel.xyz
               version: 6 # required if running v6 or higher, defaults to 5
-              key: 1c43011d74b94187bc54b0752037aa8cdb5763c2a7b17f07fd7c55c3a343dba4
+              key: "1c43011d74b94187bc54b0752037aa8cdb5763c2a7b17f07fd7c55c3a343dba4"
         - Vault:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vault-light.png
             href: https://vault.shivpatel.xyz
