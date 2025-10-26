@@ -49,36 +49,54 @@ data:
   services.yaml: |
     - Observability:
         - Datadog:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/datadog.png
             href: https://app.datadoghq.com/dashboard/lists?p=1
             description: Dashbaords and stuff
+            ping: https://app.datadoghq.com/
         - Grafana:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
             href: https://grafana.shivpatel.xyz
             description: Dashbaords and stuff
+            ping: observability.grafana
         - Prometheus:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png
             href: https://prometheus.shivpatel.xyz
             description: Metrics and stuff
+            ping: observability.prometheus-server
         - Alloy:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/alloy.png
             href: https://alloy.shivpatel.xyz
             description: Collectors and stuff
+            ping: sobservability.alloy
 
     - Admin:
         - Argocd:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/argo-cd.png
             href: https://argocd.shivpatel.xyz
             description: ArgoCD and stuff
+            ping: argocd.argocd-server
         - Traefik:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/traefik-proxy.png
             href: https://traefik.shivpatel.xyz/dashboard/#/
             description: Ingress and stuff
+            ping: traefik.traefik
         - Longhorn:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/longhorn.png
             href: https://longhorn.shivpatel.xyz
             description: Storage and stuff
+            ping: longhorn-system.longhorn-frontend
 
     - Apps:
         - Vault:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vault.png
             href: https://vault.shivpatel.xyz
             description: Secrets and stuff
+            ping: vault.vault
         - Homepage:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png
             href: https://homepage.shivpatel.xyz
             description: Homepage and stuff
+            ping: homepage.homepage
 
   widgets.yaml: |
     - kubernetes:
