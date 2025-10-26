@@ -42,7 +42,7 @@ alloy:
         }
         loki.write "default" {
           endpoint {
-          url = "https://loki.shivpatel.xyz/loki/api/v1/push"
+          url = "http://loki:3100/loki/api/v1/push"
           }
         }
         forward_to = [loki.write.default.receiver]
