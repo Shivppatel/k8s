@@ -81,6 +81,8 @@ data:
             description: Homepage and stuff
 
   widgets.yaml: |
+    - logo:
+        icon: https://avatars.githubusercontent.com/u/42050563?v=4
     - longhorn:
         # Show the expanded view
         expanded: true
@@ -92,7 +94,7 @@ data:
         nodes: true
     - kubernetes:
         cluster:
-          show: true
+          show: false
           cpu: true
           memory: true
           showLabel: true
@@ -109,8 +111,14 @@ data:
         memory: true
         network: default
     - search:
-        provider: duckduckgo
+        provider: google
+        showSearchSuggestions: true
         target: _blank
+    - datetime:
+        text_size: xl
+        format:
+          timeStyle: short
+          hour12: true
   docker.yaml: ""
 ---
 apiVersion: rbac.authorization.k8s.io/v1
