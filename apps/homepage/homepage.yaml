@@ -30,9 +30,10 @@ data:
   kubernetes.yaml: |
     mode: cluster
   settings.yaml: |
-   providers:
-     longhorn:
-       url: https://longhorn.shivpatel.xyz
+    providers:
+      longhorn:
+        url: https://longhorn.shivpatel.xyz
+    background: https://images.unsplash.com/photo-1502790671504-542ad42d5189?auto=format&fit=crop&w=2560&q=80
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |
@@ -59,7 +60,6 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
             href: https://grafana.shivpatel.xyz
             description: Dashbaords and stuff
-            ping: https://grafana.shivpatel.xyz
         - Prometheus:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png
             href: https://prometheus.shivpatel.xyz
@@ -68,7 +68,6 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/alloy.png
             href: https://alloy.shivpatel.xyz
             description: Collectors and stuff
-            ping: https://alloy.shivpatel.xyz
 
     - Admin:
         - Argocd:
