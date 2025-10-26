@@ -37,71 +37,66 @@ data:
   custom.js: ""
   bookmarks.yaml: |
     - Developer:
-        - Github shivppatel/k8s:
+        - k8s Repo:
             - abbr: GH
+              icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-light.png
               href: https://github.com/shivppatel/k8s
-        - Github shivppatel/k8s GHA:
+        - k8s PRs:
             - abbr: GH
-              href: https://github.com/Shivppatel/k8s/actions
-        - Github shivppatel/k8s PRs:
-            - abbr: GH
+              icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-light.png
               href: https://github.com/Shivppatel/k8s/pulls
+        - k8s GHA:
+            - abbr: GH
+              icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-light.png
+              href: https://github.com/Shivppatel/k8s/actions
   services.yaml: |
     - Observability:
         - Datadog:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/datadog.png
             href: https://app.datadoghq.com/dashboard/lists?p=1
             description: Dashbaords and stuff
         - Grafana:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
             href: https://grafana.shivpatel.xyz
             description: Dashbaords and stuff
         - Prometheus:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png
             href: https://prometheus.shivpatel.xyz
             description: Metrics and stuff
         - Alloy:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/alloy.png
             href: https://alloy.shivpatel.xyz
             description: Collectors and stuff
 
     - Admin:
         - Argocd:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/argo-cd.png
             href: https://argocd.shivpatel.xyz
             description: ArgoCD and stuff
         - Traefik:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/traefik-proxy.png
             href: https://traefik.shivpatel.xyz/dashboard/#/
             description: Ingress and stuff
         - Longhorn:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/longhorn.png
             href: https://longhorn.shivpatel.xyz
             description: Storage and stuff
 
     - Apps:
+        - Pi-hole:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pi-hole-unbound.png
+            href: https://pihole.shivpatel.xyz/admin
+            description: Holes and stuff
         - Vault:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vault-light.png
             href: https://vault.shivpatel.xyz
             description: Secrets and stuff
         - Homepage:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png
             href: https://homepage.shivpatel.xyz
             description: Homepage and stuff
 
   widgets.yaml: |
-    - longhorn:
-        # Show the expanded view
-        expanded: true
-        # Shows a node representing the aggregate values
-        total: true
-        # Shows the node names as labels
-        labels: true
-        # Show the nodes
-        nodes: true
-    - kubernetes:
-        cluster:
-          show: true
-          cpu: true
-          memory: true
-          showLabel: true
-          label: "cluster"
-        nodes:
-          show: true
-          cpu: true
-          memory: true
-          showLabel: true
     - resources:
         backend: resources
         expanded: true
@@ -109,8 +104,14 @@ data:
         memory: true
         network: default
     - search:
-        provider: duckduckgo
+        provider: google
+        showSearchSuggestions: true
         target: _blank
+    - datetime:
+        text_size: xl
+        format:
+          timeStyle: short
+          hour12: true
   docker.yaml: ""
 ---
 apiVersion: rbac.authorization.k8s.io/v1
