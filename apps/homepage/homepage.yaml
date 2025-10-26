@@ -37,18 +37,18 @@ data:
   custom.js: ""
   bookmarks.yaml: |
     - Developer:
-        - Shivppatel/k8s:
+        - k8s Repo:
             - abbr: GH
               icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-light.png
               href: https://github.com/shivppatel/k8s
-        - Shivppatel/k8s GHA:
-            - abbr: GH
-              icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-light.png
-              href: https://github.com/Shivppatel/k8s/actions
-        - Shivppatel/k8s PRs:
+        - k8s PRs:
             - abbr: GH
               icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-light.png
               href: https://github.com/Shivppatel/k8s/pulls
+        - k8s GHA:
+            - abbr: GH
+              icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-light.png
+              href: https://github.com/Shivppatel/k8s/actions
   services.yaml: |
     - Observability:
         - Datadog:
@@ -73,7 +73,6 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/argo-cd.png
             href: https://argocd.shivpatel.xyz
             description: ArgoCD and stuff
-            ping: https://argocd.shivpatel.xyz
         - Traefik:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/traefik-proxy.png
             href: https://traefik.shivpatel.xyz/dashboard/#/
@@ -82,7 +81,6 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/longhorn.png
             href: https://longhorn.shivpatel.xyz
             description: Storage and stuff
-            ping: https://longhorn.shivpatel.xyz
 
     - Apps:
         - Vault:
@@ -95,17 +93,6 @@ data:
             description: Homepage and stuff
 
   widgets.yaml: |
-    - kubernetes:
-        cluster:
-          show: false
-          cpu: true
-          memory: true
-          showLabel: false
-        nodes:
-          show: false
-          cpu: true
-          memory: true
-          showLabel: false
     - resources:
         backend: resources
         expanded: true
