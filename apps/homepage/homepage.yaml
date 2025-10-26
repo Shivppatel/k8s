@@ -81,17 +81,6 @@ data:
             description: Homepage and stuff
 
   widgets.yaml: |
-    - logo:
-        icon: https://avatars.githubusercontent.com/u/42050563?v=4
-    - longhorn:
-        # Show the expanded view
-        expanded: false
-        # Shows a node representing the aggregate values
-        total: true
-        # Shows the node names as labels
-        labels: true
-        # Show the nodes
-        nodes: true
     - kubernetes:
         cluster:
           show: false
