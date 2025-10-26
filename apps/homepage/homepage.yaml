@@ -37,24 +37,49 @@ data:
   custom.js: ""
   bookmarks.yaml: |
     - Developer:
-        - Github:
+        - Github shivppatel/k8s:
             - abbr: GH
               href: https://github.com/shivppatel/k8s
+        - Github shivppatel/k8s GHA:
+            - abbr: GH
+              href: https://github.com/Shivppatel/k8s/actions
+        - Github shivppatel/k8s PRs:
+            - abbr: GH
+              href: https://github.com/Shivppatel/k8s/pulls
   services.yaml: |
     - Observability:
+        - Datadog:
+            href: https://app.datadoghq.com/dashboard/lists?p=1
+            description: Dashbaords and stuff
         - Grafana:
             href: https://grafana.shivpatel.xyz
             description: Dashbaords and stuff
+        - Prometheus:
+            href: https://prometheus.shivpatel.xyz
+            description: Metrics and stuff
+        - Alloy:
+            href: https://alloy.shivpatel.xyz
+            description: Collectors and stuff
 
-    - My Second Group:
+    - Admin:
+        - Argocd:
+            href: https://argocd.shivpatel.xyz
+            description: ArgoCD and stuff
+        - Traefik:
+            href: https://traefik.shivpatel.xyz/dashboard/#/
+            description: Ingress and stuff
         - Longhorn:
             href: https://longhorn.shivpatel.xyz
             description: Storage and stuff
 
     - Apps:
-        - Argocd:
-            href: https://argocd.shivpatel.xyz
-            description: ArgoCD and stuff
+        - Vault:
+            href: https://vault.shivpatel.xyz
+            description: Secrets and stuff
+        - Homepage:
+            href: https://homepage.shivpatel.xyz
+            description: Homepage and stuff
+
   widgets.yaml: |
     - kubernetes:
         cluster:
