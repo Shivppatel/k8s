@@ -39,12 +39,15 @@ data:
     - Developer:
         - Github shivppatel/k8s:
             - abbr: GH
+              icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-light.png
               href: https://github.com/shivppatel/k8s
         - Github shivppatel/k8s GHA:
             - abbr: GH
+              icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-light.png
               href: https://github.com/Shivppatel/k8s/actions
         - Github shivppatel/k8s PRs:
             - abbr: GH
+              icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-light.png
               href: https://github.com/Shivppatel/k8s/pulls
   services.yaml: |
     - Observability:
@@ -52,51 +55,42 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/datadog.png
             href: https://app.datadoghq.com/dashboard/lists?p=1
             description: Dashbaords and stuff
-            ping: https://app.datadoghq.com/
         - Grafana:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
             href: https://grafana.shivpatel.xyz
             description: Dashbaords and stuff
-            ping: grafana.shivpatel.xyz
         - Prometheus:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png
             href: https://prometheus.shivpatel.xyz
             description: Metrics and stuff
-            ping: prometheus.shivpatel.xyz
         - Alloy:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/alloy.png
             href: https://alloy.shivpatel.xyz
             description: Collectors and stuff
-            ping: sobservability.alloy
 
     - Admin:
         - Argocd:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/argo-cd.png
             href: https://argocd.shivpatel.xyz
             description: ArgoCD and stuff
-            ping: argocd.shivpatel.xyz
         - Traefik:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/traefik-proxy.png
             href: https://traefik.shivpatel.xyz/dashboard/#/
             description: Ingress and stuff
-            ping: traefik.traefik
         - Longhorn:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/longhorn.png
             href: https://longhorn.shivpatel.xyz
             description: Storage and stuff
-            ping: longhorn-system.longhorn-frontend
 
     - Apps:
         - Vault:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vault.png
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vault-light.png
             href: https://vault.shivpatel.xyz
             description: Secrets and stuff
-            ping: vault.vault
         - Homepage:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png
             href: https://homepage.shivpatel.xyz
             description: Homepage and stuff
-            ping: homepage.homepage
 
   widgets.yaml: |
     - kubernetes:
