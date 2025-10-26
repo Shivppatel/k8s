@@ -178,7 +178,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 3005
+    - port: 3000
       targetPort: http
       protocol: TCP
       name: http
@@ -218,7 +218,7 @@ spec:
               value: homepage.shivpatel.xyz # required, may need port. See gethomepage.dev/installation/#homepage_allowed_hosts
           ports:
             - name: http
-              containerPort: 3005
+              containerPort: 3000
               protocol: TCP
           volumeMounts:
             - mountPath: /app/config/custom.js
@@ -267,4 +267,4 @@ spec:
     kind: Rule
     services:
     - name: homepage
-      port: 3005
+      port: 3000
