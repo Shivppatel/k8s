@@ -39,22 +39,22 @@ data:
     - Developer:
         - Github:
             - abbr: GH
-              href: https://github.com/
+              href: https://github.com/shivppatel/k8s
   services.yaml: |
-    - My First Group:
-        - My First Service:
-            href: http://localhost/
-            description: Homepage is awesome
+    - Observability:
+        - Grafana:
+            href: https://grafana.shivpatel.xyz
+            description: Dashbaords and stuff
 
     - My Second Group:
-        - My Second Service:
-            href: http://localhost/
-            description: Homepage is the best
+        - Longhorn:
+            href: https://longhorn.shivpatel.xyz
+            description: Storage and stuff
 
-    - My Third Group:
-        - My Third Service:
-            href: http://localhost/
-            description: Homepage is 😎
+    - Apps:
+        - Argocd:
+            href: https://argocd.shivpatel.xyz
+            description: ArgoCD and stuff
   widgets.yaml: |
     - kubernetes:
         cluster:
