@@ -33,7 +33,7 @@ data:
     providers:
       longhorn:
         url: https://longhorn.shivpatel.xyz
-    background: hhttps://pbs.twimg.com/media/DLQPvT6UIAAvl-5?format=jpg&name=4096x4096
+    background: https://pbs.twimg.com/media/DLQPvT6UIAAvl-5?format=jpg&name=4096x4096
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |
