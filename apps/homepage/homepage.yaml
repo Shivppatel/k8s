@@ -108,7 +108,7 @@ data:
         showSearchSuggestions: true
         target: _blank
     - datetime:
-        text_size: xl
+        text_size: 2xl
         format:
           timeStyle: short
           hour12: true
