@@ -268,18 +268,3 @@ spec:
     services:
     - name: homepage
       port: 3000
----
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: root-homepage-ingress
-  namespace: homepage
-spec:
-  entryPoints:
-  - websecure
-  routes:
-  - match: Host(`shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: homepage
-      port: 3000
