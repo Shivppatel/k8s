@@ -10,5 +10,5 @@ spec:
   - match: Host(`loki.shivpatel.xyz`)
     kind: Rule
     services:
-    - name: loki-gateway
-      port: 80
+    - name: loki
+      port: 3100
