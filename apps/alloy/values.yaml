@@ -105,8 +105,8 @@ alloy:
             source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
             action = "replace"
             target_label = "__path__"
-            separator = "/"
-            replacement = "/var/log/pods/*$1/*.log"
+            regex = "(.+?);(.+)"
+            replacement = "/var/log/pods/*/$1/$2/*.log"
           }
 
           // Label creation -  "container_runtime" field from "__meta_kubernetes_pod_container_id"
@@ -206,10 +206,10 @@ alloy:
 
     mounts:
       # -- Mount /var/log from the host into the container for log collection.
-      varlog: false
+      varlog: true
       # -- Mount /var/lib/docker/containers from the host into the container for log
       # collection.
-      dockercontainers: false
+      dockercontainers: true
 
       # -- Extra volume mounts to add into the Grafana Alloy container. Does not
       # affect the watch container.
