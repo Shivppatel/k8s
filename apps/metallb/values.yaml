@@ -8,7 +8,5 @@ metallb:
   prometheus:
     serviceAccount: "kube-prometheus-stack-prometheus"
     namespace: "observability"
-    podMonitor:
-      enabled: true
     serviceMonitor:
       enabled: true
