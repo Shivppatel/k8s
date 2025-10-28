@@ -1,4 +1,0 @@
-homer:
-  persistence:
-    config:
-      enabled: true

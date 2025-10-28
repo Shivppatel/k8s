@@ -1,4 +1,0 @@
-mimir-distributed:
-  server:
-    image:
-      pullPolicy: Always
