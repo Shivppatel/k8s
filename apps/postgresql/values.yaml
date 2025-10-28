@@ -1,5 +1,0 @@
-postgresql:
-  image:
-    repository: bitnamilegacy/postgresql
-  metrics:
-    enabled: true
