@@ -3,3 +3,6 @@ metallb:
     enabled: true
     image:
       pullPolicy: Always
+  prometheus:
+    serviceMonitor:
+      enabled: true

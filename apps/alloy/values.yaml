@@ -519,7 +519,7 @@ alloy:
       # cloud.google.com/load-balancer-type: Internal
 
   serviceMonitor:
-    enabled: false
+    enabled: true
     # -- Additional labels for the service monitor.
     additionalLabels: {}
     # -- Scrape interval. If not set, the Prometheus default scrape interval is used.

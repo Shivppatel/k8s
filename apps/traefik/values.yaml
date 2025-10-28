@@ -23,3 +23,8 @@ traefik:
 
   persistence:
     enabled: true
+
+  metrics:
+    prometheus:
+      serviceMonitor:
+        enabled: true
