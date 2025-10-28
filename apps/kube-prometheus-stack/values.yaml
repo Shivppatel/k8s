@@ -2,3 +2,7 @@ kube-prometheus-stack:
   prometheusOperator:
     image:
       pullPolicy: Always
+  crds:
+    upgradeJob:
+      enabled: true
+      forceConflicts: true
