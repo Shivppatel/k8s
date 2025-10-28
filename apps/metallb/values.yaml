@@ -3,6 +3,12 @@ metallb:
     enabled: true
     image:
       pullPolicy: Always
+  # rbac:
+  #   create: false
   prometheus:
+    serviceAccount: "kube-prometheus-stack-prometheus"
+    namespace: "observability"
+    podMonitor:
+      enabled: true
     serviceMonitor:
       enabled: true
