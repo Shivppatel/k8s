@@ -140,6 +140,20 @@ alloy:
           forward_to = [loki.write.default.receiver]
         }
 
+        prometheus.scrape "servicemonitors" {
+          targets = discovery.prometheus.servicemonitor.default.targets
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        discovery.prometheus.servicemonitor "default" {
+        }
+
+        prometheus.remote_write "default" {
+          endpoint {
+            url = "http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090/api/v1/write"
+          }
+        }
+
     clustering:
       # -- Deploy Alloy in a cluster to allow for load distribution.
       enabled: false
