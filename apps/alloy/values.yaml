@@ -142,7 +142,6 @@ alloy:
 
         discovery.kubernetes "services" {
           role = "service"
-          namespaces = ["cert-manager"]
           selectors {
             role = "service"
             label = "app.kubernetes.io/name=cert-manager"
@@ -152,7 +151,7 @@ alloy:
         prometheus.scrape "services" {
           targets = discovery.kubernetes.services.targets
           forward_to = [prometheus.remote_write.default.receiver]
-          relabel_configs {
+          relabel_config {
             source_labels = ["__meta_kubernetes_service_port_name"]
             action = "keep"
             regex = "tcp-prometheus-servicemonitor"
