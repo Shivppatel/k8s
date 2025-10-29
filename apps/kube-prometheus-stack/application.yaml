@@ -15,10 +15,3 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: observability
-  syncPolicy:
-    automated:
-      enabled: true
-    syncOptions:
-    - CreateNamespace=true
-    - ServerSideApply=true
-    - PruneLast=true

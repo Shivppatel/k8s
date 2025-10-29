@@ -12,32 +12,3 @@ kube-prometheus-stack:
     upgradeJob:
       enabled: true
       forceConflicts: true
-  kube-controller-manager:
-    enabled: true
-    endpoints:
-      - port: 10257
-        scheme: http
-        path: /metrics
-  kube-scheduler:
-    enabled: true
-    endpoints:
-      - port: 10259
-        scheme: http
-        path: /metrics
-  etcd:
-    enabled: true
-    endpoints:
-      - port: 2381
-        scheme: http
-        path: /metrics
-  kube-proxy:
-    enabled: true
-    endpoints:
-    - port: 10249
-      scheme: http
-      path: /metrics
-  prometheus:
-    prometheusSpec:
-      hostNetwork: true
-      hostPID: true
-      scrapeTimeout: "30s"
