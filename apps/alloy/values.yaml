@@ -140,6 +140,25 @@ alloy:
           forward_to = [loki.write.default.receiver]
         }
 
+        discovery.kubernetes "services" {
+          role = "service"
+          selectors {
+            role = "service"
+            label = "app.kubernetes.io/name=cert-manager"
+          }
+        }
+
+        prometheus.scrape "services" {
+          targets = discovery.kubernetes.services.targets
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        prometheus.remote_write "default" {
+          endpoint {
+            url = "http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090/api/v1/write"
+          }
+        }
+
     clustering:
       # -- Deploy Alloy in a cluster to allow for load distribution.
       enabled: false
