@@ -10,5 +10,5 @@ spec:
   - match: Host(`prometheus.shivpatel.xyz`)
     kind: Rule
     services:
-    - name: kube-prometheus-stack-prometheus
+    - name: prometheus-host
       port: 9090
