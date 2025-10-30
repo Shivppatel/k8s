@@ -17,3 +17,25 @@ spec:
     logCollection:
       enabled: true
       containerCollectAll: true
+  override:
+      nodeAgent:
+        containers: 
+          init-config:
+            env:
+              - name: DD_API_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: datadog-secret
+                    key: api-key
+          trace-agent:
+            env:
+              - name: DD_API_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: datadog-secret
+                    key: api-key
+              - name: DD_CLUSTER_AGENT_AUTH_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: datadog-token
+                    key: token
