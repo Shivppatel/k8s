@@ -1,14 +1,14 @@
 apiVersion: v2
-name: datadog
-description: A Helm chart for Datadog
+name: datadog-operator
+description: A Helm chart for Datadog Operator
 
 type: application
 
 version: 0.1.0
 
-appVersion: "7"
+appVersion: "1.19.1"
 
 dependencies:
-  - name: datadog
+  - name: datadog-operator
     repository: https://helm.datadoghq.com
-    version: 3.139.0
+    version: 2.14.3
