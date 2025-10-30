@@ -18,7 +18,7 @@ spec:
   override:
       nodeAgent:
         securityContext:
-          runAsUser: 0 # Default dd-agent user
+          runAsUser: 100 # Default dd-agent user
           # IMPORTANT: Replace 999 with the GID of your Docker/Containerd socket
           # Common GIDs are 999 (docker/containerd) or 0 (root) if GID 100 doesn't work.
           supplementalGroups: 
