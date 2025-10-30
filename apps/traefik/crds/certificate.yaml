@@ -9,7 +9,7 @@ spec:
   renewBefore: 360h # 15d
   subject:
     organizations:
-      - cert-managerv
+      - cert-manager
   isCA: false
   usages:
     - server auth
