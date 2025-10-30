@@ -1,3 +1,6 @@
 datadog-operator:
   replicaCount: 1
   site: datadoghq.com
+  appKey:
+    secretName: "datadog-secret"
+    keyName: "app-key"
