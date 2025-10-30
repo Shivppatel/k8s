@@ -4,6 +4,7 @@ metadata:
   name: datadog
 spec:
   global:
+    clusterName: homelab
     site: datadoghq.com
     credentials:
       apiSecret:
@@ -14,3 +15,28 @@ spec:
       enabled: false
     logCollection:
       enabled: true
+  override:
+      nodeAgent:
+        containers: 
+          # 1. Fixes the "You must set an DD_API_KEY" error
+          init-config: 
+            env:
+              - name: DD_API_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: datadog-secret
+                    key: api-key
+          
+          # 2. Fixes the trace-agent exit code 2 crash (missing API/Auth keys)
+          trace-agent:
+            env:
+              - name: DD_API_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: datadog-secret
+                    key: api-key
+              - name: DD_CLUSTER_AGENT_AUTH_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: datadog-token
+                    key: token
