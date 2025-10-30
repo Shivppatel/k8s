@@ -17,6 +17,13 @@ spec:
       enabled: true
   override:
       nodeAgent:
+        securityContext:
+          runAsUser: 100 # Default dd-agent user
+          runAsGroup: 65532 # Default dd-agent group (or leave unset)
+          # IMPORTANT: Replace 999 with the GID of your Docker/Containerd socket
+          # Common GIDs are 999 (docker/containerd) or 0 (root) if GID 100 doesn't work.
+          supplementalGroups: 
+            - 999
         containers: 
           # 1. Fixes the "You must set an DD_API_KEY" error
           init-config: 
