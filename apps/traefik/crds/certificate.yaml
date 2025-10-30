@@ -17,8 +17,6 @@ spec:
   dnsNames:
     - "*.shivpatel.xyz"
     - "shivpatel.xyz"
-  ipAddresses:
-    - 192.168.86.10
   issuerRef:
     name: cloudflare-clusterissuer
     kind: ClusterIssuer
