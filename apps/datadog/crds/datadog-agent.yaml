@@ -4,6 +4,7 @@ metadata:
   name: datadog
 spec:
   global:
+    clusterName: homelab
     site: datadoghq.com
     credentials:
       apiSecret:
