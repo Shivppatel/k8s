@@ -11,5 +11,5 @@ spec:
         keyName: api-key
   features:
     logCollection:
-      enabled: true
+      enabled: false
 
