@@ -14,7 +14,6 @@ spec:
   usages:
     - server auth
     - client auth
-  commonName: "*.shivpatel.xyz"
   dnsNames:
     - "*.shivpatel.xyz"
     - "shivpatel.xyz"
