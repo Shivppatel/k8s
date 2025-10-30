@@ -1,41 +1,16 @@
-kind: "DatadogAgent"
-apiVersion: "datadoghq.com/v2alpha1"
+apiVersion: datadoghq.com/v2alpha1
+kind: DatadogAgent
 metadata:
-  name: "datadog"
+  name: datadog
 spec:
   global:
-    site: "datadoghq.com"
+    site: datadoghq.com
     credentials:
       apiSecret:
-        secretName: "datadog-secret"
-        keyName: "api-key"
-      appSecret:
-        secretName: "datadog-secret"
-        keyName: "app-key"
-    clusterName: "homelab"
+        secretName: datadog-secret
+        keyName: api-key
   features:
+    apm:
+      enabled: false
     logCollection:
       enabled: true
-      containerCollectAll: true
-  override:
-      nodeAgent:
-        containers: 
-          init-config:
-            env:
-              - name: DD_API_KEY
-                valueFrom:
-                  secretKeyRef:
-                    name: datadog-secret
-                    key: api-key
-          trace-agent:
-            env:
-              - name: DD_API_KEY
-                valueFrom:
-                  secretKeyRef:
-                    name: datadog-secret
-                    key: api-key
-              - name: DD_CLUSTER_AGENT_AUTH_TOKEN
-                valueFrom:
-                  secretKeyRef:
-                    name: datadog-token
-                    key: token
