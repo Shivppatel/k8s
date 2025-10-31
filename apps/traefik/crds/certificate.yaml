@@ -4,7 +4,7 @@ metadata:
   name: wildcard-cert
   namespace: traefik
 spec:
-  secretName: wildcard-cert-tls
+  secretName: wildcard-cert
   duration: 2160h # 90d
   renewBefore: 360h # 15d
   subject:

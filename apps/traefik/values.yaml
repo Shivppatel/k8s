@@ -19,7 +19,7 @@ traefik:
   tlsStore:
     default:
       defaultCertificate:
-        secretName: wildcard-cert-tls
+        secretName: wildcard-cert
 
   persistence:
     enabled: true
