@@ -86,9 +86,7 @@ alloy:
 
         prometheus.remote_write "prometheus_default" {
             endpoint {
-              // Adjust this URL if your Prometheus/Mimir endpoint is different
               url = "http://prometheus:9090/api/v1/write"
-              # Adjust headers if required by your remote storage
               headers = {}
             }
         }
