@@ -42,12 +42,10 @@ alloy:
 
         discovery.kubernetes "argocd_services" {
           role = "service"
+          namespaces = ["argocd"]
           selectors {
             role = "service"
-            // Find services within the 'argocd' namespace
             label = "app.kubernetes.io/instance=argocd"
-            // Optionally target the namespace explicitly
-            namespace = "argocd" 
           }
         }
         
