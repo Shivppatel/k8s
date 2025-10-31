@@ -1,4 +1,7 @@
 argo-cd:
+  configs:
+    params:
+      server.insecure: "true"
   controller:
     metrics:
       enabled: true
