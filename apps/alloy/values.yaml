@@ -86,7 +86,7 @@ alloy:
 
         prometheus.remote_write "prometheus_default" {
             endpoint {
-              url = "http://prometheus:9090/api/v1/write"
+              url = "http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090/api/v1/write"
               headers = {}
             }
         }
