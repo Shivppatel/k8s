@@ -1,0 +1,36 @@
+argo-cd:
+  controller:
+    metrics:
+      enabled: true
+      servicemonitor:
+        enabled: true
+  dex:
+    metrics:
+      enabled: true
+      servicemonitor:
+        enabled: true
+  redis:
+    metrics:
+      enabled: true
+      servicemonitor:
+        enabled: true
+  server:
+    metrics:
+      enabled: true
+      servicemonitor:
+        enabled: true
+  repoServer:
+    metrics:
+      enabled: true
+      servicemonitor:
+        enabled: true
+  applicationSet:
+    metrics:
+      enabled: true
+      servicemonitor:
+        enabled: true
+  notifications:
+    metrics:
+      enabled: true
+      servicemonitor:
+        enabled: true
