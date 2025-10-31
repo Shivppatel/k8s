@@ -12,3 +12,4 @@ spec:
     services:
     - name: alloy
       port: 12345
+  tls: {}

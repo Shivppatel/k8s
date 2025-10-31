@@ -12,3 +12,4 @@ spec:
     services:
     - name: prometheus-server
       port: 80
+  tls: {}

@@ -12,3 +12,4 @@ spec:
     services:
     - name: vault
       port: 8200
+  tls: {}
