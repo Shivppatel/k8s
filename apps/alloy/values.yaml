@@ -58,7 +58,7 @@ alloy:
           rule {
             action = "keep"
             source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component"]
-            regex = "(application-controller|application-set-controller|repo-server|server|dex-server|redis)"
+            regex = "(application-controller|applicationset-controller|repo-server|server|notifications-controller|redis|dex-server)"
           }
 
           // Set job label based on component
@@ -105,7 +105,7 @@ alloy:
           }
 
           // Set address and port - ArgoCD components expose metrics on different ports
-          // Default: use pod IP with port 8082
+          // Default: use pod IP with port 8082 (application-controller)
           rule {
             action = "replace"
             source_labels = ["__meta_kubernetes_pod_ip"]
@@ -132,6 +132,46 @@ alloy:
             separator = ";"
             regex = "repo-server;(.+)"
             replacement = "$1:8084"
+          }
+          
+          // Override port for applicationset-controller component (port 8080)
+          rule {
+            action = "replace"
+            source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component", "__meta_kubernetes_pod_ip"]
+            target_label = "__address__"
+            separator = ";"
+            regex = "applicationset-controller;(.+)"
+            replacement = "$1:8080"
+          }
+          
+          // Override port for notifications-controller component (port 9001)
+          rule {
+            action = "replace"
+            source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component", "__meta_kubernetes_pod_ip"]
+            target_label = "__address__"
+            separator = ";"
+            regex = "notifications-controller;(.+)"
+            replacement = "$1:9001"
+          }
+          
+          // Override port for redis component (port 9121)
+          rule {
+            action = "replace"
+            source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component", "__meta_kubernetes_pod_ip"]
+            target_label = "__address__"
+            separator = ";"
+            regex = "redis;(.+)"
+            replacement = "$1:9121"
+          }
+          
+          // Override port for dex-server component (port 5558)
+          rule {
+            action = "replace"
+            source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component", "__meta_kubernetes_pod_ip"]
+            target_label = "__address__"
+            separator = ";"
+            regex = "dex-server;(.+)"
+            replacement = "$1:5558"
           }
         }
 
