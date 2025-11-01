@@ -40,53 +40,104 @@ alloy:
           format = "logfmt"
         }
 
-        discovery.kubernetes "argocd_services" {
-          role = "service"
+        discovery.kubernetes "argocd_pods" {
+          role = "pod"
           namespaces {
             names = ["argocd"]
           }
           selectors {
-            role = "service"
+            role = "pod"
             label = "app.kubernetes.io/instance=argocd"
           }
         }
         
         discovery.relabel "argocd_metrics" {
-          targets = discovery.kubernetes.argocd_services.targets
+          targets = discovery.kubernetes.argocd_pods.targets
+          
+          // Keep only pods that have metrics port annotations or are known ArgoCD components
           rule {
             action = "keep"
-            source_labels = ["__meta_kubernetes_service_port_name", "__meta_kubernetes_service_name"]
-            regex = "(.*metrics.*|.*metrics.*)" // Keeps if port OR service name has "metrics"
+            source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component"]
+            regex = "(application-controller|application-set-controller|repo-server|server|dex-server|redis)"
           }
 
+          // Set job label based on component
           rule {
             action = "replace"
-            source_labels = ["__meta_kubernetes_service_name"]
+            source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component"]
             target_label = "job"
+            replacement = "argocd-$1"
           }
 
+          // Set app_component label
           rule {
             action = "replace"
-            source_labels = ["__meta_kubernetes_service_label_app_kubernetes_io_name"]
+            source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component"]
             target_label = "app_component"
           }
 
+          // Set namespace label
+          rule {
+            action = "replace"
+            source_labels = ["__meta_kubernetes_namespace"]
+            target_label = "namespace"
+          }
+
+          // Set pod label
+          rule {
+            action = "replace"
+            source_labels = ["__meta_kubernetes_pod_name"]
+            target_label = "pod"
+          }
+
+          // Set metrics path
           rule {
             action = "replace"
             target_label = "__metrics_path__"
             replacement = "/metrics"
           }
           
+          // Set scheme
           rule {
             action = "replace"
             target_label = "__scheme__"
-            replacement = "http" 
+            replacement = "http"
+          }
+
+          // Set address and port - ArgoCD components expose metrics on different ports
+          // Default: use pod IP with port 8082
+          rule {
+            action = "replace"
+            source_labels = ["__meta_kubernetes_pod_ip"]
+            target_label = "__address__"
+            regex = "(.+)"
+            replacement = "$1:8082"
+          }
+          
+          // Override port for server component (port 8083)
+          rule {
+            action = "replace"
+            source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component", "__meta_kubernetes_pod_ip"]
+            target_label = "__address__"
+            separator = ";"
+            regex = "server;(.+)"
+            replacement = "$1:8083"
+          }
+          
+          // Override port for repo-server component (port 8084)
+          rule {
+            action = "replace"
+            source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component", "__meta_kubernetes_pod_ip"]
+            target_label = "__address__"
+            separator = ";"
+            regex = "repo-server;(.+)"
+            replacement = "$1:8084"
           }
         }
 
         prometheus.remote_write "prometheus_default" {
             endpoint {
-              url = "http://kube-prometheus-stack-prometheus:9090/api/v1/write"
+              url = "http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090/api/v1/write"
               headers = {}
             }
         }

@@ -12,3 +12,9 @@ kube-prometheus-stack:
     upgradeJob:
       enabled: true
       forceConflicts: true
+  prometheus:
+    prometheusSpec:
+      # Enable remote write receiver to accept metrics via remote_write API
+      # This allows Prometheus to accept metrics sent via POST to /api/v1/write
+      extraArgs:
+        - --enable-feature=remote-write-receiver
