@@ -1,7 +1,7 @@
 cert-manager:
   replicaCount: 3
   podDisruptionBudget:
-    enabled: false
+    enabled: true
     minAvailable: 1
   prometheus:
     servicemonitor:
