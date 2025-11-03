@@ -1,0 +1,12 @@
+harbor:
+  expose:
+    tls:
+      enabled: false
+      certSource: none
+    ingress:
+      hosts:
+        core: harbor.shivpatel.xyz
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true

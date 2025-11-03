@@ -1,3 +1,0 @@
-artifactory:
-  replicaCount: 3
-  persistence.type: cluster-file-system
