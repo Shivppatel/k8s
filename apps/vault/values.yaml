@@ -2,6 +2,11 @@ vault:
   server:
     ha:
       enabled: true
+      raft:
+        enabled: true
+    dataStorage:
+      enabled: true
+      size: 10Gi
   global:
     serverTelemetry:
       enabled: true
