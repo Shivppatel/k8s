@@ -1,4 +1,7 @@
 vault:
+  server:
+    ha:
+      enabled: true
   global:
     serverTelemetry:
       enabled: true
