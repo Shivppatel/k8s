@@ -1,5 +1,9 @@
 kube-prometheus-stack:
   grafana:
+    admin:
+      existingSecret: kube-prometheus-stack-grafana
+      userKey: admin-user
+      passwordKey: admin-password
     persistence:
       enabled: true
       type: sts
