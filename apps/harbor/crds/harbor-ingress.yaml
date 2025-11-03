@@ -10,6 +10,6 @@ spec:
   - match: Host(`harbor.shivpatel.xyz`)
     kind: Rule
     services:
-    - name: harbor
+    - name: harbor-portal
       port: 80
   tls: {}
