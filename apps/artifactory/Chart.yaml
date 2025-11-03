@@ -1,0 +1,14 @@
+apiVersion: v2
+name: artifactory
+description: A Helm chart for Artifactory
+
+type: application
+
+version: 0.1.0
+
+appVersion: "7.125.4"
+
+dependencies:
+  - name: artifactory
+    repository: https://charts.jfrog.io
+    version: 107.125.4
