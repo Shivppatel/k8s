@@ -1,6 +1,6 @@
 vault:
   global:
     serverTelemetry:
-      enabled: true
+      enabled: false
       prometheusRules:
-        enabled: true
+        enabled: false
