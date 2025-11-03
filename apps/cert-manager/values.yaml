@@ -1,6 +1,6 @@
 cert-manager:
   prometheus:
     servicemonitor:
-      enabled: false
+      enabled: true
   crds:
     enabled: true

@@ -12,4 +12,4 @@ longhorn:
     jobEnabled: false
   metrics:
     serviceMonitor:
-      enabled: false
+      enabled: true

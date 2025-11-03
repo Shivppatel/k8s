@@ -27,4 +27,4 @@ traefik:
   metrics:
     prometheus:
       serviceMonitor:
-        enabled: false
+        enabled: true
