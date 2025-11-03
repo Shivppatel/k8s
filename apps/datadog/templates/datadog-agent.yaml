@@ -9,12 +9,16 @@ spec:
       apiSecret:
         secretName: "datadog-secret"
         keyName: "api-key"
-  agent:
-    env:
-      - name: DD_HOSTNAME
-        valueFrom:
-          fieldRef:
-            fieldPath: spec.nodeName
-      - name: DD_KUBELET_TLS_VERIFY
-        value: "false"
+  features:
+    kubelet:
+      tlsVerify: false
+  override:
+    nodeAgent:
+      containers:
+        agent:
+          env:
+            - name: DD_HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
 
