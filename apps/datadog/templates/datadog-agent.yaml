@@ -18,4 +18,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
+            - name: DD_KUBELET_TLS_VERIFY
+              value: "false"
 
