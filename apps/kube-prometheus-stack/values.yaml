@@ -15,3 +15,9 @@ kube-prometheus-stack:
   prometheus:
     prometheusSpec:
       enableRemoteWriteReceiver: true
+      # Allow Prometheus to discover ServiceMonitors from all namespaces
+      # This enables automatic discovery of metrics without needing Alloy
+      serviceMonitorNamespaceSelector: {}
+      serviceMonitorSelector: {}
+      podMonitorNamespaceSelector: {}
+      podMonitorSelector: {}

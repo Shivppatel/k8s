@@ -2,7 +2,10 @@ argo-cd:
   configs:
     params:
       server.insecure: "true"
+  redis-ha:
+    enabled: true
   controller:
+    replicas: 1
     metrics:
       enabled: true
       servicemonitor:
@@ -18,16 +21,23 @@ argo-cd:
       servicemonitor:
         enabled: true
   server:
+    autoscaling:
+      enabled: true
+      minReplicas: 2
     metrics:
       enabled: true
       servicemonitor:
         enabled: true
   repoServer:
+    autoscaling:
+      enabled: true
+      minReplicas: 2
     metrics:
       enabled: true
       servicemonitor:
         enabled: true
   applicationSet:
+    replicas: 2
     metrics:
       enabled: true
       servicemonitor:

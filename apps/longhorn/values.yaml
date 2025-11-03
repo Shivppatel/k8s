@@ -1,13 +1,15 @@
 longhorn:
   image:
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
   defaultSettings:
     defaultDataPath: "/mnt/storage/longhorn"
-    defaultReplicaCount: "1"
+    defaultReplicaCount: "2"
+    replicaSoftAntiAffinity: true
   persistence:
-    defaultClassReplicaCount: "1"
+    defaultClass: true
+    defaultClassReplicaCount: 2
   preUpgradeChecker:
     jobEnabled: false
   metrics:
     serviceMonitor:
-      enabled: true
+      enabled: false
