@@ -5,8 +5,8 @@ metallb:
       pullPolicy: Always
   # rbac:
   #   create: false
-  prometheus:
-    serviceAccount: "kube-prometheus-stack-prometheus"
-    namespace: "observability"
-    serviceMonitor:
-      enabled: true
+  # prometheus:
+  #   serviceAccount: "kube-prometheus-stack-prometheus"
+  #   namespace: "observability"
+  #   serviceMonitor:
+  #     enabled: true
