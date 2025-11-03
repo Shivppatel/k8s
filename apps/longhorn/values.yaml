@@ -3,11 +3,11 @@ longhorn:
     pullPolicy: IfNotPresent
   defaultSettings:
     defaultDataPath: "/mnt/storage/longhorn"
-    defaultReplicaCount: "2"
+    defaultReplicaCount: "3"
     replicaSoftAntiAffinity: true
   persistence:
     defaultClass: true
-    defaultClassReplicaCount: 2
+    defaultClassReplicaCount: 3
   preUpgradeChecker:
     jobEnabled: false
   metrics:
