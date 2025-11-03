@@ -10,8 +10,7 @@ spec:
         secretName: "datadog-secret"
         keyName: "api-key"
   features:
-    kubelet:
-      tlsVerify: false
+    kubelet_tls_verify: false
   override:
     nodeAgent:
       containers:
