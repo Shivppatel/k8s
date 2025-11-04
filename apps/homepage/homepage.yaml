@@ -74,7 +74,7 @@ data:
             href: https://alloy.shivpatel.xyz
             description: Collectors and stuff
         - Policy Reporter:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/policycontroller.png
+            icon: https://kyverno.github.io/policy-reporter-docs/logo.png
             href: https://policy-reporter.shivpatel.xyz
             description: Policies and stuff
 
@@ -83,6 +83,10 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/argo-cd.png
             href: https://argocd.shivpatel.xyz
             description: ArgoCD and stuff
+        - Cloudflare:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/cloudflare.png
+            href: https://one.dash.cloudflare.com/
+            description: Tunnels and stuff
         - Traefik:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/traefik-proxy.png
             href: https://traefik.shivpatel.xyz/dashboard/#/
@@ -102,7 +106,7 @@ data:
             href: https://harbor.shivpatel.xyz
             description: Registries and stuff
         - Vault:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vault-light.png
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/hashicorp-vault.png
             href: https://vault.shivpatel.xyz
             description: Secrets and stuff
         - Pi-hole:
