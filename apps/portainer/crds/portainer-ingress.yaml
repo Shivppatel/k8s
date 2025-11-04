@@ -11,5 +11,5 @@ spec:
     kind: Rule
     services:
     - name: portainer
-      port: 9000
+      port: 9443
   tls: {}
