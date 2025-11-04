@@ -1,0 +1,9 @@
+kyverno:
+  grafana:
+    enabled: true
+    grafanaDashboard:
+      create: true
+      folder: kyverno
+      allowCrossNamespaceImport: true
+      matchLabels:
+        dashboards: "grafana"
