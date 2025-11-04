@@ -91,6 +91,10 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/longhorn.png
             href: https://longhorn.shivpatel.xyz
             description: Storage and stuff
+        - Unifi:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/unifi.png
+            href: https://unifi.ui.com
+            description: Networking and stuff
 
     - Apps:
         - Harbor:
