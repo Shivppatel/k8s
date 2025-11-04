@@ -10,6 +10,6 @@ spec:
   - match: Host(`portainer.shivpatel.xyz`)
     kind: Rule
     services:
-    - name: portainer-ui
+    - name: portainer
       port: 9000
   tls: {}
