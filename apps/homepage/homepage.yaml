@@ -73,6 +73,10 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/alloy.png
             href: https://alloy.shivpatel.xyz
             description: Collectors and stuff
+        - Policy Reporter:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/policycontroller.png
+            href: https://policy-reporter.shivpatel.xyz
+            description: Policies and stuff
 
     - Admin:
         - Argocd:
