@@ -83,6 +83,10 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/argo-cd.png
             href: https://argocd.shivpatel.xyz
             description: ArgoCD and stuff
+        - Portainer:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/portainer-dark.png
+            href: https://portainer.shivpatel.xyz
+            description: Containers and stuff
         - Cloudflare:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/cloudflare.png
             href: https://one.dash.cloudflare.com/

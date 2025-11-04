@@ -1,0 +1,3 @@
+portainer:
+  persistence:
+    enabled: true
