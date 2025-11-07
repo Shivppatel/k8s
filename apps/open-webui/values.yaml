@@ -17,4 +17,4 @@ open-webui:
     persistence:
       enabled: true
       storageClass: "longhorn" # Or whatever your Longhorn storageClass is named
-      size: 100i # Storage for the models themselves
+      size: 100Gi # Storage for the models themselves
