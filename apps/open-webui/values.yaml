@@ -1,0 +1,20 @@
+open-webui:
+  ollama:
+    enabled: true
+
+    # This is our scheduling rule for the Ollama pod
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: ram
+              operator: In
+              values:
+              - high
+
+    # Don't forget to use your Longhorn storage!
+    persistence:
+      enabled: true
+      storageClass: "longhorn" # Or whatever your Longhorn storageClass is named
+      size: 50Gi # Storage for the models themselves
