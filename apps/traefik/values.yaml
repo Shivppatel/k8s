@@ -1,7 +1,7 @@
 traefik:
   ingressRoute:
     dashboard:
-      enabled: false
+      enabled: true
       
   logs:
     general:
