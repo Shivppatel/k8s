@@ -7,7 +7,12 @@ spec:
   entryPoints:
   - websecure
   routes:
-  - match: Host(`traefik.shivpatel.xyz`)
+  - match: Host(`traefik.shivpatel.xyz`) && PathPrefix(`/dashboard`)
+    kind: Rule
+    services:
+    - name: traefik-dashboard
+      port: 8080
+  - match: Host(`traefik.shivpatel.xyz`) && Path(`/`)
     kind: Rule
     middlewares:
     - name: traefik-dashboard-redirect
