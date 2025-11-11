@@ -10,6 +10,16 @@ traefik:
   service:
     type: LoadBalancer
     loadBalancerIP: "192.168.3.20"  # Choose an available IP from your MetalLB range
+    ports:
+      websecure:
+        port: 443
+        targetPort: websecure
+      web:
+        port: 80
+        targetPort: web
+      traefik:
+        port: 8443
+        targetPort: 8443
 
   additionalArguments:
     - --entryPoints.web.http.redirections.entryPoint.to=websecure
