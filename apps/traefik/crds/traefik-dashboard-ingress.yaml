@@ -10,13 +10,13 @@ spec:
   - match: Host(`traefik.shivpatel.xyz`) && PathPrefix(`/dashboard`)
     kind: Rule
     services:
-    - name: api@internal
-      kind: TraefikService
+    - name: traefik
+      port: 8443
   - match: Host(`traefik.shivpatel.xyz`) && Path(`/`)
     kind: Rule
     middlewares:
     - name: traefik-dashboard-redirect
     services:
-    - name: api@internal
-      kind: TraefikService
+    - name: traefik
+      port: 8443
   tls: {}
