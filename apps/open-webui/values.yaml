@@ -13,8 +13,14 @@ open-webui:
               values:
               - high
 
-    # Don't forget to use your Longhorn storage!
-    persistence:
+    # Enable persistent storage for Ollama models
+    persistentVolume:
       enabled: true
-      storageClass: "longhorn" # Or whatever your Longhorn storageClass is named
-      size: 100Gi # Storage for the models themselves
+      storageClass: "longhorn"
+      size: 100Gi
+
+  # OpenWebUI app persistence (separate from Ollama models)
+  persistence:
+    enabled: true
+    storageClass: "longhorn"
+    size: 2Gi
