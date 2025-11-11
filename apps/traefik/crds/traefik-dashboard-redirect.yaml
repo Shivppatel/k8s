@@ -4,7 +4,6 @@ metadata:
   name: traefik-dashboard-redirect
   namespace: traefik
 spec:
-  redirectRegex:
-    regex: ^https://traefik\.shivpatel\.xyz/?$
-    replacement: https://traefik.shivpatel.xyz/dashboard/
-    permanent: true
+  replacePathRegex:
+    regex: ^/$
+    replacement: /dashboard/
