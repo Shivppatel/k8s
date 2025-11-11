@@ -7,11 +7,9 @@ spec:
   entryPoints:
   - websecure
   routes:
-  - match: Host(`traefik.shivpatel.xyz`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+  - match: Host(`traefik.shivpatel.xyz`)
     kind: Rule
-    middlewares:
-    - name: add-trailing-slash
     services:
-    - name: api@internal
-      kind: TraefikService
+    - name: traefik-dashboard
+      port: 8080
   tls: {}
