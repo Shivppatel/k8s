@@ -2,11 +2,6 @@ argo-cd:
   configs:
     params:
       server.insecure: "true"
-    configs:
-      cm:
-        accounts.readonly: apiKey
-      rbac:
-        policy.csv: "g, readonly, role:readonly"
   redis-ha:
     enabled: true
   controller:
