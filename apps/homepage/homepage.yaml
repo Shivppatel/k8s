@@ -87,24 +87,24 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/portainer-dark.png
             href: https://portainer.shivpatel.xyz
             description: Containers and stuff
-        - Cloudflare:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/cloudflare.png
-            href: https://one.dash.cloudflare.com/
-            description: Tunnels and stuff
-        - Traefik:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/traefik-proxy.png
-            href: https://traefik.shivpatel.xyz/dashboard/#/
-            description: Ingress and stuff
         - Longhorn:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/longhorn.png
             href: https://longhorn.shivpatel.xyz
             description: Storage and stuff
+        - Traefik:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/traefik-proxy.png
+            href: https://traefik.shivpatel.xyz/dashboard/#/
+            description: Ingress and stuff
         - Unifi:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/unifi.png
             href: https://unifi.ui.com
             description: Networking and stuff
 
     - Apps:
+        - Open WebUI:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/open-webui.png
+            href: https://chat.shivpatel.xyz
+            description: Local AI models and stuff
         - Harbor:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/harbor.png
             href: https://harbor.shivpatel.xyz
@@ -251,7 +251,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
-              value: homepage.shivpatel.xyz,shivpatel.xyz # required, may need port. See gethomepage.dev/installation/#homepage_allowed_hosts
+              value: shivpatel.xyz,homepage.shivpatel.xyz # required, may need port. See gethomepage.dev/installation/#homepage_allowed_hosts
           ports:
             - name: http
               containerPort: 3000
@@ -299,7 +299,7 @@ spec:
   entryPoints:
   - websecure
   routes:
-  - match: Host(`homepage.shivpatel.xyz`) || Host(`shivpatel.xyz`)
+  - match: Host(`homepage.shivpatel.xyz`)
     kind: Rule
     services:
     - name: homepage
