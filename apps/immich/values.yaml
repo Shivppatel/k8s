@@ -7,34 +7,34 @@ immich:
         existingClaim: immich-library
   
   # Enable Redis/Valkey for caching and job queues
-  valkey:
-    enabled: false
+    valkey:
+      enabled: false
   
   # Configure external database connection
-  server:
-    env:
-      DB_HOSTNAME:
-        valueFrom:
-          secretKeyRef:
-            name: immich-postgres-app
-            key: host
-      DB_USERNAME:
-        valueFrom:
-          secretKeyRef:
-            name: immich-postgres-app
-            key: username
-      DB_PASSWORD:
-        valueFrom:
-          secretKeyRef:
-            name: immich-postgres-app
-            key: password
-      DB_DATABASE_NAME:
-        valueFrom:
-          secretKeyRef:
-            name: immich-postgres-app
-            key: database
-      DB_PORT:
-        valueFrom:
-          secretKeyRef:
-            name: immich-postgres-app
-            key: port
+    server:
+      env:
+        DB_HOSTNAME:
+          valueFrom:
+            secretKeyRef:
+              name: immich-postgres-app
+              key: host
+        DB_USERNAME:
+          valueFrom:
+            secretKeyRef:
+              name: immich-postgres-app
+              key: username
+        DB_PASSWORD:
+          valueFrom:
+            secretKeyRef:
+              name: immich-postgres-app
+              key: password
+        DB_DATABASE_NAME:
+          valueFrom:
+            secretKeyRef:
+              name: immich-postgres-app
+              key: database
+        DB_PORT:
+          valueFrom:
+            secretKeyRef:
+              name: immich-postgres-app
+              key: port
