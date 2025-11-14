@@ -7,8 +7,8 @@ immich:
         existingClaim: immich-library
   
   # Enable Redis/Valkey for caching and job queues
-  redis:
-    enabled: true
+  valkey:
+    enabled: false
   
   # Configure external database connection
   server:
