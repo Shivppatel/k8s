@@ -1,6 +1,7 @@
 immich:
-  metrics:
-    enabled: true
-  persistence:
-    library:
-      existingClaim: immich-library
+  immich:
+    metrics:
+      enabled: true
+    persistence:
+      library:
+        existingClaim: immich-library
