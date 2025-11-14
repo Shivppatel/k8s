@@ -5,3 +5,35 @@ immich:
     persistence:
       library:
         existingClaim: immich-library
+  
+  # Disable internal PostgreSQL
+  postgresql:
+    enabled: false
+  
+  # Use external CloudNativePG database
+  env:
+    DB_HOSTNAME:
+      valueFrom:
+        secretKeyRef:
+          name: immich-postgres-app
+          key: host
+    DB_USERNAME:
+      valueFrom:
+        secretKeyRef:
+          name: immich-postgres-app
+          key: username
+    DB_PASSWORD:
+      valueFrom:
+        secretKeyRef:
+          name: immich-postgres-app
+          key: password
+    DB_DATABASE_NAME:
+      valueFrom:
+        secretKeyRef:
+          name: immich-postgres-app
+          key: database
+    DB_PORT:
+      valueFrom:
+        secretKeyRef:
+          name: immich-postgres-app
+          key: port
