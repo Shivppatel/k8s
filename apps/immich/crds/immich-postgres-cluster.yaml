@@ -6,6 +6,9 @@ metadata:
 spec:
   instances: 3
   
+  # Use PostgreSQL image with pgvector extension pre-installed
+  imageName: tensorchord/pgvecto-rs:pg16-v0.2.0
+  
   postgresql:
     parameters:
       max_connections: "200"
@@ -20,6 +23,8 @@ spec:
       work_mem: "2621kB"
       min_wal_size: "1GB"
       max_wal_size: "4GB"
+    shared_preload_libraries:
+      - vectors.so
   
   bootstrap:
     initdb:
