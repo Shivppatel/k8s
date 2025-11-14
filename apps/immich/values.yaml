@@ -1,4 +1,4 @@
 immich:
-  metrics:
-    enabled: true
-  
+  immich:
+    metrics:
+      enabled: true
