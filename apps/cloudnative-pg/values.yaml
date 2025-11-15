@@ -1,5 +1,0 @@
-cloudnative-pg:
-  monitoring:
-    grafanaDashboard: 
-      namespace: "observability"
-      create: true
