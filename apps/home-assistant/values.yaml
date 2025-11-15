@@ -2,3 +2,10 @@ home-assistant:
   replicaCount: 3
   persistence:
     enabled: true
+  configuration:
+    enabled: true
+    trusted_proxies:
+      - 10.96.0.0/12
+      - 10.244.0.0/24
+      - 10.244.1.0/24
+      - 10.244.2.0/24
