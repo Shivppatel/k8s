@@ -2,6 +2,8 @@ home-assistant:
   replicaCount: 3
   persistence:
     enabled: true
+  ingress:
+    external: true
   configuration:
     enabled: true
     trusted_proxies:
