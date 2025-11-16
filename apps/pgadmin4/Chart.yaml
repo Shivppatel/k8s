@@ -1,0 +1,14 @@
+apiVersion: v2
+name: pgadmin4
+description: A Helm chart for pgAdmin4
+
+type: application
+
+version: 0.1.0
+
+appVersion: "9.8"
+
+dependencies:
+  - name: pgadmin4
+    repository: https://helm.runix.net/
+    version: 1.50.0
