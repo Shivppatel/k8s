@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: redis-ingress
+  namespace: redis
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - match: Host(`redis.shivpatel.xyz`)
+    kind: Rule
+    services:
+    - name: redis
+      port: 80
+  tls: {}
