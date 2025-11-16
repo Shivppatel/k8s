@@ -1,0 +1,5 @@
+external-secrets:
+  replicaCount: 3
+  leaderElect: true
+  serviceMonitor:
+    enable: true
