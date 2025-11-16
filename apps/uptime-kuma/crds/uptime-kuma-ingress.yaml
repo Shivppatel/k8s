@@ -11,5 +11,5 @@ spec:
     kind: Rule
     services:
     - name: uptime-kuma
-      port: 80
+      port: 3001
   tls: {}
