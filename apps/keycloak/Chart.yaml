@@ -1,0 +1,14 @@
+apiVersion: v2
+name: keycloak
+description: A Helm chart for Keycloak
+
+type: application
+
+version: 0.1.0
+
+appVersion: "26.3.3"
+
+dependencies:
+  - name: keycloak
+    repository: https://charts.bitnami.com/bitnami
+    version: 25.2.0
