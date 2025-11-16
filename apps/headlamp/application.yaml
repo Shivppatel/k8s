@@ -20,5 +20,5 @@ spec:
       - CreateNamespace=true
   destination:
     server: https://kubernetes.default.svc
-    namespace: headlamp
+    namespace: kube-system
 
