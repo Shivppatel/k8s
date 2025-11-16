@@ -1,0 +1,5 @@
+k8s-monitoring:
+  clusterMetrics:
+    enabled: true
+  clusterEvents:
+    enabled: true
