@@ -1,0 +1,4 @@
+rabbitmq:
+  image:
+    registry: docker.io
+    repository: bitnami/rabbitmq
