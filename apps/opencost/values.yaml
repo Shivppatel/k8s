@@ -1,5 +1,8 @@
-pgadmin4:
-  image:
-    registry: registry-1.docker.io
-    # repository: bitnami-legacy/postgresql
-    tag: latest
+opencost:
+  opencost:
+    prometheus:
+      internal:
+        enabled: true
+        serviceName: kube-prometheus-stack-prometheus
+        namespaceName: observability
+        port: 9090
