@@ -1,8 +1,10 @@
 keycloak:
   global:
+    imageRegistry: "docker.io"
     security:
       allowInsecureImages: true
   image:
-    registry: docker.io
     repository: bitnamilegacy/keycloak
     tag: 26.3.3-debian-12-r0
+  postgresql:
+    enabled: false
