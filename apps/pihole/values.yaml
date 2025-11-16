@@ -1,5 +1,5 @@
 pihole:
-  replicaCount: 3
+  replicaCount: 1
   persistentVolumeClaim:
     enabled: true
 
