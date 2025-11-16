@@ -1,2 +1,3 @@
 pihole:
   replicaCount: 3
+  hostname: "pihole.shivpatel.xyz"
