@@ -1,5 +1,5 @@
 redis:
   image:
   registry: registry-1.docker.io
-  repository: bitnami-legacy/redis
+  # repository: bitnami-legacy/redis
   tag: latest
