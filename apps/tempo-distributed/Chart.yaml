@@ -1,0 +1,14 @@
+apiVersion: v2
+name: tempo
+description: A Helm chart for Tempo
+
+type: application
+
+version: 0.1.0
+
+appVersion: "2.9.0"
+
+dependencies:
+  - name: tempo-distributed
+    repository: https://grafana.github.io/helm-charts
+    version: 1.56.1
