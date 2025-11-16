@@ -11,5 +11,5 @@ spec:
     kind: Rule
     services:
     - name: opencost
-      port: 80
+      port: 9003
   tls: {}
