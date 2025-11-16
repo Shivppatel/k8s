@@ -1,2 +1,5 @@
 postgresql:
-  
+  image:
+    registry: registry-1.docker.io
+    repository: bitnami-legacy/postgresql
+    tag: latest

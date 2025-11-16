@@ -1,1 +1,2 @@
 pihole:
+  replicaCount: 3
