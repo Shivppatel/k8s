@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rabbitmq-ingress
+  namespace: rabbitmq
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - match: Host(`rabbitmq.shivpatel.xyz`)
+    kind: Rule
+    services:
+    - name: rabbitmq
+      port: 15672
+  tls: {}
