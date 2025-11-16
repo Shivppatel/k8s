@@ -1,4 +1,7 @@
 rabbitmq:
+  global:
+    security:
+      allowInsecureImages: true
   image:
     registry: docker.io
     repository: bitnami-legacy/rabbitmq
