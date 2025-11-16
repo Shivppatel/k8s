@@ -10,6 +10,6 @@ spec:
   - match: Host(`pihole.shivpatel.xyz`)
     kind: Rule
     services:
-    - name: pihole
+    - name: pihole-web
       port: 80
   tls: {}
