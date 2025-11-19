@@ -1,0 +1,6 @@
+home-assistant:
+  replicaCount: 3
+  persistence:
+    enabled: true
+  serviceMonitor:
+    enabled: true
