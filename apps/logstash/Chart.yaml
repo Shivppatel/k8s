@@ -1,0 +1,14 @@
+apiVersion: v2
+name: logstash
+description: A Helm chart for Logstash
+
+type: application
+
+version: 0.1.0
+
+appVersion: "8.5.1"
+
+dependencies:
+  - name: logstash
+    repository: https://helm.elastic.co
+    version: 8.5.1

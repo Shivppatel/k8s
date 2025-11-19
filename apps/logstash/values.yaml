@@ -1,0 +1,4 @@
+logstash:
+  replicas: 3
+  persistence:
+    enabled: true

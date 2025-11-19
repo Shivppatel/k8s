@@ -1,0 +1,14 @@
+apiVersion: v2
+name: kibana
+description: A Helm chart for Kibana
+
+type: application
+
+version: 0.1.0
+
+appVersion: "8.5.1"
+
+dependencies:
+  - name: kibana
+    repository: https://helm.elastic.co
+    version: 8.5.1

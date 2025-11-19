@@ -1,0 +1,4 @@
+kibana:
+  replicas: 3
+  persistence:
+    enabled: true
