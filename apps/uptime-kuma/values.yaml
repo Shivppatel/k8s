@@ -2,3 +2,5 @@ uptime-kuma:
   image:
     repository: louislam/uptime-kuma
     pullPolicy: IfNotPresent
+  serviceMonitor:
+    enabled: true
