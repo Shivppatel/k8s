@@ -1,5 +1,9 @@
 pihole:
-  replicaCount: 3
+  admin:
+    enabled: true
+    existingSecret: "pihole-custom-password"
+    passwordKey: "password"
+  replicaCount: 1
   persistentVolumeClaim:
     enabled: true
 
