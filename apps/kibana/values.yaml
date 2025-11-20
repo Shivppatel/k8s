@@ -12,9 +12,9 @@ kibana:
 
   extraEnvs:
     - name: ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES
-      value: /usr/share/kibana/config/certs/ca.crt
+      value: /usr/share/kibana/config/custom-certs/ca.crt
 
   secretMounts:
     - name: elasticsearch-master-certs
       secretName: elasticsearch-master-certs
-      path: /usr/share/kibana/config/certs
+      path: /usr/share/kibana/config/custom-certs

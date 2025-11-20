@@ -43,8 +43,8 @@ logstash:
       output {
         elasticsearch {
           hosts => ["https://elasticsearch-master:9200"]
-          user => ''
-          password => ''
+          user => '${ELASTICSEARCH_USERNAME}'
+          password => '${ELASTICSEARCH_PASSWORD}'
           ssl => true
           cacert => '/usr/share/logstash/config/certs/ca.crt'
         }
