@@ -1,4 +1,20 @@
 kibana:
-  replicas: 3
-  persistence:
-    enabled: true
+  replicas: 1
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+  
+  elasticsearchHosts: "https://elasticsearch-master:9200"
+
+  extraEnvs:
+    - name: ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES
+      value: /usr/share/kibana/config/certs/ca.crt
+
+  secretMounts:
+    - name: elasticsearch-master-certs
+      secretName: elasticsearch-master-certs
+      path: /usr/share/kibana/config/certs

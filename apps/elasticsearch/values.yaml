@@ -1,3 +1,20 @@
 elasticsearch:
+  replicas: 3
+  minimumMasterNodes: 2
+  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "2Gi"
+    limits:
+      cpu: "1000m"
+      memory: "2Gi"
+
+  esJavaOpts: "-Xmx1g -Xms1g"
+
   persistence:
     enabled: true
+    size: "10Gi"
+
+  antiAffinity: "soft"
