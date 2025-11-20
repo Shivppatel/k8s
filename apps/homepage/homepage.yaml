@@ -122,10 +122,6 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/home-assistant.png
             href: https://home.shivpatel.xyz
             description: Home and stuff
-        - Homepage:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png
-            href: https://shivpatel.xyz
-            description: Homepage and stuff
         - Open WebUI:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/open-webui.png
             href: https://chat.shivpatel.xyz
