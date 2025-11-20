@@ -11,5 +11,5 @@ spec:
     kind: Rule
     services:
     - name: mongodb
-      port: 9090
+      port: 27017
   tls: {}
