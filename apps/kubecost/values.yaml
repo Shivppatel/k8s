@@ -1,9 +1,10 @@
-global:
-  clusterId: "homelab"
-  prometheus:
-    enabled: true
-    fqdn: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090
-    insecureSkipVerify: true
-  grafana:
-    enabled: false
-    domainName: http://kube-prometheus-grafana.observability.svc.cluster.local:80
+cost-analyzer:
+  global:
+    clusterId: "homelab"
+    prometheus:
+      enabled: true
+      fqdn: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090
+      insecureSkipVerify: true
+    grafana:
+      enabled: false
+      domainName: http://kube-prometheus-grafana.observability.svc.cluster.local:80
