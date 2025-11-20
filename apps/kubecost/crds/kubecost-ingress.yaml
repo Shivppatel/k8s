@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kubecost-ingress
+  namespace: kubecost
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - match: Host(`kubecost.shivpatel.xyz`)
+    kind: Rule
+    services:
+    - name: kubecost
+      port: 9090
+  tls: {}
