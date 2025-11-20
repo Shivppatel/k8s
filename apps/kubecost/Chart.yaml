@@ -6,9 +6,9 @@ type: application
 
 version: 0.1.0
 
-appVersion: "2.9.3"
+appVersion: "v3.0.4"
 
 dependencies:
-  - name: cost-analyzer
-    repository: https://kubecost.github.io/cost-analyzer
-    version: 2.9.3
+  - name: kubecost
+    repository: https://kubecost.github.io/kubecost/
+    version: 3.0.4
