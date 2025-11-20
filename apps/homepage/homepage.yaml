@@ -122,6 +122,10 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pi-hole-unbound.png
             href: https://pihole.shivpatel.xyz/
             description: Holes and stuff
+        - Home Assistant:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/home-assistant.png
+            href: https://home.shivpatel.xyz
+            description: Home and stuff
         - Open WebUI:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/open-webui.png
             href: https://chat.shivpatel.xyz
