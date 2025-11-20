@@ -1,0 +1,4 @@
+minio:
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/minio

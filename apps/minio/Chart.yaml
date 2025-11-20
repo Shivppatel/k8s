@@ -1,0 +1,14 @@
+apiVersion: v2
+name: minio
+description: A Helm chart for MiniO
+
+type: application
+
+version: 0.1.0
+
+appVersion: "2025.7.23"
+
+dependencies:
+  - name: minio
+    repository: https://charts.bitnami.com/bitnami
+    version: 17.0.21
