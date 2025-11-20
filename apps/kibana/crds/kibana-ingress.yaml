@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kibana-ingress
+  namespace: logging
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - match: Host(`kibana.shivpatel.xyz`)
+    kind: Rule
+    services:
+    - name: kibana-kibana
+      port: 5601
+  tls: {}
