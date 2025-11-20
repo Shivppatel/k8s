@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: minio-ingress
+  namespace: minio
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - match: Host(`minio.shivpatel.xyz`)
+    kind: Rule
+    services:
+    - name: minio-console
+      port: 9090
+  tls: {}
