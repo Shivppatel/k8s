@@ -54,6 +54,10 @@ data:
               href: https://github.com/Shivppatel/k8s/actions
   services.yaml: |
     - Observability:
+        - Alloy:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/alloy.png
+            href: https://alloy.shivpatel.xyz
+            description: Collectors and stuff
         - Datadog:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/datadog.png
             href: https://app.datadoghq.com/dashboard/lists?p=1
@@ -62,26 +66,22 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
             href: https://grafana.shivpatel.xyz
             description: Dashbaords and stuff
-        - Prometheus:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png
-            href: https://prometheus.shivpatel.xyz
-            description: Metrics and stuff
-        - Alloy:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/alloy.png
-            href: https://alloy.shivpatel.xyz
-            description: Collectors and stuff
-        - Uptime Kuma:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/uptime-kuma.png
-            href: https://uptime.shivpatel.xyz/dashboard
-            description: Uptime and stuff
-        - Policy Reporter:
-            icon: https://kyverno.github.io/policy-reporter-docs/logo.png
-            href: https://policy-reporter.shivpatel.xyz
-            description: Policies and stuff
         - Kibana:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kibana.png
             href: https://kibana.shivpatel.xyz
             description: ES dashboards and stuff
+        - Policy Reporter:
+            icon: https://kyverno.github.io/policy-reporter-docs/logo.png
+            href: https://policy-reporter.shivpatel.xyz
+            description: Policies and stuff
+        - Prometheus:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png
+            href: https://prometheus.shivpatel.xyz
+            description: Metrics and stuff
+        - Uptime Kuma:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/uptime-kuma.png
+            href: https://uptime.shivpatel.xyz/dashboard
+            description: Uptime and stuff
 
     - Admin:
         - Argocd:
@@ -92,64 +92,64 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/headlamp.png
             href: https://headlamp.shivpatel.xyz
             description: Clusters and stuff
-        - Portainer:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/portainer-dark.png
-            href: https://portainer.shivpatel.xyz
-            description: Containers and stuff
-        - Vault:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/hashicorp-vault.png
-            href: https://vault.shivpatel.xyz
-            description: Secrets and stuff
-        - Longhorn:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/longhorn.png
-            href: https://longhorn.shivpatel.xyz
-            description: Storage and stuff
-        - Traefik:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/traefik-proxy.png
-            href: https://traefik.shivpatel.xyz/dashboard/#/
-            description: Ingress and stuff
         - Keycloak:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/keycloak.png
             href: https://keycloak.shivpatel.xyz
             description: Access management and stuff
+        - Longhorn:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/longhorn.png
+            href: https://longhorn.shivpatel.xyz
+            description: Storage and stuff
+        - Portainer:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/portainer-dark.png
+            href: https://portainer.shivpatel.xyz
+            description: Containers and stuff
+        - Traefik:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/traefik-proxy.png
+            href: https://traefik.shivpatel.xyz/dashboard/#/
+            description: Ingress and stuff
+        - Vault:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/hashicorp-vault.png
+            href: https://vault.shivpatel.xyz
+            description: Secrets and stuff
 
     - Apps:
-        - Unifi:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/unifi.png
-            href: https://unifi.ui.com
-            description: Networking and stuff
-        - Pi Hole:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pi-hole-unbound.png
-            href: https://pihole.shivpatel.xyz/
-            description: Holes and stuff
-        - Home Assistant:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/home-assistant.png
-            href: https://home.shivpatel.xyz
-            description: Home and stuff
-        - Open WebUI:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/open-webui.png
-            href: https://chat.shivpatel.xyz
-            description: Local AI models and stuff
-        - pgAdmin:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pgadmin.png
-            href: https://pgadmin.shivpatel.xyz/
-            description: DBs and stuff
-        - RabbitMQ:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/rabbitmq.png
-            href: https://rabbitmq.shivpatel.xyz/
-            description: Messages and stuff
         - Harbor:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/harbor.png
             href: https://harbor.shivpatel.xyz
             description: Registries and stuff
-        - OpenCost:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/opencost.png
-            href: https://opencost.shivpatel.xyz/
-            description: Costs and stuff
+        - Home Assistant:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/home-assistant.png
+            href: https://home.shivpatel.xyz
+            description: Home and stuff
         - Homepage:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png
             href: https://shivpatel.xyz
             description: Homepage and stuff
+        - Open WebUI:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/open-webui.png
+            href: https://chat.shivpatel.xyz
+            description: Local AI models and stuff
+        - OpenCost:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/opencost.png
+            href: https://opencost.shivpatel.xyz/
+            description: Costs and stuff
+        - pgAdmin:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pgadmin.png
+            href: https://pgadmin.shivpatel.xyz/
+            description: DBs and stuff
+        - Pi-hole:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pi-hole-unbound.png
+            href: https://pihole.shivpatel.xyz/
+            description: Holes and stuff
+        - RabbitMQ:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/rabbitmq.png
+            href: https://rabbitmq.shivpatel.xyz/
+            description: Messages and stuff
+        - Unifi:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/unifi.png
+            href: https://unifi.ui.com
+            description: Networking and stuff
 
   widgets.yaml: |
     - resources:
