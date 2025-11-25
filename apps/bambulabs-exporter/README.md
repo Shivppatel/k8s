@@ -7,6 +7,7 @@ This Helm chart deploys the BambuLabs Prometheus Exporter to Kubernetes.
 - Kubernetes cluster
 - ArgoCD (for GitOps deployment)
 - Prometheus Operator (for ServiceMonitor)
+- Docker Hub credentials (for private image access)
 
 ## Configuration
 
@@ -25,9 +26,28 @@ env:
         key: access-code
 ```
 
-### Creating the Secret
+### Creating Secrets
 
-Before deploying, create a Kubernetes secret with your printer's access code:
+Before deploying, you need to create two secrets:
+
+#### 1. Docker Hub Secret (for private image access)
+
+```bash
+kubectl create secret docker-registry dockerhub-secret \
+  --docker-server=https://index.docker.io/v1/ \
+  --docker-username=YOUR_DOCKERHUB_USERNAME \
+  --docker-password=YOUR_DOCKERHUB_PAT \
+  --docker-email=YOUR_EMAIL \
+  --namespace=bambulabs-exporter
+```
+
+Or use the provided script:
+```bash
+# Edit the script with your credentials first
+./create-dockerhub-secret.sh
+```
+
+#### 2. BambuLabs Secret (optional, if needed by exporter)
 
 ```bash
 kubectl create secret generic bambulabs-secret \
