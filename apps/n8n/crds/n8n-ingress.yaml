@@ -11,5 +11,5 @@ spec:
     kind: Rule
     services:
     - name: n8n
-      port: 80
+      port: 5678
   tls: {}
