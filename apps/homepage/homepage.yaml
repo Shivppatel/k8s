@@ -122,6 +122,10 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/home-assistant.png
             href: https://home.shivpatel.xyz
             description: Home and stuff
+        - Jellyfin:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyfin.png
+            href: https://jelly.shivpatel.xyz
+            description: Media and stuff
         - MiniO:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/minio.png
             href: https://minio.shivpatel.xyz/
