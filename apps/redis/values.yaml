@@ -3,6 +3,6 @@ redis:
     security:
       allowInsecureImages: true
   image:
-  registry: registry-1.docker.io
-  repository: bitnamilegacy/redis
-  tag: latest
+    registry: registry-1.docker.io
+    repository: bitnamilegacy/redis
+    tag: latest
