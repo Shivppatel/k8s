@@ -1,2 +1,5 @@
 nextcloud:
-  
+  nextcloud:
+    host: nextcloud.shivpatel.xyz
+    username: admin
+    password: changeme
