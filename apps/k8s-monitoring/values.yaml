@@ -10,6 +10,8 @@ k8s-monitoring:
       type: loki
       url: http://loki.observability.svc.cluster.local:3100/loki/api/v1/push
 
+  alloy-metrics:
+    enabled: true
   clusterMetrics:
     enabled: true
   clusterEvents:
