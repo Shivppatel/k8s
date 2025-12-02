@@ -11,5 +11,5 @@ spec:
     kind: Rule
     services:
     - name: nextcloud
-      port: 80
+      port: 8080
   tls: {}
