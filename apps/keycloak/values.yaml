@@ -7,7 +7,7 @@ keycloak:
     repository: bitnamilegacy/keycloak
     tag: 26.3.3-debian-12-r0
   externalDatabase:
-    host: postgresql.postgresql.svc.cluster.local
+    host: postgresql-rw.postgresql.svc.cluster.local
     port: 5432
     database: keycloak
     existingSecret: "keycloak-db-secret"
