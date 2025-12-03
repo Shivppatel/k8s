@@ -2,6 +2,8 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: postgresql
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   instances: 1
   
