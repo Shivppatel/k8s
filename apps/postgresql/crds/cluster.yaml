@@ -16,15 +16,11 @@ spec:
   superuserSecret:
     name: postgresql-superuser
   
-  # Bootstrap - just create extensions
+  # Bootstrap - create databases and extensions
   bootstrap:
     initdb:
       database: postgres
       owner: postgres
-      postInitTemplateSQL:
-        # Uncomment when using pgvector-enabled image
-        # - CREATE EXTENSION IF NOT EXISTS vector
-        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
       postInitSQL:
         - CREATE DATABASE immich
         - CREATE DATABASE keycloak
