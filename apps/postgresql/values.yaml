@@ -20,6 +20,12 @@ postgresql:
         init-extensions.sql: |
           CREATE EXTENSION IF NOT EXISTS vector;
           CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
+    extraVolumeMounts:
+      - name: run
+        mountPath: /var/run/postgresql
+    extraVolumes:
+      - name: run
+        emptyDir: {}
     persistence:
       enabled: true
       size: 10Gi
