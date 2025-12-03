@@ -8,7 +8,12 @@ immich:
           env:
             REDIS_HOSTNAME: '{{ printf "%s-valkey" .Release.Name }}'
             IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
-            # Add the env vars to connect to your database here.
+            # Database connection - UPDATE THESE VALUES
+            DB_HOSTNAME: "your-postgres-host"  # e.g., postgres.immich.svc.cluster.local
+            DB_PORT: "5432"
+            DB_DATABASE_NAME: "immich"
+            DB_USERNAME: "immich"
+            DB_PASSWORD: "your-password"  # Consider using a secret reference instead
 
   immich:
     metrics:
@@ -34,7 +39,7 @@ immich:
   # Dependencies
 
   valkey:
-    enabled: false
+    enabled: true
     controllers:
       main:
         containers:
