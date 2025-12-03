@@ -16,7 +16,7 @@ spec:
   superuserSecret:
     name: postgresql-superuser
   
-  # Bootstrap with users and databases
+  # Bootstrap - just create extensions
   bootstrap:
     initdb:
       database: postgres
@@ -25,23 +25,21 @@ spec:
         # Uncomment when using pgvector-enabled image
         # - CREATE EXTENSION IF NOT EXISTS vector
         - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
-      postInitApplicationSQL:
-        # Create immich user and database
-        - CREATE USER immich
-        - ALTER USER immich WITH PASSWORD :'IMMICH_PASSWORD'
-        - CREATE DATABASE immich OWNER immich
-        - GRANT ALL PRIVILEGES ON DATABASE immich TO immich
-        # Create keycloak user and database  
-        - CREATE USER keycloak
-        - ALTER USER keycloak WITH PASSWORD :'KEYCLOAK_PASSWORD'
-        - CREATE DATABASE keycloak OWNER keycloak
-        - GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak
-      postInitApplicationSQLRefs:
-        secretRefs:
-          - name: postgresql-app-passwords
-            key: IMMICH_PASSWORD
-          - name: postgresql-app-passwords
-            key: KEYCLOAK_PASSWORD
+      postInitSQL:
+        - CREATE DATABASE immich
+        - CREATE DATABASE keycloak
+
+  # Managed roles - CNPG handles user creation/password sync
+  managed:
+    roles:
+      - name: immich
+        login: true
+        passwordSecret:
+          name: immich-db-secret
+      - name: keycloak
+        login: true
+        passwordSecret:
+          name: keycloak-db-secret
 
   storage:
     size: 10Gi
