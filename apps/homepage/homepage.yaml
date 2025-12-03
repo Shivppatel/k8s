@@ -118,18 +118,14 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/harbor.png
             href: https://harbor.shivpatel.xyz
             description: Registries and stuff
-        - Home Assistant:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/home-assistant.png
-            href: https://home.shivpatel.xyz
-            description: Home and stuff
-        - Jellyfin:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyfin.png
-            href: https://jelly.shivpatel.xyz
-            description: Media and stuff
         - MiniO:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/minio.png
             href: https://minio.shivpatel.xyz/
             description: Objects and stuff
+        - n8n:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/n8n.png
+            href: https://n8n.shivpatel.xyz
+            description: Automations and stuff
         - Open WebUI:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/open-webui.png
             href: https://chat.shivpatel.xyz
@@ -142,14 +138,32 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pgadmin.png
             href: https://pgadmin.shivpatel.xyz/
             description: DBs and stuff
-        - Pi-hole:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pi-hole-unbound.png
-            href: https://pihole.shivpatel.xyz/
-            description: Holes and stuff
         - RabbitMQ:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/rabbitmq.png
             href: https://rabbitmq.shivpatel.xyz/
             description: Messages and stuff
+
+    - Home:
+        - Pi-hole:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pi-hole-unbound.png
+            href: https://pihole.shivpatel.xyz/
+            description: Holes and stuff
+        - Nextcloud:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/nextcloud.png
+            href: https://nextcloud.shivpatel.xyz
+            description: Personal cloud and stuff
+        - Home Assistant:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/home-assistant.png
+            href: https://home.shivpatel.xyz
+            description: IoT and stuff
+        - Immich:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/immich.png
+            href: https://immich.shivpatel.xyz
+            description: Photos and stuff
+        - Jellyfin:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyfin.png
+            href: https://jelly.shivpatel.xyz
+            description: Linux ISOs and stuff
         - Unifi:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/unifi.png
             href: https://unifi.ui.com

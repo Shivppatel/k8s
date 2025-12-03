@@ -1,5 +1,15 @@
 postgresql:
   image:
     registry: registry-1.docker.io
-    # repository: bitnami-legacy/postgresql
     tag: latest
+
+  auth:
+    postgresPassword: "change-me-admin"  # superuser password
+    username: "immich"
+    password: "change-me-immich"  # TODO: use a secret in production
+    database: "immich"
+
+  primary:
+    persistence:
+      enabled: true
+      size: 10Gi
