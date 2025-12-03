@@ -1,3 +1,7 @@
+global:
+  security:
+    allowInsecureImages: true
+
 postgresql:
   image:
     registry: docker.io
