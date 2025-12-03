@@ -15,6 +15,12 @@ postgresql:
     database: "immich"
 
   primary:
+    livenessProbe:
+      enabled: false
+    readinessProbe:
+      enabled: false
+    startupProbe:
+      enabled: false
     initdb:
       scripts:
         init-immich.sh: |
