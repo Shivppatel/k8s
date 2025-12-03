@@ -1,0 +1,45 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+spec:
+  instances: 1
+  
+  # Note: For pgvector support, you may need a custom image
+  # Options: ghcr.io/tensorchord/cloudnative-pgvecto.rs:17-v0.4.0 (uses 'vectors' extension)
+  # Or build custom image with pgvector
+  imageName: ghcr.io/cloudnative-pg/postgresql:17
+  
+  # Use superuser credentials from Vault
+  superuserSecret:
+    name: postgresql-superuser
+  
+  # Bootstrap with users and databases
+  bootstrap:
+    initdb:
+      database: postgres
+      owner: postgres
+      postInitTemplateSQL:
+        # Uncomment when using pgvector-enabled image
+        # - CREATE EXTENSION IF NOT EXISTS vector
+        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
+      postInitApplicationSQL:
+        # Create immich user and database
+        - CREATE USER immich
+        - ALTER USER immich WITH PASSWORD :'IMMICH_PASSWORD'
+        - CREATE DATABASE immich OWNER immich
+        - GRANT ALL PRIVILEGES ON DATABASE immich TO immich
+        # Create keycloak user and database  
+        - CREATE USER keycloak
+        - ALTER USER keycloak WITH PASSWORD :'KEYCLOAK_PASSWORD'
+        - CREATE DATABASE keycloak OWNER keycloak
+        - GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak
+      postInitApplicationSQLRefs:
+        secretRefs:
+          - name: postgresql-app-passwords
+            key: IMMICH_PASSWORD
+          - name: postgresql-app-passwords
+            key: KEYCLOAK_PASSWORD
+
+  storage:
+    size: 10Gi

@@ -8,17 +8,16 @@ spec:
   source:
     repoURL: git@github.com:shivppatel/k8s.git
     targetRevision: main
-    path: apps/postgresql
-    helm:
-      valueFiles:
-        - values.yaml
+    path: apps/postgresql/crds
+    directory:
+      recurse: false
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - Replace=true
+      - ServerSideApply=true
   destination:
     server: https://kubernetes.default.svc
     namespace: postgresql
