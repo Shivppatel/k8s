@@ -18,16 +18,38 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+      - RespectIgnoreDifferences=true
   destination:
     server: https://kubernetes.default.svc
     namespace: postgresql
-  # Ignore operator-managed fields that cause perpetual diffs
+  # Ignore operator-managed and normalized fields
   ignoreDifferences:
     - group: external-secrets.io
       kind: ExternalSecret
       jqPathExpressions:
         - .status
+        - .spec.data[].remoteRef.conversionStrategy
+        - .spec.data[].remoteRef.decodingStrategy
+        - .spec.data[].remoteRef.metadataPolicy
     - group: postgresql.cnpg.io
       kind: Cluster
+      managedFieldsManagers:
+        - cnpg-controller-manager
       jqPathExpressions:
         - .status
+        - .spec.affinity
+        - .spec.enablePDB
+        - .spec.failoverDelay
+        - .spec.logLevel
+        - .spec.maxSyncReplicas
+        - .spec.minSyncReplicas
+        - .spec.monitoring
+        - .spec.postgresGID
+        - .spec.postgresUID
+        - .spec.postgresql
+        - .spec.bootstrap.initdb.encoding
+        - .spec.bootstrap.initdb.localeCType
+        - .spec.bootstrap.initdb.localeCollate
+        - .spec.managed.roles[].connectionLimit
+        - .spec.managed.roles[].ensure
+        - .spec.managed.roles[].inherit
