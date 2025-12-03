@@ -366,8 +366,7 @@ n8n:
     extraEnvVars: {}
 
     # -- Extra secrets for environment variables
-    extraSecretNamesForEnvFrom:
-      - n8n-db-secret
+    extraSecretNamesForEnvFrom: []
 
     # -- Additional volumes on the output Deployment definition.
     volumes: []
@@ -543,8 +542,7 @@ n8n:
     extraEnvVars: {}
 
     # -- Extra secrets for environment variables
-    extraSecretNamesForEnvFrom:
-      - n8n-db-secret
+    extraSecretNamesForEnvFrom: []
 
     # -- Additional volumes on the output Deployment definition.
     volumes: []
@@ -764,8 +762,7 @@ n8n:
     extraEnvVars: {}
 
     # -- Extra secrets for environment variables
-    extraSecretNamesForEnvFrom:
-      - n8n-db-secret
+    extraSecretNamesForEnvFrom: []
 
     # -- Additional volumes on the output Deployment definition.
     volumes: []
@@ -1084,9 +1081,9 @@ n8n:
   externalPostgresql:
     # -- External PostgreSQL server host
     host: "postgresql-rw.postgresql.svc.cluster.local"
-    # -- External PostgreSQL username (loaded from secret via extraSecretNamesForEnvFrom)
-    username: ""
-    # -- External PostgreSQL password (loaded from secret via extraSecretNamesForEnvFrom)
+    # -- External PostgreSQL username
+    username: "n8n"
+    # -- External PostgreSQL password
     password: ""
     # -- External PostgreSQL server port
     port: 5432
@@ -1094,7 +1091,7 @@ n8n:
     database: n8n
     # -- The name of an existing secret with PostgreSQL (must contain key `postgres-password`) and credentials.
     # When it's set, the `externalPostgresql.password` parameter is ignored
-    existingSecret: ""
+    existingSecret: "n8n-db-secret"
 
   # -- Minio configuration
   minio:
