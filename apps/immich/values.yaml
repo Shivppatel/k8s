@@ -12,8 +12,9 @@ immich:
             DB_HOSTNAME: "postgresql.postgresql.svc.cluster.local"
             DB_PORT: "5432"
             DB_DATABASE_NAME: "immich"
-            DB_USERNAME: "immich"
-            DB_PASSWORD: "change-me-immich"  # Must match postgresql values.yaml
+          envFrom:
+            - secretRef:
+                name: immich-db-secret
 
   immich:
     metrics:
