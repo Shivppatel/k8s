@@ -1,47 +1,11 @@
-global:
-  security:
-    allowInsecureImages: true
+image:
+  repository: pgvector/pgvector
+  tag: pg17
 
-postgresql:
-  image:
-    registry: docker.io
-    repository: pgvector/pgvector
-    tag: pg17
+auth:
+  username: "immich"
+  password: "change-me-immich"  # TODO: use a secret in production
+  database: "immich"
 
-  auth:
-    postgresPassword: "change-me-admin"  # superuser password
-    username: "immich"
-    password: "change-me-immich"  # TODO: use a secret in production
-    database: "immich"
-
-  primary:
-    livenessProbe:
-      enabled: false
-    readinessProbe:
-      enabled: false
-    startupProbe:
-      enabled: false
-    initdb:
-      scripts:
-        init-immich.sh: |
-          #!/bin/bash
-          set -e
-          psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
-            CREATE USER immich WITH PASSWORD 'change-me-immich';
-            CREATE DATABASE immich OWNER immich;
-          EOSQL
-          psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "immich" <<-EOSQL
-            CREATE EXTENSION IF NOT EXISTS vector;
-            CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
-            GRANT ALL PRIVILEGES ON DATABASE immich TO immich;
-            GRANT ALL ON SCHEMA public TO immich;
-          EOSQL
-    extraVolumeMounts:
-      - name: run
-        mountPath: /var/run/postgresql
-    extraVolumes:
-      - name: run
-        emptyDir: {}
-    persistence:
-      enabled: true
-      size: 10Gi
+persistence:
+  size: 10Gi
