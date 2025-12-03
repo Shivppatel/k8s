@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgresql-setup
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: setup
+          image: ghcr.io/cloudnative-pg/postgresql:17
+          env:
+            - name: PGHOST
+              value: postgresql-rw.postgresql.svc.cluster.local
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-superuser
+                  key: password
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+              echo "Setting up immich database..."
+              psql -d immich -c "CREATE EXTENSION IF NOT EXISTS vector;"
+              psql -d immich -c "ALTER SCHEMA public OWNER TO immich;"
+              psql -d immich -c "GRANT ALL ON SCHEMA public TO immich;"
+              
+              echo "Setting up keycloak database..."
+              psql -d keycloak -c "ALTER SCHEMA public OWNER TO keycloak;"
+              psql -d keycloak -c "GRANT ALL ON SCHEMA public TO keycloak;"
+              
+              echo "Setup complete!"

@@ -16,16 +16,20 @@ spec:
   superuserSecret:
     name: postgresql-superuser
   
-  # Bootstrap - create databases and extensions
+  # Bootstrap - create users, databases, and set permissions
   bootstrap:
     initdb:
       database: postgres
       owner: postgres
       postInitSQL:
-        - CREATE DATABASE immich
-        - CREATE DATABASE keycloak
+        # Create users (managed roles will sync passwords later)
+        - CREATE USER immich WITH PASSWORD 'temp'
+        - CREATE USER keycloak WITH PASSWORD 'temp'
+        # Create databases with correct ownership
+        - CREATE DATABASE immich OWNER immich
+        - CREATE DATABASE keycloak OWNER keycloak
 
-  # Managed roles - CNPG handles user creation/password sync
+  # Managed roles - CNPG syncs passwords from secrets
   managed:
     roles:
       - name: immich
