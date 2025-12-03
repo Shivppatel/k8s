@@ -1,7 +1,8 @@
 postgresql:
   image:
-    registry: registry-1.docker.io
-    tag: latest
+    registry: docker.io
+    repository: pgvector/pgvector
+    tag: pg17
 
   auth:
     postgresPassword: "change-me-admin"  # superuser password
@@ -10,6 +11,11 @@ postgresql:
     database: "immich"
 
   primary:
+    initdb:
+      scripts:
+        init-extensions.sql: |
+          CREATE EXTENSION IF NOT EXISTS vector;
+          CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
     persistence:
       enabled: true
       size: 10Gi
