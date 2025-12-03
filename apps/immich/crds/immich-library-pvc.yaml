@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: immich-library
-  namespace: limmich
+  namespace: immich
 spec:
   accessModes:
     - ReadWriteOnce

@@ -11,5 +11,5 @@ spec:
     kind: Rule
     services:
     - name: immich
-      port: 80
+      port: 2283
   tls: {}
