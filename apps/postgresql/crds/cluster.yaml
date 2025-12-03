@@ -24,9 +24,11 @@ spec:
         # Create users (managed roles will sync passwords later)
         - CREATE USER immich WITH PASSWORD 'temp'
         - CREATE USER keycloak WITH PASSWORD 'temp'
+        - CREATE USER n8n WITH PASSWORD 'temp'
         # Create databases with correct ownership
         - CREATE DATABASE immich OWNER immich
         - CREATE DATABASE keycloak OWNER keycloak
+        - CREATE DATABASE n8n OWNER n8n
 
   # Managed roles - CNPG syncs passwords from secrets
   managed:
@@ -39,6 +41,10 @@ spec:
         login: true
         passwordSecret:
           name: keycloak-db-secret
+      - name: n8n
+        login: true
+        passwordSecret:
+          name: n8n-db-secret
 
   storage:
     size: 10Gi

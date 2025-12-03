@@ -174,7 +174,7 @@ n8n:
     # -- Prefix to use for table names.
     tablePrefix: ""
     # -- Type of database to use. Valid values 'sqlite' | 'postgresdb'
-    type: sqlite
+    type: postgresdb
 
     logging:
       # -- Whether database logging is enabled.
@@ -366,7 +366,8 @@ n8n:
     extraEnvVars: {}
 
     # -- Extra secrets for environment variables
-    extraSecretNamesForEnvFrom: []
+    extraSecretNamesForEnvFrom:
+      - n8n-db-secret
 
     # -- Additional volumes on the output Deployment definition.
     volumes: []
@@ -542,7 +543,8 @@ n8n:
     extraEnvVars: {}
 
     # -- Extra secrets for environment variables
-    extraSecretNamesForEnvFrom: []
+    extraSecretNamesForEnvFrom:
+      - n8n-db-secret
 
     # -- Additional volumes on the output Deployment definition.
     volumes: []
@@ -762,7 +764,8 @@ n8n:
     extraEnvVars: {}
 
     # -- Extra secrets for environment variables
-    extraSecretNamesForEnvFrom: []
+    extraSecretNamesForEnvFrom:
+      - n8n-db-secret
 
     # -- Additional volumes on the output Deployment definition.
     volumes: []
@@ -1080,10 +1083,10 @@ n8n:
   # -- External PostgreSQL parameters
   externalPostgresql:
     # -- External PostgreSQL server host
-    host: ""
-    # -- External PostgreSQL username
-    username: "postgres"
-    # -- External PostgreSQL password
+    host: "postgresql-rw.postgresql.svc.cluster.local"
+    # -- External PostgreSQL username (loaded from secret via extraSecretNamesForEnvFrom)
+    username: ""
+    # -- External PostgreSQL password (loaded from secret via extraSecretNamesForEnvFrom)
     password: ""
     # -- External PostgreSQL server port
     port: 5432

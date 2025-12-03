@@ -44,4 +44,8 @@ spec:
               psql -d keycloak -c "ALTER SCHEMA public OWNER TO keycloak;"
               psql -d keycloak -c "GRANT ALL ON SCHEMA public TO keycloak;"
               
+              echo "Setting up n8n database..."
+              psql -d n8n -c "ALTER SCHEMA public OWNER TO n8n;"
+              psql -d n8n -c "GRANT ALL ON SCHEMA public TO n8n;"
+              
               echo "Setup complete!"
