@@ -21,4 +21,4 @@ spec:
       - Replace=true
   destination:
     server: https://kubernetes.default.svc
-    namespace: limmich
+    namespace: immich
