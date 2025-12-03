@@ -12,9 +12,8 @@ spec:
   # Or build custom image with pgvector
   imageName: ghcr.io/cloudnative-pg/postgresql:17
   
-  # Use superuser credentials from Vault
-  superuserSecret:
-    name: postgresql-superuser
+  # Let CNPG manage superuser - creates postgresql-superuser secret automatically
+  enableSuperuserAccess: true
   
   # Bootstrap - create users, databases, and set permissions
   bootstrap:

@@ -17,8 +17,12 @@ spec:
           env:
             - name: PGHOST
               value: postgresql-rw.postgresql.svc.cluster.local
+            # CNPG auto-generates this secret: <cluster-name>-superuser
             - name: PGUSER
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-superuser
+                  key: username
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
