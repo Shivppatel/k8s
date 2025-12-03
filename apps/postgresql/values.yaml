@@ -17,9 +17,19 @@ postgresql:
   primary:
     initdb:
       scripts:
-        init-extensions.sql: |
-          CREATE EXTENSION IF NOT EXISTS vector;
-          CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
+        init-immich.sh: |
+          #!/bin/bash
+          set -e
+          psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+            CREATE USER immich WITH PASSWORD 'change-me-immich';
+            CREATE DATABASE immich OWNER immich;
+          EOSQL
+          psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "immich" <<-EOSQL
+            CREATE EXTENSION IF NOT EXISTS vector;
+            CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
+            GRANT ALL PRIVILEGES ON DATABASE immich TO immich;
+            GRANT ALL ON SCHEMA public TO immich;
+          EOSQL
     extraVolumeMounts:
       - name: run
         mountPath: /var/run/postgresql
