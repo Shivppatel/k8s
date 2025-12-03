@@ -33,6 +33,14 @@ spec:
             - -c
             - |
               set -e
+              
+              # Ensure all users and databases exist (idempotent)
+              for app in immich keycloak n8n; do
+                echo "Ensuring $app user and database exist..."
+                psql -c "DO \$\$ BEGIN CREATE USER $app WITH PASSWORD 'temp'; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$;"
+                psql -c "SELECT 1 FROM pg_database WHERE datname='$app'" | grep -q 1 || psql -c "CREATE DATABASE $app OWNER $app;"
+              done
+              
               echo "Setting up immich database..."
               psql -d immich -c "CREATE EXTENSION IF NOT EXISTS cube;"
               psql -d immich -c "CREATE EXTENSION IF NOT EXISTS earthdistance;"
