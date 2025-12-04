@@ -10,6 +10,6 @@ spec:
   - match: Host(`gitea.shivpatel.xyz`)
     kind: Rule
     services:
-    - name: gitea
-      port: 80
+    - name: gitea-http
+      port: 3000
   tls: {}
