@@ -5,3 +5,9 @@ rabbitmq:
   image:
     registry: docker.io
     repository: bitnamilegacy/rabbitmq
+  auth:
+    # Use existing secret from Vault via ExternalSecret
+    existingPasswordSecret: rabbitmq
+    existingErlangSecret: rabbitmq
+    # Force password update even with existing persisted data
+    forcePassword: true
