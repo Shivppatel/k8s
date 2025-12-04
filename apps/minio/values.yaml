@@ -1,4 +1,8 @@
 minio:
+  # Use Recreate strategy for single-replica with RWO PVC
+  deployment:
+    updateStrategy:
+      type: Recreate
   image:
     registry: docker.io
     repository: bitnamilegacy/minio
