@@ -42,7 +42,7 @@ gitlab:
       externalIP:
       ssh:
       gitlab: {}
-      minio: minio.minio.svc.cluster.local
+      minio: {}
       registry: {}
       tls: {}
       smartcard: {}
@@ -216,7 +216,7 @@ gitlab:
 
     ## https://docs.gitlab.com/charts/charts/globals#configure-minio-settings
     minio:
-      enabled: false
+      enabled: true
       credentials: {}
         # secret:
 
