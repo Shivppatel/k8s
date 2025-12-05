@@ -216,7 +216,7 @@ gitlab:
 
     ## https://docs.gitlab.com/charts/charts/globals#configure-minio-settings
     minio:
-      enabled: true
+      enabled: false
       credentials: {}
         # secret:
 
