@@ -116,10 +116,6 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/traefik-proxy.png
             href: https://traefik.shivpatel.xyz/dashboard/#/
             description: Ingress and stuff
-        - Vault:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/hashicorp-vault.png
-            href: https://vault.shivpatel.xyz
-            description: Secrets and stuff
 
     - Apps:
         - MiniO:
@@ -146,6 +142,10 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/rabbitmq.png
             href: https://rabbitmq.shivpatel.xyz/
             description: Messages and stuff
+        - Vault:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/hashicorp-vault.png
+            href: https://vault.shivpatel.xyz
+            description: Secrets and stuff
 
     - Home:
         - Pi-hole:
