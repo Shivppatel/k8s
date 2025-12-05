@@ -1103,7 +1103,7 @@ gitlab:
   ## Installation & configuration of stable/prometheus
   ## See dependencies in Chart.yaml for current version
   prometheus:
-    install: true
+    install: false
     rbac:
       create: true
     alertmanager:
@@ -1266,7 +1266,7 @@ gitlab:
   ## https://docs.gitlab.com/charts/architecture/decisions#redis
   ## https://docs.gitlab.com/charts/installation/deployment.html#redis
   redis:
-    install: true
+    install: false
     image:
       repository: bitnamilegacy/redis
     auth:
@@ -1300,7 +1300,7 @@ gitlab:
   ## Installation & configuration of stable/postgresql
   ## See dependencies in Chart.yaml for current version
   postgresql:
-    install: true
+    install: false
     auth:
       ## These need to be set, for the sake of bitnami/postgresql upgrade patterns.
       ## They are overridden by use of `existingSecret`
