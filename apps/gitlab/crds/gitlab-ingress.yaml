@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: gitlab-ingress
+  namespace: gitea
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - match: Host(`gitlab.shivpatel.xyz`)
+    kind: Rule
+    services:
+    - name: gitlab-http
+      port: 3000
+  tls: {}
