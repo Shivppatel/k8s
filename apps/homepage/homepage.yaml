@@ -88,10 +88,6 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/argo-cd.png
             href: https://argocd.shivpatel.xyz
             description: ArgoCD and stuff
-        - GitLab:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gitlab.png
-            href: https://gitlab.shivpatel.xyz
-            description: Source control and stuff
         - Gitea:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gitea.png
             href: https://gitea.shivpatel.xyz
