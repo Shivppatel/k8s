@@ -88,6 +88,18 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/argo-cd.png
             href: https://argocd.shivpatel.xyz
             description: ArgoCD and stuff
+        - GitLab:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gitlab.png
+            href: https://gitlab.shivpatel.xyz
+            description: Source control and stuff
+        - Gitea:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gitea.png
+            href: https://gitea.shivpatel.xyz
+            description: Source control and stuff
+        - Harbor:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/harbor.png
+            href: https://harbor.shivpatel.xyz
+            description: Registries and stuff
         - Headlamp:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/headlamp.png
             href: https://headlamp.shivpatel.xyz
@@ -114,10 +126,6 @@ data:
             description: Secrets and stuff
 
     - Apps:
-        - Harbor:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/harbor.png
-            href: https://harbor.shivpatel.xyz
-            description: Registries and stuff
         - MiniO:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/minio.png
             href: https://minio.shivpatel.xyz/
