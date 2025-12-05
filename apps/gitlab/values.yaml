@@ -42,7 +42,7 @@ gitlab:
       externalIP:
       ssh:
       gitlab: {}
-      minio: {}
+      minio: minio.minio.svc.cluster.local
       registry: {}
       tls: {}
       smartcard: {}
