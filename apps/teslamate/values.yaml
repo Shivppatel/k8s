@@ -17,13 +17,17 @@ teslamate:
               # -- Set the container timezone
               TZ: UTC
               # -- Postgres database hostname
-              DATABASE_HOST: '{{ include "bjw-s.common.lib.chart.names.fullname" .}}-postgresql'
+              DATABASE_HOST: 'postgresql-rw.postgresql.svc.cluster.local'
               # -- Postgres database user name
-              DATABASE_USER: '{{ "Values.postgresql.auth.username" | default "postgres" }}'
-              # -- Postgres database password
-              DATABASE_PASS: "{{ .Values.postgresql.auth.password }}"
-              # -- Postgres database password
+              DATABASE_USER: 'teslamate'
+              # -- Postgres database name
               DATABASE_NAME: "{{ .Values.postgresql.auth.database }}"
+              # -- Postgres database password (from secret)
+              DATABASE_PASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: teslamate-db-secret
+                    key: password
               # -- Disables the MQTT feature if `true`
               DISABLE_MQTT: "false"
               # -- MQTT server host
@@ -44,10 +48,14 @@ teslamate:
             tag: 1.23.0
           env:
             ENCRYPTION_KEY: "{{ .Values.controllers.main.containers.main.env.ENCRYPTION_KEY }}"
-            DATABASE_USER: "{{ .Values.postgresql.auth.username }}"
-            DATABASE_PASS: "{{ .Values.postgresql.auth.postgresPassword }}"
+            DATABASE_USER: "teslamate"
+            DATABASE_PASS:
+              valueFrom:
+                secretKeyRef:
+                  name: teslamate-db-secret
+                  key: password
             DATABASE_NAME: "{{ .Values.postgresql.auth.database }}"
-            DATABASE_HOST: "{{ .Values.controllers.main.containers.main.DATABASE_HOST }}"
+            DATABASE_HOST: "postgresql-rw.postgresql.svc.cluster.local"
             MQTT_HOST: "{{ .Values.controllers.main.containers.main.MQTT_HOST }}"
             # -- MQTT username
             # MQTT_USERNAME:
@@ -60,10 +68,14 @@ teslamate:
             repository: mattjeanes/teslamateagile
             tag: v1.20.0
           env:
-            DATABASE_USER: "{{ .Values.postgresql.auth.username }}"
-            DATABASE_PASS: "{{ .Values.postgresql.auth.postgresPassword }}"
+            DATABASE_USER: "teslamate"
+            DATABASE_PASS:
+              valueFrom:
+                secretKeyRef:
+                  name: teslamate-db-secret
+                  key: password
             DATABASE_NAME: "{{ .Values.postgresql.auth.database }}"
-            DATABASE_HOST: "{{ .Values.controllers.main.containers.main.env.DATABASE_HOST }}"
+            DATABASE_HOST: "postgresql-rw.postgresql.svc.cluster.local"
             TeslaMate__UpdateIntervalSeconds: 300
             TeslaMate__GeofenceId: 1
             TeslaMate__EnergyProvider: Tibber
@@ -146,3 +158,13 @@ teslamate:
     primary:
       persistence:
         enabled: false
+
+# External secret reference for database credentials
+# The teslamate-db-secret is created by ExternalSecret in postgresql app
+# and contains username/password from Vault
+externalSecrets:
+  enabled: true
+  postgres:
+    secretName: teslamate-db-secret
+    usernameKey: username
+    passwordKey: password
