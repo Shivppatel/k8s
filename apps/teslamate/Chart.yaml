@@ -1,0 +1,14 @@
+apiVersion: v2
+name: teslamate
+description: A Helm chart for Teslamate
+
+type: application
+
+version: 0.1.0
+
+appVersion: "2.2.0"
+
+dependencies:
+  - name: teslamate
+    repository: https://charts.egeback.se
+    version: 2.0.9
