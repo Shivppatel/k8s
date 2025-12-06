@@ -65,5 +65,13 @@ spec:
               echo "Setting up teslamate database..."
               psql -d teslamate -c "ALTER SCHEMA public OWNER TO teslamate;"
               psql -d teslamate -c "GRANT ALL ON SCHEMA public TO teslamate;"
+              
+              # Sync passwords from ExternalSecrets to database users
+              echo "Syncing passwords from ExternalSecrets..."
+              for app in immich keycloak n8n teslamate; do
+                echo "Syncing password for $app..."
+                PASSWORD=$(kubectl get secret ${app}-db-secret -n postgresql -o jsonpath='{.data.password}' | base64 -d)
+                psql -c "ALTER USER $app WITH PASSWORD '$PASSWORD';"
+              done
 
               echo "Setup complete!"

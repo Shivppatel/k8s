@@ -32,25 +32,8 @@ spec:
         - CREATE DATABASE n8n OWNER n8n
         - CREATE DATABASE teslamate OWNER teslamate
 
-  # Managed roles - CNPG syncs passwords from secrets
-  managed:
-    roles:
-      - name: immich
-        login: true
-        passwordSecret:
-          name: immich-db-secret
-      - name: keycloak
-        login: true
-        passwordSecret:
-          name: keycloak-db-secret
-      - name: n8n
-        login: true
-        passwordSecret:
-          name: n8n-db-secret
-      - name: teslamate
-        login: true
-        passwordSecret:
-          name: teslamate-db-secret
+  # Note: Application users are managed via ExternalSecrets
+# CNPG creates users in bootstrap, ExternalSecrets manages passwords
 
   storage:
     size: 10Gi
