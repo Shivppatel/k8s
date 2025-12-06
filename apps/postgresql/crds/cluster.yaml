@@ -25,10 +25,12 @@ spec:
         - CREATE USER immich WITH PASSWORD 'temp'
         - CREATE USER keycloak WITH PASSWORD 'temp'
         - CREATE USER n8n WITH PASSWORD 'temp'
+        - CREATE USER teslamate WITH PASSWORD 'temp'
         # Create databases with correct ownership
         - CREATE DATABASE immich OWNER immich
         - CREATE DATABASE keycloak OWNER keycloak
         - CREATE DATABASE n8n OWNER n8n
+        - CREATE DATABASE teslamate OWNER n8n
 
   # Managed roles - CNPG syncs passwords from secrets
   managed:
@@ -45,6 +47,10 @@ spec:
         login: true
         passwordSecret:
           name: n8n-db-secret
+      - name: teslamate
+        login: true
+        passwordSecret:
+          name: teslamate-db-secret
 
   storage:
     size: 10Gi
