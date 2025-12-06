@@ -34,6 +34,12 @@ spec:
             - |
               set -e
               
+              # Wait for PostgreSQL to be ready
+              until pg_isready -h $PGHOST -p 5432 -U $PGUSER; do
+                echo "Waiting for PostgreSQL..."
+                sleep 2
+              done
+              
               # Ensure all users and databases exist (idempotent)
               for app in immich keycloak n8n teslamate; do
                 echo "Ensuring $app user and database exist..."

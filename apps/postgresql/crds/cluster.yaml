@@ -30,7 +30,7 @@ spec:
         - CREATE DATABASE immich OWNER immich
         - CREATE DATABASE keycloak OWNER keycloak
         - CREATE DATABASE n8n OWNER n8n
-        - CREATE DATABASE teslamate OWNER n8n
+        - CREATE DATABASE teslamate OWNER teslamate
 
   # Managed roles - CNPG syncs passwords from secrets
   managed:
