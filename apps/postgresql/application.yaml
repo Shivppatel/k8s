@@ -20,7 +20,6 @@ spec:
       - ServerSideApply=true
       - RespectIgnoreDifferences=true
       - PrunePropagationPolicy=foreground
-      - PruneLast=true
   destination:
     server: https://kubernetes.default.svc
     namespace: postgresql
@@ -55,3 +54,9 @@ spec:
         - .spec.managed.roles[].connectionLimit
         - .spec.managed.roles[].ensure
         - .spec.managed.roles[].inherit
+  # Explicitly protect PVCs from being pruned
+  - group: ""
+    kind: PersistentVolumeClaim
+    jqPathExpressions:
+      - .metadata.annotations['pv.kubernetes.io/bind-completed']
+      - .metadata.annotations['volume.beta.kubernetes.io/storage-provisioner']
