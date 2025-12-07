@@ -4,6 +4,12 @@ metadata:
   name: postgresql
   annotations:
     argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: PrunePropagationPolicy=foreground
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
+    # Prevent accidental deletion
+    argocd.argoproj.io/sync-options: Prune=false
+    # Add deletion protection
+    argocd.argoproj.io/hook-delete-policy: HookFailed
 spec:
   instances: 1
   

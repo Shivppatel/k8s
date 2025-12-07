@@ -13,12 +13,14 @@ spec:
       recurse: false
   syncPolicy:
     automated:
-      prune: true
+      prune: false  # Disable pruning to protect PVC
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
       - RespectIgnoreDifferences=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
   destination:
     server: https://kubernetes.default.svc
     namespace: postgresql
