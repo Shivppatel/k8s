@@ -11,6 +11,19 @@ spec:
   template:
     spec:
       restartPolicy: OnFailure
+      volumes:
+        - name: immich-db-secret
+          secret:
+            secretName: immich-db-secret
+        - name: keycloak-db-secret
+          secret:
+            secretName: keycloak-db-secret
+        - name: n8n-db-secret
+          secret:
+            secretName: n8n-db-secret
+        - name: teslamate-db-secret
+          secret:
+            secretName: teslamate-db-secret
       containers:
         - name: setup
           image: ghcr.io/cloudnative-pg/postgresql:17
@@ -28,6 +41,15 @@ spec:
                 secretKeyRef:
                   name: postgresql-superuser
                   key: password
+          volumeMounts:
+            - name: immich-db-secret
+              mountPath: /run/secrets/immich-db-secret
+            - name: keycloak-db-secret
+              mountPath: /run/secrets/keycloak-db-secret
+            - name: n8n-db-secret
+              mountPath: /run/secrets/n8n-db-secret
+            - name: teslamate-db-secret
+              mountPath: /run/secrets/teslamate-db-secret
           command:
             - /bin/bash
             - -c
@@ -68,10 +90,16 @@ spec:
               
               # Sync passwords from ExternalSecrets to database users
               echo "Syncing passwords from ExternalSecrets..."
+              # Read secrets directly from mounted files or environment variables
               for app in immich keycloak n8n teslamate; do
                 echo "Syncing password for $app..."
-                PASSWORD=$(kubectl get secret ${app}-db-secret -n postgresql -o jsonpath='{.data.password}' | base64 -d)
-                psql -c "ALTER USER $app WITH PASSWORD '$PASSWORD';"
+                # Use environment variables or mount secrets as files
+                PASSWORD=$(cat /run/secrets/${app}-db-secret/password 2>/dev/null || echo "")
+                if [ -z "$PASSWORD" ]; then
+                  echo "Warning: Could not read password for $app, keeping existing password"
+                else
+                  psql -c "ALTER USER $app WITH PASSWORD '$PASSWORD';"
+                fi
               done
 
               echo "Setup complete!"
