@@ -14,7 +14,7 @@ spec:
       volumes:
         - name: app-db-secret
           secret:
-            secretName: "{{ .Values.app.name }}-db-secret"
+            secretName: "newapp-db-secret"
       containers:
         - name: setup
           image: ghcr.io/cloudnative-pg/postgresql:17
@@ -32,7 +32,7 @@ spec:
                   name: postgresql-superuser
                   key: password
             - name: APP_NAME
-              value: "{{ .Values.app.name }}"
+              value: "newapp"
           volumeMounts:
             - name: app-db-secret
               mountPath: /run/secrets/app-db-secret
