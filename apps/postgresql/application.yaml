@@ -58,5 +58,5 @@ spec:
     - group: ""
       kind: PersistentVolumeClaim
       jqPathExpressions:
-        - .metadata.annotations['pv.kubernetes.io/bind-completed']
-        - .metadata.annotations['volume.beta.kubernetes.io/storage-provisioner']
+        - .metadata.annotations
+        - .metadata.labels
