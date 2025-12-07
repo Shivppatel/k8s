@@ -1,0 +1,75 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: add-app-db
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: OnFailure
+      volumes:
+        - name: app-db-secret
+          secret:
+            secretName: "{{ .Values.app.name }}-db-secret"
+      containers:
+        - name: setup
+          image: ghcr.io/cloudnative-pg/postgresql:17
+          env:
+            - name: PGHOST
+              value: postgresql-rw.postgresql.svc.cluster.local
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-superuser
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-superuser
+                  key: password
+            - name: APP_NAME
+              value: "{{ .Values.app.name }}"
+          volumeMounts:
+            - name: app-db-secret
+              mountPath: /run/secrets/app-db-secret
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+              
+              # Wait for PostgreSQL to be ready
+              until pg_isready -h $PGHOST -p 5432 -U $PGUSER; do
+                echo "Waiting for PostgreSQL..."
+                sleep 2
+              done
+              
+              # Create user and database for the new app
+              echo "Creating user and database for $APP_NAME..."
+              psql -c "DO \$\$ BEGIN CREATE USER $APP_NAME WITH PASSWORD 'temp'; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$;"
+              
+              # Check if database exists
+              DB_EXISTS=$(psql -tAc "SELECT 1 FROM pg_database WHERE datname='$APP_NAME'" 2>/dev/null || echo "")
+              if [ -z "$DB_EXISTS" ]; then
+                echo "Creating database $APP_NAME..."
+                psql -c "CREATE DATABASE $APP_NAME OWNER $APP_NAME;"
+                psql -d $APP_NAME -c "ALTER SCHEMA public OWNER TO $APP_NAME;"
+                psql -d $APP_NAME -c "GRANT ALL ON SCHEMA public TO $APP_NAME;"
+              else
+                echo "Database $APP_NAME already exists"
+              fi
+              
+              # Sync password from ExternalSecret
+              echo "Syncing password for $APP_NAME..."
+              PASSWORD=$(cat /run/secrets/app-db-secret/password 2>/dev/null || echo "")
+              if [ -z "$PASSWORD" ]; then
+                echo "Warning: Could not read password for $APP_NAME"
+              else
+                psql -c "ALTER USER $APP_NAME WITH PASSWORD '$PASSWORD';"
+              fi
+              
+              echo "Setup complete for $APP_NAME!"
