@@ -14,10 +14,18 @@ spec:
         - values.yaml
   syncPolicy:
     automated:
-      prune: true
+      prune: false  # Protect photo library from deletion
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
   destination:
     server: https://kubernetes.default.svc
     namespace: immich
+  # Protect PVCs from being pruned
+  ignoreDifferences:
+    - group: ""
+      kind: PersistentVolumeClaim
+      jqPathExpressions:
+        - .metadata.annotations
+        - .metadata.labels
