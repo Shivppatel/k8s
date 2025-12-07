@@ -54,9 +54,9 @@ spec:
         - .spec.managed.roles[].connectionLimit
         - .spec.managed.roles[].ensure
         - .spec.managed.roles[].inherit
-  # Explicitly protect PVCs from being pruned
-  - group: ""
-    kind: PersistentVolumeClaim
-    jqPathExpressions:
-      - .metadata.annotations['pv.kubernetes.io/bind-completed']
-      - .metadata.annotations['volume.beta.kubernetes.io/storage-provisioner']
+    # Explicitly protect PVCs from being pruned
+    - group: ""
+      kind: PersistentVolumeClaim
+      jqPathExpressions:
+        - .metadata.annotations['pv.kubernetes.io/bind-completed']
+        - .metadata.annotations['volume.beta.kubernetes.io/storage-provisioner']
