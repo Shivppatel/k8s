@@ -34,9 +34,14 @@ teslamate:
               # MQTT_PASSWORD:
               # -- Teslamate encryption key
               ENCRYPTION_KEY: "MySuperSecretEncryptionKey"
+              DATABASE_PASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: teslamate-db-secret
+                    key: password
               envFrom:
                 - secretRef:
-                    name: immich-db-secret
+                    name: teslamate-db-secret
         teslamateapi:
           enabled: false
           name: teslamateapi
