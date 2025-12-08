@@ -4,11 +4,8 @@ metadata:
   name: postgresql
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-    argocd.argoproj.io/sync-options: PrunePropagationPolicy=foreground
+    argocd.argoproj.io/sync-options: PrunePropagationPolicy=foreground, Prune=false
     argocd.argoproj.io/compare-options: IgnoreExtraneous
-    # Prevent accidental deletion
-    argocd.argoproj.io/sync-options: Prune=false
-    # Add deletion protection
     argocd.argoproj.io/hook-delete-policy: HookFailed
 spec:
   instances: 1
@@ -32,11 +29,13 @@ spec:
         - CREATE USER keycloak WITH PASSWORD 'temp'
         - CREATE USER n8n WITH PASSWORD 'temp'
         - CREATE USER teslamate WITH PASSWORD 'temp'
+        - CREATE USER authentik WITH PASSWORD 'temp'
         # Create databases with correct ownership
         - CREATE DATABASE immich OWNER immich
         - CREATE DATABASE keycloak OWNER keycloak
         - CREATE DATABASE n8n OWNER n8n
         - CREATE DATABASE teslamate OWNER teslamate
+        - CREATE DATABASE authentik OWNER authentik
 
   # Note: Application users are managed via ExternalSecrets
 # CNPG creates users in bootstrap, ExternalSecrets manages passwords

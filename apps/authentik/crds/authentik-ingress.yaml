@@ -10,6 +10,6 @@ spec:
   - match: Host(`authentik.shivpatel.xyz`)
     kind: Rule
     services:
-    - name: authentik
-      port: 30080
+    - name: authentik-server
+      port: 80
   tls: {}

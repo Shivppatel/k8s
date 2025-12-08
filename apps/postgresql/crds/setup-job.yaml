@@ -24,6 +24,9 @@ spec:
         - name: teslamate-db-secret
           secret:
             secretName: teslamate-db-secret
+        - name: authentik-db-secret
+          secret:
+            secretName: authentik-db-secret
       containers:
         - name: setup
           image: ghcr.io/cloudnative-pg/postgresql:17
@@ -63,7 +66,7 @@ spec:
               done
               
               # Ensure all users and databases exist (non-destructive)
-              for app in immich keycloak n8n teslamate; do
+              for app in immich keycloak n8n teslamate authentik; do
                 echo "Ensuring $app user and database exist..."
                 psql -c "DO \$\$ BEGIN CREATE USER $app WITH PASSWORD 'temp'; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$;"
                 
@@ -95,11 +98,15 @@ spec:
               echo "Setting up teslamate database..."
               psql -d teslamate -c "ALTER SCHEMA public OWNER TO teslamate;"
               psql -d teslamate -c "GRANT ALL ON SCHEMA public TO teslamate;"
+
+              echo "Setting up authentik database..."
+              psql -d authentik -c "ALTER SCHEMA public OWNER TO authentik;"
+              psql -d authentik -c "GRANT ALL ON SCHEMA public TO authentik;"
               
               # Sync passwords from ExternalSecrets to database users
               echo "Syncing passwords from ExternalSecrets..."
               # Read secrets directly from mounted files or environment variables
-              for app in immich keycloak n8n teslamate; do
+              for app in immich keycloak n8n teslamate authentik; do
                 echo "Syncing password for $app..."
                 # Use environment variables or mount secrets as files
                 PASSWORD=$(cat /run/secrets/${app}-db-secret/password 2>/dev/null || echo "")
