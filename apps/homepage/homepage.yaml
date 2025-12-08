@@ -168,6 +168,10 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/immich.png
             href: https://immich.shivpatel.xyz
             description: Photos and stuff
+        - It-Tools:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/it-tools-light.png
+            href: https://tools.shivpatel.xyz
+            description: Tools and stuff
         - Jellyfin:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyfin.png
             href: https://jelly.shivpatel.xyz
