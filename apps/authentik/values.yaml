@@ -154,7 +154,7 @@ authentik:
     log_level: info
     # -- Secret key used for cookie singing and unique user IDs,
     # don't change this after the first install
-    secret_key: ""
+    secret_key: file:///authentik-creds/AUTHENTIK_SECRET_KEY
     events:
       context_processors:
         # -- Path for the GeoIP City database. If the file doesn't exist, GeoIP features are disabled.
@@ -349,12 +349,17 @@ authentik:
       - name: postgres-creds
         mountPath: /postgres-creds
         readOnly: true
-
+      - name: authentik-creds
+        mountPath: /authentik-creds
+        readOnly: true
     # -- Additional volumes to the authentik server pod
     volumes:
       - name: postgres-creds
         secret:
           secretName: authentik-db-secret
+      - name: authentik-creds
+        secret:
+          secretName: authentik-secret
 
     # -- Annotations to be added to the authentik server Deployment
     deploymentAnnotations: {}
@@ -782,12 +787,18 @@ authentik:
       - name: postgres-creds
         mountPath: /postgres-creds
         readOnly: true
+      - name: authentik-creds
+        mountPath: /authentik-creds
+        readOnly: true
 
     # -- Additional volumes to the authentik worker pod
     volumes:
       - name: postgres-creds
         secret:
           secretName: authentik-db-secret
+      - name: authentik-creds
+        secret:
+          secretName: authentik-secret
 
     # -- Annotations to be added to the authentik worker Deployment
     deploymentAnnotations: {}
