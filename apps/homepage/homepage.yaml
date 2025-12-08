@@ -142,6 +142,10 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/rabbitmq.png
             href: https://rabbitmq.shivpatel.xyz/
             description: Messages and stuff
+        - Teslamate:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/teslamate-light.png
+            href: https://tesla.shivpatel.xyz/
+            description: Data and stuff
         - Vault:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/hashicorp-vault.png
             href: https://vault.shivpatel.xyz
