@@ -205,17 +205,13 @@ authentik:
       name: "authentik"
       # -- postgresql Username
       # @default -- `authentik`
-      user: "authentik"
-      password:
-        valueFrom:
-          secretKeyRef:
-            name: authentik-db-secret
-            key: DATABASE_PASS
+      user: file:///postgres-creds/username
+      password: file:///postgres-creds/password
       port: 5432
     redis:
       # -- set the redis hostname to talk to
       # @default -- `{{ .Release.Name }}-redis-master`
-      host: "{{ .Release.Name }}-redis-master"
+      host: redis-master.redis.svc.cluster.local
       password: ""
 
 
@@ -349,14 +345,16 @@ authentik:
     #     - echo init
 
     # -- Additional volumeMounts to the authentik server main container
-    volumeMounts: []
-      # - name: custom
-      #   mountPath: /custom
+    volumeMounts:
+      - name: postgres-creds
+        mountPath: /postgres-creds
+        readOnly: true
 
     # -- Additional volumes to the authentik server pod
-    volumes: []
-      # - name: custom
-      #   emptyDir: {}
+    volumes:
+      - name: postgres-creds
+        secret:
+          secretName: authentik-db-secret
 
     # -- Annotations to be added to the authentik server Deployment
     deploymentAnnotations: {}
@@ -780,14 +778,16 @@ authentik:
     #     - echo init
 
     # -- Additional volumeMounts to the authentik worker main container
-    volumeMounts: []
-      # - name: custom
-      #   mountPath: /custom
+    volumeMounts:
+      - name: postgres-creds
+        mountPath: /postgres-creds
+        readOnly: true
 
     # -- Additional volumes to the authentik worker pod
-    volumes: []
-      # - name: custom
-      #   emptyDir: {}
+    volumes:
+      - name: postgres-creds
+        secret:
+          secretName: authentik-db-secret
 
     # -- Annotations to be added to the authentik worker Deployment
     deploymentAnnotations: {}
