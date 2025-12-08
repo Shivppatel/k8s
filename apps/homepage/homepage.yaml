@@ -152,6 +152,10 @@ data:
             description: Secrets and stuff
 
     - Home:
+        - Authentik:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authentik.png
+            href: https://authentik.shivpatel.xyz/
+            description: Auth and stuff
         - Pi-hole:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pi-hole-unbound.png
             href: https://pihole.shivpatel.xyz/

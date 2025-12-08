@@ -1,0 +1,14 @@
+apiVersion: v2
+name: authentik
+description: A Helm chart for Authentik
+
+type: application
+
+version: 0.1.0
+
+appVersion: "2025.10.2"
+
+dependencies:
+  - name: authentik
+    repository: https://charts.goauthentik.io/
+    version: 2025.10.2
