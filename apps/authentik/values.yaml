@@ -199,14 +199,18 @@ authentik:
       # -- set the postgresql hostname to talk to
       # if unset and .Values.postgresql.enabled == true, will generate the default
       # @default -- `{{ .Release.Name }}-postgresql`
-      host: "{{ .Release.Name }}-postgresql"
+      host: postgresql-rw.postgresql.svc.cluster.local
       # -- postgresql Database name
       # @default -- `authentik`
       name: "authentik"
       # -- postgresql Username
       # @default -- `authentik`
       user: "authentik"
-      password: ""
+      password:
+        valueFrom:
+          secretKeyRef:
+            name: authentik-db-secret
+            key: DATABASE_PASS
       port: 5432
     redis:
       # -- set the redis hostname to talk to
