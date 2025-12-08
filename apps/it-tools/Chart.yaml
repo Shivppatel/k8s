@@ -1,0 +1,14 @@
+apiVersion: v2
+name: it-tools
+description: A Helm chart for it-tools
+
+type: application
+
+version: 0.1.0
+
+appVersion: "2024.10.22-7ca5933"
+
+dependencies:
+  - name: it-tools
+    repository: https://charts.jeffresc.dev
+    version: 0.1.4
