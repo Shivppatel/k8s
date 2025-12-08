@@ -211,7 +211,7 @@ authentik:
     redis:
       # -- set the redis hostname to talk to
       # @default -- `{{ .Release.Name }}-redis-master`
-      host: redis-master.redis.svc.cluster.local
+      host: '{{ .Release.Name }}-redis-master'
       password: ""
 
 
@@ -1149,7 +1149,7 @@ authentik:
 
   redis:
     # -- enable the Bitnami Redis chart. Refer to https://github.com/bitnami/charts/blob/main/bitnami/redis/ for possible values.
-    enabled: false
+    enabled: true
     image:
       registry: docker.io
       repository: library/redis
