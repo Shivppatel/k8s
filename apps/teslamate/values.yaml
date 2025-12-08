@@ -19,9 +19,13 @@ teslamate:
               # -- Postgres database hostname
               DATABASE_HOST: 'postgresql-rw.postgresql.svc.cluster.local'
               # -- Postgres database user name
-              DATABASE_USER: 'teslamate'
+              DATABASE_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: teslamate-db-secret
+                    key: DATABASE_USER
               # -- Postgres database name
-              DATABASE_NAME: "{{ .Values.postgresql.auth.database }}"
+              DATABASE_NAME: "teslamate"
               # -- Disables the MQTT feature if `true`
               DISABLE_MQTT: "false"
               # -- MQTT server host
@@ -34,14 +38,12 @@ teslamate:
               # MQTT_PASSWORD:
               # -- Teslamate encryption key
               ENCRYPTION_KEY: "MySuperSecretEncryptionKey"
+              # -- Override database password from secret
               DATABASE_PASS:
                 valueFrom:
                   secretKeyRef:
                     name: teslamate-db-secret
-                    key: password
-              envFrom:
-                - secretRef:
-                    name: teslamate-db-secret
+                    key: DATABASE_PASS
         teslamateapi:
           enabled: false
           name: teslamateapi
