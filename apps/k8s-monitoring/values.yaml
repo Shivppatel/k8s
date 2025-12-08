@@ -18,3 +18,5 @@ k8s-monitoring:
     enabled: true
   clusterEvents:
     enabled: true
+  node-exporter:
+    enabled: false
