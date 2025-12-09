@@ -70,7 +70,7 @@ teslamate:
           enabled: false
           image:
             repository: mattjeanes/teslamateagile
-            tag: v1.20.0
+            tag: v1.21.0
           env:
             DATABASE_USER: "teslamate"
             DATABASE_PASS:
