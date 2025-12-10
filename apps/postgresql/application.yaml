@@ -38,12 +38,8 @@ spec:
         - cnpg-controller-manager
       jqPathExpressions:
         - .status
-        - .spec.affinity
-        - .spec.enablePDB
         - .spec.failoverDelay
         - .spec.logLevel
-        - .spec.maxSyncReplicas
-        - .spec.minSyncReplicas
         - .spec.monitoring
         - .spec.postgresGID
         - .spec.postgresUID

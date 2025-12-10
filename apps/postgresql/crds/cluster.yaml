@@ -8,7 +8,10 @@ metadata:
     argocd.argoproj.io/compare-options: IgnoreExtraneous
     argocd.argoproj.io/hook-delete-policy: HookFailed
 spec:
-  instances: 1
+  instances: 3
+  enablePDB: true
+  minSyncReplicas: 1
+  maxSyncReplicas: 2
   
   # Note: For pgvector support, you may need a custom image
   # Options: ghcr.io/tensorchord/cloudnative-pgvecto.rs:17-v0.4.0 (uses 'vectors' extension)
@@ -42,3 +45,16 @@ spec:
 
   storage:
     size: 50Gi
+  
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: cnpg.io/cluster
+                  operator: In
+                  values:
+                    - postgresql
+            topologyKey: kubernetes.io/hostname
