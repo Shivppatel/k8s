@@ -423,7 +423,22 @@ gitea:
       server:
         SSH_PORT: 22 # rootful image
         SSH_LISTEN_PORT: 2222 # rootless image
-    #
+      database:
+        DB_TYPE: postgres
+        HOST: postgresql-rw.postgresql.svc.cluster.local
+        NAME: gitea
+        USER:
+          valueFrom:
+            secretKeyRef:
+              name: gitea-db-secret
+              key: DATABASE_USER
+        PASSWD:
+          valueFrom:
+            secretKeyRef:
+              name: gitea-db-secret
+              key: DATABASE_PASS
+        SCHEMA: gitea
+
     #  security:
     #    PASSWORD_COMPLEXITY: spec
 
