@@ -9,7 +9,7 @@ longhorn:
     defaultClass: true
     defaultClassReplicaCount: 3
   preUpgradeChecker:
-    jobEnabled: false
+    jobEnabled: true
   metrics:
     serviceMonitor:
       enabled: true
