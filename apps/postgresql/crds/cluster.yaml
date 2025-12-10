@@ -33,12 +33,14 @@ spec:
         - CREATE USER n8n WITH PASSWORD 'temp'
         - CREATE USER teslamate WITH PASSWORD 'temp'
         - CREATE USER authentik WITH PASSWORD 'temp'
+        - CREATE USER gitea WITH PASSWORD 'temp'
         # Create databases with correct ownership
         - CREATE DATABASE immich OWNER immich
         - CREATE DATABASE keycloak OWNER keycloak
         - CREATE DATABASE n8n OWNER n8n
         - CREATE DATABASE teslamate OWNER teslamate
         - CREATE DATABASE authentik OWNER authentik
+        - CREATE DATABASE gitea OWNER gitea
 
   # Note: Application users are managed via ExternalSecrets
 # CNPG creates users in bootstrap, ExternalSecrets manages passwords
