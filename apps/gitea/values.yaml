@@ -256,7 +256,7 @@ gitea:
     enabled: true
     create: true
     mount: true
-    claimName: ""
+    claimName: gitea-shared-storage
     size: 10Gi
     accessModes:
       - ReadWriteOnce
