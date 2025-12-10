@@ -27,6 +27,9 @@ spec:
         - name: authentik-db-secret
           secret:
             secretName: authentik-db-secret
+        - name: gitea-db-secret
+          secret:
+            secretName: gitea-db-secret
       containers:
         - name: setup
           image: ghcr.io/cloudnative-pg/postgresql:17
@@ -55,6 +58,8 @@ spec:
               mountPath: /run/secrets/teslamate-db-secret
             - name: authentik-db-secret
               mountPath: /run/secrets/authentik-db-secret
+            - name: gitea-db-secret
+              mountPath: /run/secrets/gitea-db-secret
           command:
             - /bin/bash
             - -c
