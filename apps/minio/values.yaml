@@ -6,6 +6,11 @@ minio:
   image:
     registry: docker.io
     repository: bitnamilegacy/minio
+  persistence:
+    enabled: true
+    storageClass: longhorn
+    accessModes:
+      - ReadWriteOnce
   console:
     image:
       registry: docker.io

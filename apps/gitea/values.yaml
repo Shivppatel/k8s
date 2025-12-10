@@ -256,16 +256,15 @@ gitea:
     enabled: true
     create: true
     mount: true
-    claimName: gitea-shared-storage
+    claimName: ""
     size: 10Gi
     accessModes:
       - ReadWriteOnce
     labels: {}
-    storageClass:
-    subPath:
+    storageClass: longhorn
+    subPath: ""
     volumeName: ""
-    annotations:
-      helm.sh/resource-policy: keep
+    annotations: {}
 
   ## @param extraContainers Additional sidecar containers to run in the pod
   extraContainers: []
