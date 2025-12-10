@@ -3,7 +3,7 @@ longhorn:
     pullPolicy: IfNotPresent
   defaultSettings:
     defaultDataPath: "/mnt/storage/longhorn"
-    defaultReplicaCount: "3"
+    defaultReplicaCount: "2"
     replicaSoftAntiAffinity: true
     removeSnapshotsDuringFilesystemTrim: true
     autoCleanupSystemGeneratedSnapshot: true
@@ -15,7 +15,7 @@ longhorn:
     recurringJobMaxRetention: "10"
   persistence:
     defaultClass: true
-    defaultClassReplicaCount: 3
+    defaultClassReplicaCount: 2
   preUpgradeChecker:
     jobEnabled: true
   metrics:
