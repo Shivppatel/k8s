@@ -98,12 +98,11 @@ spec:
               psql -d n8n -c "GRANT ALL ON SCHEMA public TO n8n;"
               
               echo "Setting up teslamate database..."
-              # Extensions required by TeslaMate migrations; run once with superuser
-              psql -d teslamate -c "CREATE EXTENSION IF NOT EXISTS cube;"
-              psql -d teslamate -c "CREATE EXTENSION IF NOT EXISTS earthdistance;"
-              # Allow TeslaMate to manage extensions if migrations drop/recreate them
-              psql -d teslamate -c "ALTER EXTENSION cube OWNER TO teslamate;"
-              psql -d teslamate -c "ALTER EXTENSION earthdistance OWNER TO teslamate;"
+              # TeslaMate migrations drop/recreate geo extensions; do it here with superuser
+              psql -d teslamate -c "DROP EXTENSION IF EXISTS earthdistance CASCADE;"
+              psql -d teslamate -c "DROP EXTENSION IF EXISTS cube CASCADE;"
+              psql -d teslamate -c "CREATE EXTENSION cube WITH SCHEMA public;"
+              psql -d teslamate -c "CREATE EXTENSION earthdistance WITH SCHEMA public;"
               # Give the application user ownership so future migrations can modify objects
               psql -d teslamate -c "ALTER FUNCTION ll_to_earth(double precision, double precision) OWNER TO teslamate;"
               psql -d teslamate -c "ALTER FUNCTION earth_box(earth, double precision) OWNER TO teslamate;"
