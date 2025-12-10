@@ -5,6 +5,14 @@ longhorn:
     defaultDataPath: "/mnt/storage/longhorn"
     defaultReplicaCount: "3"
     replicaSoftAntiAffinity: true
+    removeSnapshotsDuringFilesystemTrim: true
+    autoCleanupSystemGeneratedSnapshot: true
+    autoCleanupRecurringJobBackupSnapshot: true
+    autoCleanupSnapshotWhenDeleteBackup: true
+    autoCleanupSnapshotAfterOnDemandBackupCompleted: true
+    recurringSuccessfulJobsHistoryLimit: "3"
+    recurringFailedJobsHistoryLimit: "3"
+    recurringJobMaxRetention: "10"
   persistence:
     defaultClass: true
     defaultClassReplicaCount: 3
