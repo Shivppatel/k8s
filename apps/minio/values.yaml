@@ -2,6 +2,7 @@ minio:
   mode: distributed
   statefulset:
     replicaCount: 3
+    drivesPerNode: 2
   deployment:
     updateStrategy:
       type: RollingUpdate
