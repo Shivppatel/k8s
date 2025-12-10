@@ -46,15 +46,3 @@ spec:
   storage:
     size: 50Gi
   
-  affinity:
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchExpressions:
-                - key: cnpg.io/cluster
-                  operator: In
-                  values:
-                    - postgresql
-            topologyKey: kubernetes.io/hostname
