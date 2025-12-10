@@ -103,6 +103,8 @@ spec:
               psql -d teslamate -c "DROP EXTENSION IF EXISTS cube CASCADE;"
               psql -d teslamate -c "CREATE EXTENSION cube WITH SCHEMA public;"
               psql -d teslamate -c "CREATE EXTENSION earthdistance WITH SCHEMA public;"
+              # Ensure extension is on latest version for TeslaMate migrations
+              psql -d teslamate -c "ALTER EXTENSION earthdistance UPDATE;"
               # Give the application user ownership so future migrations can modify objects
               psql -d teslamate -c "ALTER FUNCTION ll_to_earth(double precision, double precision) OWNER TO teslamate;"
               psql -d teslamate -c "ALTER FUNCTION earth_box(earth, double precision) OWNER TO teslamate;"
@@ -110,6 +112,8 @@ spec:
               psql -d teslamate -c "GRANT ALL ON SCHEMA public TO teslamate;"
               # Mark TeslaMate migration 20240929084639 as applied so it doesn't re-drop extensions
               psql -d teslamate -c "INSERT INTO schema_migrations (version, inserted_at) VALUES ('20240929084639', NOW()) ON CONFLICT (version) DO NOTHING;"
+              # Mark TeslaMate migration 20250407155134 (earthdistance upgrade) as complete
+              psql -d teslamate -c "INSERT INTO schema_migrations (version, inserted_at) VALUES ('20250407155134', NOW()) ON CONFLICT (version) DO NOTHING;"
 
               echo "Setting up authentik database..."
               psql -d authentik -c "ALTER SCHEMA public OWNER TO authentik;"
