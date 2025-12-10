@@ -601,7 +601,7 @@ gitea:
   ## @section PostgreSQL HA
   postgresql-ha:
     ## @param postgresql-ha.enabled Enable PostgreSQL HA
-    enabled: true
+    enabled: false
 
     ## @param postgresql-ha.global.postgresql.database Name for a custom database to create (overrides `auth.database`)
     ## @param postgresql-ha.global.postgresql.username Name for a custom user to create (overrides `auth.username`)
