@@ -18,3 +18,7 @@ minio:
     image:
       registry: docker.io
       repository: bitnamilegacy/minio-object-browser
+    auth:
+      existingSecret: minio-password-secret
+      rootUserSecretKey: MINIO_ROOT_USER
+      rootPasswordSecretKey: MINIO_ROOT_PASSWORD
