@@ -8,3 +8,4 @@ redis:
     tag: latest
   auth:
     existingSecret: redis-password-secret
+    existingSecretPasswordKey: redis-password
