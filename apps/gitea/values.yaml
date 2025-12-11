@@ -429,7 +429,7 @@ gitea:
         NAME: gitea
         USER: ""
         PASSWD: ""
-        SCHEMA: gitea
+        SCHEMA: public
     #    PASSWORD_COMPLEXITY: spec
 
     ## @param gitea.additionalConfigSources Additional configuration from secret or configmap
