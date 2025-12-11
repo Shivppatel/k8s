@@ -428,15 +428,13 @@ gitea:
         HOST: postgresql-rw.postgresql.svc.cluster.local
         NAME: gitea
         USER:
-          valueFrom:
-            secretKeyRef:
-              name: gitea-db-secret
-              key: DB_USER
+          secretKeyRef:
+            name: gitea-db-secret
+            key: DB_USER
         PASSWD:
-          valueFrom:
-            secretKeyRef:
-              name: gitea-db-secret
-              key: DB_PASSWORD
+          secretKeyRef:
+            name: gitea-db-secret
+            key: DB_PASSWORD
         SCHEMA: gitea
     #    PASSWORD_COMPLEXITY: spec
 
