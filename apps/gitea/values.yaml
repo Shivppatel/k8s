@@ -431,12 +431,12 @@ gitea:
           valueFrom:
             secretKeyRef:
               name: gitea-db-secret
-              key: DATABASE_USER
+              key: USER
         PASSWD:
           valueFrom:
             secretKeyRef:
               name: gitea-db-secret
-              key: DATABASE_PASS
+              key: PASSWD
         SCHEMA: gitea
 
     #  security:
