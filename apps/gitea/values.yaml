@@ -430,15 +430,6 @@ gitea:
         USER: ""
         PASSWD: ""
         SCHEMA: public
-#      queue:
-#        TYPE: redis
-#        CONN_STR: redis://redis-master.redis.svc.cluster.local:6379
-#      session:
-#        PROVIDER: redis
-#        PROVIDER_CONFIG: redis://redis-master.redis.svc.cluster.local:6379
-#      cache:
-#        ADAPTER: redis
-#        HOST: redis://redis-master.redis.svc.cluster.local:6379
 
     ## @param gitea.additionalConfigSources Additional configuration from secret or configmap
     additionalConfigSources:
