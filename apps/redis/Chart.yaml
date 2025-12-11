@@ -6,7 +6,7 @@ type: application
 
 version: 0.1.0
 
-appVersion: "8.2.3"
+appVersion: "8.4.0"
 
 dependencies:
   - name: redis
