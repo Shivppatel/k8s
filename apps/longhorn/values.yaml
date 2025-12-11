@@ -13,6 +13,13 @@ longhorn:
     recurringSuccessfulJobsHistoryLimit: "3"
     recurringFailedJobsHistoryLimit: "3"
     recurringJobMaxRetention: "10"
+    # Settings to prevent and recover from stale mount issues
+    autoSalvage: true
+    autoDeletePodWhenVolumeDetachedUnexpectedly: true
+    nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+    nodeDrainPolicy: block-for-eviction-if-contains-last-replica
+    detachManuallyAttachedVolumesWhenCordoned: true
+    allowVolumeCreationWithDegradedAvailability: true
   persistence:
     defaultClass: true
     defaultClassReplicaCount: 2
