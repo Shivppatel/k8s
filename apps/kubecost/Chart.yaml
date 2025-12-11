@@ -6,9 +6,9 @@ type: application
 
 version: 0.1.0
 
-appVersion: "v3.0.4"
+appVersion: "v3.0.6"
 
 dependencies:
   - name: kubecost
     repository: https://kubecost.github.io/kubecost/
-    version: 3.0.5
+    version: 3.0.6
