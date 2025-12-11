@@ -6,9 +6,9 @@ type: application
 
 version: 0.1.0
 
-appVersion: "8.2.3"
+appVersion: "8.4.0"
 
 dependencies:
   - name: redis
     repository: https://charts.bitnami.com/bitnami
-    version: 24.0.0
+    version: 24.0.4
