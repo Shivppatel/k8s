@@ -6,7 +6,7 @@ type: application
 
 version: 0.1.0
 
-appVersion: "3.5.5"
+appVersion: "3.6.2"
 
 dependencies:
   - name: loki
