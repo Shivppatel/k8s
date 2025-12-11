@@ -427,13 +427,17 @@ gitea:
         DB_TYPE: postgres
         HOST: postgresql-rw.postgresql.svc.cluster.local
         NAME: gitea
-        USER: gitea
-        PASSWD: "{{ .Values.database.password | default \"\" }}"
+        USER:
+          valueFrom:
+            secretKeyRef:
+              name: gitea-db-secret
+              key: DB_USER
+        PASSWD:
+          valueFrom:
+            secretKeyRef:
+              name: gitea-db-secret
+              key: DB_PASSWORD
         SCHEMA: gitea
-    database:
-      password:
-        existingSecret: gitea-db-secret
-        passwordKey: PASSWD
     #    PASSWORD_COMPLEXITY: spec
 
     ## @param gitea.additionalConfigSources Additional configuration from secret or configmap
