@@ -6,3 +6,5 @@ redis:
     registry: registry-1.docker.io
     repository: bitnamilegacy/redis
     tag: latest
+  auth:
+    existingSecret: redis-password-secret
