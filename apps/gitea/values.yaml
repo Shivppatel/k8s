@@ -532,7 +532,7 @@ gitea:
     ## @param valkey-cluster.cluster.nodes Number of valkey cluster master nodes
     ## @param valkey-cluster.cluster.replicas Number of valkey cluster master node replicas
     cluster:
-      nodes: 3 # default: 6
+      nodes: 1 # default: 6
       replicas: 0 # default: 1
 
     ## @param valkey-cluster.metrics.image.repository Image repository, eg. `bitnamilegacy/redis-exporter`.
