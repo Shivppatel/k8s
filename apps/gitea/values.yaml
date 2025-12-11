@@ -427,6 +427,8 @@ gitea:
         DB_TYPE: postgres
         HOST: postgresql-rw.postgresql.svc.cluster.local
         NAME: gitea
+        USER: ${DATABASE_USER}
+        PASSWD: ${DATABASE_PASSWORD}
         SCHEMA: gitea
 
     env:
