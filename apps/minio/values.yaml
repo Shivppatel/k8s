@@ -3,9 +3,8 @@ minio:
   statefulset:
     replicaCount: 3
     drivesPerNode: 2
-  deployment:
     updateStrategy:
-      type: RollingUpdate
+      type: OnDelete
   image:
     registry: docker.io
     repository: bitnamilegacy/minio

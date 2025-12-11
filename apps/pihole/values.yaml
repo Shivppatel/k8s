@@ -4,6 +4,7 @@ pihole:
     existingSecret: "pihole-custom-password"
     passwordKey: "password"
   replicaCount: 1
+  strategyType: Recreate
   persistentVolumeClaim:
     enabled: true
 

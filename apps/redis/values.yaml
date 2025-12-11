@@ -8,3 +8,12 @@ redis:
     tag: latest
   auth:
     existingSecret: redis-password-secret
+  master:
+    persistence:
+      enabled: true
+  replica:
+    replicaCount: 3
+    persistence:
+      enabled: true
+    updateStrategy:
+      type: OnDelete

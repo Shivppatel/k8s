@@ -2,6 +2,7 @@ elasticsearch:
   replicas: 3
   minimumMasterNodes: 2
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+  updateStrategy: OnDelete
 
   resources:
     requests:
