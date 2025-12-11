@@ -430,7 +430,15 @@ gitea:
         USER: ""
         PASSWD: ""
         SCHEMA: public
-    #    PASSWORD_COMPLEXITY: spec
+      queue:
+        TYPE: redis
+        CONN_STR: redis://redis-master.redis.svc.cluster.local:6379
+      session:
+        PROVIDER: redis
+        PROVIDER_CONFIG: redis://redis-master.redis.svc.cluster.local:6379
+      cache:
+        ADAPTER: redis
+        HOST: redis://redis-master.redis.svc.cluster.local:6379
 
     ## @param gitea.additionalConfigSources Additional configuration from secret or configmap
     additionalConfigSources:
@@ -521,7 +529,7 @@ gitea:
     # Consider omitting such or open an issue in the Bitnami repo and let us know once this got fixed.
     ## @param valkey-cluster.usePassword Whether to use password authentication.
     ## @param valkey-cluster.usePasswordFiles Whether to mount passwords as files instead of environment variables.
-    enabled: true
+    enabled: false
     usePassword: false
     usePasswordFiles: false
 
