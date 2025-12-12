@@ -25,4 +25,4 @@ open-webui:
     storageClass: "longhorn"
     size: 2Gi
   strategy:
-    type: Recreate
+    type: OnDelete

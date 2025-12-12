@@ -3,4 +3,4 @@ mongodb:
     registry: registry-1.docker.io
     repository: bitnamilegacy/mongodb
   updateStrategy:
-    type: OnDelete
+    type: Recreate
