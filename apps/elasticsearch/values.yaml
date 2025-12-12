@@ -4,6 +4,9 @@ elasticsearch:
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=30s"
   updateStrategy: OnDelete
 
+  secret:
+    enabled: false
+
   readinessProbe:
     timeoutSeconds: 35
 
