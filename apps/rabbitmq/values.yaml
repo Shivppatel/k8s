@@ -5,6 +5,8 @@ rabbitmq:
   image:
     registry: docker.io
     repository: bitnamilegacy/rabbitmq
+  updateStrategy:
+    type: OnDelete
   auth:
     # Use existing secret from Vault via ExternalSecret
     existingPasswordSecret: rabbitmq

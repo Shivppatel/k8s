@@ -6,6 +6,8 @@ harbor:
     ingress:
       hosts:
         core: harbor.shivpatel.xyz
+  updateStrategy:
+    type: Recreate
   persistence:
     enabled: true
     resourcePolicy: keep
