@@ -1,3 +1,4 @@
+vault:
   server:
     ha:
       enabled: true
@@ -11,4 +12,3 @@
       enabled: true
       prometheusRules:
         enabled: true
-
