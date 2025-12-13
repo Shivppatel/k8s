@@ -1,0 +1,74 @@
+name: Helm Lint
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'apps/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4.3.0
+
+      - name: Get changed app directories
+        id: changed-apps
+        run: |
+          # Get list of changed files
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD 2>/dev/null || git diff --name-only HEAD~1)
+          
+          # Find unique app directories with changes
+          APP_DIRS=""
+          for file in $CHANGED_FILES; do
+            if [[ "$file" == apps/*/* ]]; then
+              DIR=$(echo "$file" | cut -d'/' -f1-2)
+              if [[ -f "$DIR/Chart.yaml" ]] && [[ ! "$APP_DIRS" =~ "$DIR" ]]; then
+                APP_DIRS="$APP_DIRS $DIR"
+              fi
+            fi
+          done
+          
+          echo "app_dirs=$APP_DIRS" >> $GITHUB_OUTPUT
+          echo "Found app directories: $APP_DIRS"
+
+      - name: Lint changed charts
+        if: steps.changed-apps.outputs.app_dirs != ''
+        run: |
+          FAILED=0
+          for dir in ${{ steps.changed-apps.outputs.app_dirs }}; do
+            echo "=========================================="
+            echo "Linting $dir"
+            echo "=========================================="
+            
+            # Build dependencies first
+            helm dependency build "$dir" 2>/dev/null || true
+            
+            # Run lint
+            if ! helm lint "$dir"; then
+              FAILED=1
+            fi
+            
+            # Template validation (catch render errors)
+            echo "Validating template rendering for $dir"
+            if ! helm template "$dir" > /dev/null; then
+              echo "❌ Template rendering failed for $dir"
+              FAILED=1
+            else
+              echo "✅ Template renders successfully"
+            fi
+            
+            echo ""
+          done
+          
+          if [ $FAILED -eq 1 ]; then
+            echo "❌ One or more charts failed validation"
+            exit 1
+          fi
+          
+          echo "✅ All charts passed validation"
