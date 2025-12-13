@@ -1,0 +1,31 @@
+name: Update helm charts
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - 'renovate/**'
+jobs:
+  update-helm-charts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4.3.0
+
+      - name: Update Helm dependencies
+        run: helm dependency update ./apps/uptime-kuma
+
+      - name: Print the debug info STDOUT
+        run: echo "The head of this PR starts with 'releases/'"
+        # - name: Commit changes
+        #     run: |
+        #     git config --global user.name "github-actions[bot]"
+        #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        #     git add .
+        #     git commit -m "chore: update helm chart dependencies" || echo "No changes to commit"
+        #     git push origin HEAD:${{ github.head_ref }}
+        #     env:
+        #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
