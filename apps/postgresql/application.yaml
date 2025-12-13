@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: git@github.com:shivppatel/k8s.git
     targetRevision: main
-    path: apps/postgresql/crds
+    path: apps/postgresql/templates
     directory:
       recurse: false
   syncPolicy:
