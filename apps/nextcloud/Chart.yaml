@@ -11,4 +11,4 @@ appVersion: "32.0.2"
 dependencies:
   - name: nextcloud
     repository: https://nextcloud.github.io/helm/
-    version: 8.6.1
+    version: 8.7.0
