@@ -14,8 +14,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.base_ref }}
+
+      - name: Get changed YAML files
+        id: changed-files
+        run: |
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- '*.yaml' '*.yml' | tr '\n' ' ')
+          echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "Found changed YAML files: $CHANGED_FILES"
 
       - name: YAML Lint
+        if: steps.changed-files.outputs.files != ''
         uses: ibiqlik/action-yamllint@v3
         with:
           config_data: |
@@ -29,5 +42,5 @@ jobs:
               brackets:
                 min-spaces-inside: 0
                 max-spaces-inside: 1
-          file_or_dir: .
+          file_or_dir: ${{ steps.changed-files.outputs.files }}
           strict: false
