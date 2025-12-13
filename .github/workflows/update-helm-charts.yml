@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - 'apps/**/Chart.yaml'
+      - "apps/**/Chart.yaml"
 
 permissions:
   contents: write
@@ -33,7 +33,7 @@ jobs:
         run: |
           # Get list of changed files in PR
           CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
-          
+
           # Find unique app directories with Chart.yaml changes
           CHART_DIRS=""
           for file in $CHANGED_FILES; do
@@ -44,7 +44,7 @@ jobs:
               fi
             fi
           done
-          
+
           echo "chart_dirs=$CHART_DIRS" >> $GITHUB_OUTPUT
           echo "Found chart directories: $CHART_DIRS"
 

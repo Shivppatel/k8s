@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'apps/**'
+      - "apps/**"
 
 jobs:
   lint:
@@ -27,7 +27,7 @@ jobs:
         run: |
           # Get list of changed files
           CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD 2>/dev/null || git diff --name-only HEAD~1)
-          
+
           # Find unique app directories with changes
           APP_DIRS=""
           for file in $CHANGED_FILES; do
@@ -38,7 +38,7 @@ jobs:
               fi
             fi
           done
-          
+
           echo "app_dirs=$APP_DIRS" >> $GITHUB_OUTPUT
           echo "Found app directories: $APP_DIRS"
 
@@ -70,10 +70,10 @@ jobs:
             
             echo ""
           done
-          
+
           if [ $FAILED -eq 1 ]; then
             echo "❌ One or more charts failed validation"
             exit 1
           fi
-          
+
           echo "✅ All charts passed validation"
