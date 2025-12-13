@@ -795,9 +795,9 @@ postgresql:
 # -- External PostgreSQL parameters
 externalPostgresql:
   # -- External PostgreSQL server host
-  host: ""
+  host: "postgresql-rw.postgresql.svc.cluster.local"
   # -- External PostgreSQL username
-  username: "postgres"
+  username: "outline"
   # -- External PostgreSQL password
   password: ""
   # -- External PostgreSQL server port
@@ -805,7 +805,7 @@ externalPostgresql:
   # -- The name of the external PostgreSQL database. For more information: https://docs.getoutline.com/s/hosting/doc/docker-7pfeLP5a8t
   database: outline
   # -- The name of an existing secret with PostgreSQL (must contain key `postgres-password`) and credentials. When it's set, the `externalPostgresql.password` parameter is ignored
-  existingSecret: ""
+  existingSecret: "outline-db-secret"
   # -- DEPRECATED: Use passwordSecretKey field instead. This field will be removed in a future release.
   secretKey: "postgres-password"
   # -- This is for setting up the external postgresql secret key.
