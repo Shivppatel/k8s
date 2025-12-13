@@ -727,7 +727,7 @@ outline:
   # -- External Redis parameters
   externalRedis:
     # -- External Redis server host
-    host: ""
+    host: "redis-master.redis.svc.cluster.local"
     # -- External Redis username
     username: ""
     # -- External Redis password
@@ -736,7 +736,7 @@ outline:
     port: 6379
     # -- The name of an existing secret with Redis (must contain key `redis-password`) and Sentinel credentials.
     # When it's set, the `externalRedis.password` parameter is ignored
-    existingSecret: ""
+    existingSecret: "outline-redis-secret"
     # -- This is for setting up the external redis username secret key.
     usernameSecretKey: "redis-username"
     # -- This is for setting up the external redis password secret key.
