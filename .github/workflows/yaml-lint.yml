@@ -1,0 +1,33 @@
+name: YAML Lint
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**.yaml'
+      - '**.yml'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: YAML Lint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_data: |
+            extends: relaxed
+            rules:
+              line-length: disable
+              truthy:
+                check-keys: false
+              comments:
+                min-spaces-from-content: 1
+              brackets:
+                min-spaces-inside: 0
+                max-spaces-inside: 1
+          file_or_dir: .
+          strict: false
