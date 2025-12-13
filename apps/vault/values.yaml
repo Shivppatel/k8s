@@ -1,4 +1,3 @@
-vault:
   server:
     ha:
       enabled: true
