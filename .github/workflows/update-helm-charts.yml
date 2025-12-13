@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [opened, reopened]
     branches:
-      - 'renovate/**'
+      - 'main'
 jobs:
   update-helm-charts:
     runs-on: ubuntu-latest
@@ -18,7 +18,9 @@ jobs:
         run: helm dependency update ./apps/uptime-kuma
 
       - name: Print the debug info STDOUT
-        run: echo "The head of this PR starts with 'releases/'"
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
         # - name: Commit changes
         #     run: |
         #     git config --global user.name "github-actions[bot]"
