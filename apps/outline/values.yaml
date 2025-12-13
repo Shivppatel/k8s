@@ -727,7 +727,7 @@ outline:
   # -- External Redis parameters
   externalRedis:
     # -- External Redis server host
-    host: "redis-master.redis.svc.cluster.local"
+    host: redis-master.redis.svc.cluster.local
     # -- External Redis username
     username: ""
     # -- External Redis password
@@ -736,7 +736,7 @@ outline:
     port: 6379
     # -- The name of an existing secret with Redis (must contain key `redis-password`) and Sentinel credentials.
     # When it's set, the `externalRedis.password` parameter is ignored
-    existingSecret: "outline-redis-secret"
+    existingSecret: outline-redis-secret
     # -- This is for setting up the external redis username secret key.
     usernameSecretKey: "redis-username"
     # -- This is for setting up the external redis password secret key.
@@ -790,9 +790,9 @@ outline:
   # -- External PostgreSQL parameters
   externalPostgresql:
     # -- External PostgreSQL server host
-    host: "postgresql-rw.postgresql.svc.cluster.local"
+    host: postgresql-rw.postgresql.svc.cluster.local
     # -- External PostgreSQL username
-    username: "outline"
+    username: outline
     # -- External PostgreSQL password
     password: ""
     # -- External PostgreSQL server port
@@ -800,7 +800,7 @@ outline:
     # -- The name of the external PostgreSQL database. For more information: https://docs.getoutline.com/s/hosting/doc/docker-7pfeLP5a8t
     database: outline
     # -- The name of an existing secret with PostgreSQL (must contain key `postgres-password`) and credentials. When it's set, the `externalPostgresql.password` parameter is ignored
-    existingSecret: "outline-db-secret"
+    existingSecret: outline-db-secret
     # -- DEPRECATED: Use passwordSecretKey field instead. This field will be removed in a future release.
     secretKey: "postgres-password"
     # -- This is for setting up the external postgresql secret key.
