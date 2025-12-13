@@ -1,5 +1,8 @@
 nextcloud:
   nextcloud:
     host: nextcloud.shivpatel.xyz
-    username: admin
-    password: changeme
+    existingSecret:
+      enabled: true
+      secretName: nextcloud-secret
+      usernameKey: nextcloud-username
+      passwordKey: nextcloud-password
