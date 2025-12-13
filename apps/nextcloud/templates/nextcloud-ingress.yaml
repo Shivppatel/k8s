@@ -5,11 +5,11 @@ metadata:
   namespace: nextcloud
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`nextcloud.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: nextcloud
-      port: 8080
+    - match: Host(`nextcloud.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: nextcloud
+          port: 8080
   tls: {}

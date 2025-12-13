@@ -5,11 +5,11 @@ metadata:
   namespace: vault
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`vault.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: vault
-      port: 8200
+    - match: Host(`vault.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: vault
+          port: 8200
   tls: {}

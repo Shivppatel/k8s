@@ -5,11 +5,11 @@ metadata:
   namespace: redis
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`tesla.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: teslamate
-      port: 4000
+    - match: Host(`tesla.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: teslamate
+          port: 4000
   tls: {}

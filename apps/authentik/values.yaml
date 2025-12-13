@@ -6,10 +6,8 @@ authentik:
   # -- Override the Kubernetes version, which is used to evaluate certain manifests
   kubeVersionOverride: ""
 
-
   ## Globally shared configuration for authentik components.
   global:
-
     # To override bitnami images
     security:
       allowInsecureImages: true
@@ -145,7 +143,6 @@ authentik:
       # - name: custom
       #   emptyDir: {}
 
-
   ## Authentik configuration
   authentik:
     # -- whether to create the authentik configuration secret
@@ -211,9 +208,8 @@ authentik:
     redis:
       # -- set the redis hostname to talk to
       # @default -- `{{ .Release.Name }}-redis-master`
-      host: '{{ .Release.Name }}-redis-master'
+      host: "{{ .Release.Name }}-redis-master"
       password: ""
-
 
   blueprints:
     # -- List of config maps to mount blueprints from.
@@ -222,7 +218,6 @@ authentik:
     # -- List of secrets to mount blueprints from.
     # Only keys in the secret ending with `.yaml` will be discovered and applied.
     secrets: []
-
 
   ## authentik server
   server:
@@ -661,7 +656,6 @@ authentik:
         # -- Additional custom rules that can be added to the route
         additionalRules: []
 
-
   ## authentik worker
   worker:
     # -- whether to enable worker resources
@@ -987,7 +981,6 @@ authentik:
         # -- Prometheus ServiceMonitor annotations
         annotations: {}
 
-
   serviceAccount:
     # -- Create service account. Needed for managed outposts
     create: true
@@ -999,7 +992,6 @@ authentik:
       # disable its creation
       enabled: false
     fullnameOverride: authentik
-
 
   geoip:
     # -- enable GeoIP sidecars for the authentik server and worker pods
@@ -1081,7 +1073,6 @@ authentik:
       #   drop:
       #     - ALL
 
-
   prometheus:
     rules:
       enabled: false
@@ -1097,7 +1088,6 @@ authentik:
       annotations: {}
       # -- PrometheusRuleGroup additional annotations
       additionalRuleGroupAnnotations: {}
-
 
   postgresql:
     # -- enable the Bitnami PostgreSQL chart. Refer to https://github.com/bitnami/charts/blob/main/bitnami/postgresql/ for possible values.
@@ -1157,7 +1147,6 @@ authentik:
     metrics:
       resourcesPreset: "none"
 
-
   redis:
     # -- enable the Bitnami Redis chart. Refer to https://github.com/bitnami/charts/blob/main/bitnami/redis/ for possible values.
     enabled: true
@@ -1180,7 +1169,6 @@ authentik:
       resourcesPreset: "none"
     sysctl:
       resourcesPreset: "none"
-
 
   # -- additional resources to deploy. Those objects are templated.
   additionalObjects: []

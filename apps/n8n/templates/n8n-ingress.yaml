@@ -5,11 +5,11 @@ metadata:
   namespace: n8n
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`n8n.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: n8n
-      port: 5678
+    - match: Host(`n8n.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: n8n
+          port: 5678
   tls: {}

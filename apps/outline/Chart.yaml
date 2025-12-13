@@ -11,4 +11,4 @@ appVersion: "1.1.0"
 dependencies:
   - name: outline
     repository: https://community-charts.github.io/helm-charts
-    version: 0.7.3 
+    version: 0.7.3

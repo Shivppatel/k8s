@@ -5,11 +5,11 @@ metadata:
   namespace: minio
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`mongodb.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: mongodb
-      port: 27017
+    - match: Host(`mongodb.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: mongodb
+          port: 27017
   tls: {}

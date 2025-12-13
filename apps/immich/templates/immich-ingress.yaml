@@ -5,11 +5,11 @@ metadata:
   namespace: immich
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`immich.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: immich-server
-      port: 2283
+    - match: Host(`immich.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: immich-server
+          port: 2283
   tls: {}

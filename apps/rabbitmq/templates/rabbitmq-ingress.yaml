@@ -5,11 +5,11 @@ metadata:
   namespace: rabbitmq
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`rabbitmq.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: rabbitmq
-      port: 15672
+    - match: Host(`rabbitmq.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: rabbitmq
+          port: 15672
   tls: {}

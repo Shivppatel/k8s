@@ -5,11 +5,11 @@ metadata:
   namespace: authentik
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`authentik.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: authentik-server
-      port: 80
+    - match: Host(`authentik.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: authentik-server
+          port: 80
   tls: {}

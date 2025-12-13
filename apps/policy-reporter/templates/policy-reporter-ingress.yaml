@@ -5,11 +5,11 @@ metadata:
   namespace: kyverno
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`policy-reporter.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: policy-reporter-ui
-      port: 8080
+    - match: Host(`policy-reporter.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: policy-reporter-ui
+          port: 8080
   tls: {}

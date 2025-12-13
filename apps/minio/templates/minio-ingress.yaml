@@ -5,11 +5,11 @@ metadata:
   namespace: minio
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`minio.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: minio-console
-      port: 9090
+    - match: Host(`minio.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: minio-console
+          port: 9090
   tls: {}

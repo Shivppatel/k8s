@@ -5,11 +5,11 @@ metadata:
   namespace: kube-system
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`headlamp.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: headlamp
-      port: 80
+    - match: Host(`headlamp.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: headlamp
+          port: 80
   tls: {}

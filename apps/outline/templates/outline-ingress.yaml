@@ -5,11 +5,11 @@ metadata:
   namespace: outline
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`outline.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: outline
-      port: 3000
+    - match: Host(`outline.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: outline
+          port: 3000
   tls: {}

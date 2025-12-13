@@ -5,11 +5,11 @@ metadata:
   namespace: it-tools
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`tools.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: it-tools
-      port: 8080
+    - match: Host(`tools.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: it-tools
+          port: 8080
   tls: {}

@@ -5,13 +5,13 @@ metadata:
   namespace: traefik
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`traefik.shivpatel.xyz`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
-    kind: Rule
-    middlewares:
-    - name: add-trailing-slash
-    services:
-    - name: api@internal
-      kind: TraefikService
+    - match: Host(`traefik.shivpatel.xyz`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      kind: Rule
+      middlewares:
+        - name: add-trailing-slash
+      services:
+        - name: api@internal
+          kind: TraefikService
   tls: {}

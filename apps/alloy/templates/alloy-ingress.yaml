@@ -5,11 +5,11 @@ metadata:
   namespace: observability
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`alloy.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: alloy
-      port: 12345
+    - match: Host(`alloy.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: alloy
+          port: 12345
   tls: {}

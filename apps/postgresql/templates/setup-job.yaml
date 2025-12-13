@@ -70,13 +70,13 @@ spec:
             - -c
             - |
               set -e
-              
+
               # Wait for PostgreSQL to be ready
               until pg_isready -h $PGHOST -p 5432 -U $PGUSER; do
                 echo "Waiting for PostgreSQL..."
                 sleep 2
               done
-              
+
               # Ensure all users and databases exist (non-destructive)
               for app in immich keycloak n8n teslamate authentik gitea outline; do
                 echo "Ensuring $app user and database exist..."
@@ -91,22 +91,22 @@ spec:
                   echo "Database $app already exists, skipping creation"
                 fi
               done
-              
+
               echo "Setting up immich database..."
               psql -d immich -c "CREATE EXTENSION IF NOT EXISTS cube;"
               psql -d immich -c "CREATE EXTENSION IF NOT EXISTS earthdistance;"
               psql -d immich -c "CREATE EXTENSION IF NOT EXISTS vector;"
               psql -d immich -c "ALTER SCHEMA public OWNER TO immich;"
               psql -d immich -c "GRANT ALL ON SCHEMA public TO immich;"
-              
+
               echo "Setting up keycloak database..."
               psql -d keycloak -c "ALTER SCHEMA public OWNER TO keycloak;"
               psql -d keycloak -c "GRANT ALL ON SCHEMA public TO keycloak;"
-              
+
               echo "Setting up n8n database..."
               psql -d n8n -c "ALTER SCHEMA public OWNER TO n8n;"
               psql -d n8n -c "GRANT ALL ON SCHEMA public TO n8n;"
-              
+
               echo "Setting up teslamate database..."
               # TeslaMate migrations drop/recreate geo extensions; do it here with superuser
               psql -d teslamate -c "DROP EXTENSION IF EXISTS earthdistance CASCADE;"
@@ -136,7 +136,7 @@ spec:
               echo "Setting up outline database..."
               psql -d outline -c "ALTER SCHEMA public OWNER TO outline;"
               psql -d outline -c "GRANT ALL ON SCHEMA public TO outline;"
-              
+
               # Sync passwords from ExternalSecrets to database users
               echo "Syncing passwords from ExternalSecrets..."
               # Read secrets directly from mounted files or environment variables

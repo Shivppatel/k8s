@@ -5,11 +5,11 @@ metadata:
   namespace: logging
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`kibana.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: kibana-kibana
-      port: 5601
+    - match: Host(`kibana.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: kibana-kibana
+          port: 5601
   tls: {}

@@ -5,11 +5,11 @@ metadata:
   namespace: gitea
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`gitea.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: gitea-http
-      port: 3000
+    - match: Host(`gitea.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: gitea-http
+          port: 3000
   tls: {}

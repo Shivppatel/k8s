@@ -2,14 +2,14 @@ traefik:
   ingressRoute:
     dashboard:
       enabled: true
-      
+
   logs:
     general:
       level: "INFO" # DEBUG if needed
 
   service:
     type: LoadBalancer
-    loadBalancerIP: "192.168.20.20"  # Choose an available IP from your MetalLB range
+    loadBalancerIP: "192.168.20.20" # Choose an available IP from your MetalLB range
 
   additionalArguments:
     - --entryPoints.web.http.redirections.entryPoint.to=websecure

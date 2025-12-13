@@ -5,11 +5,11 @@ metadata:
   namespace: observability
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`prometheus.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: kube-prometheus-stack-prometheus
-      port: 9090
+    - match: Host(`prometheus.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: kube-prometheus-stack-prometheus
+          port: 9090
   tls: {}

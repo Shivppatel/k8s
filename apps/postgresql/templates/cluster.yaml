@@ -12,15 +12,15 @@ spec:
   enablePDB: true
   minSyncReplicas: 1
   maxSyncReplicas: 2
-  
+
   # Note: For pgvector support, you may need a custom image
   # Options: ghcr.io/tensorchord/cloudnative-pgvecto.rs:17-v0.4.0 (uses 'vectors' extension)
   # Or build custom image with pgvector
   imageName: ghcr.io/cloudnative-pg/postgresql:17
-  
+
   # Let CNPG manage superuser - creates postgresql-superuser secret automatically
   enableSuperuserAccess: true
-  
+
   # Bootstrap - create users, databases, and set permissions
   bootstrap:
     initdb:
@@ -45,8 +45,7 @@ spec:
         - CREATE DATABASE outline OWNER outline
 
   # Note: Application users are managed via ExternalSecrets
-# CNPG creates users in bootstrap, ExternalSecrets manages passwords
+  # CNPG creates users in bootstrap, ExternalSecrets manages passwords
 
   storage:
     size: 50Gi
-  

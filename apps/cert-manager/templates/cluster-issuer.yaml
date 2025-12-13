@@ -10,9 +10,9 @@ spec:
     privateKeySecretRef:
       name: cloudflare-clusterissuer-account-key
     solvers:
-    - dns01:
-        cloudflare:
-          email: mail@shivpatel.xyz
-          apiTokenSecretRef:
-            name: cloudflare-api-token-secret
-            key: api-token
+      - dns01:
+          cloudflare:
+            email: mail@shivpatel.xyz
+            apiTokenSecretRef:
+              name: cloudflare-api-token-secret
+              key: api-token

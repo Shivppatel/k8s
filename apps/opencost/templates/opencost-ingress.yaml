@@ -5,11 +5,11 @@ metadata:
   namespace: opencost
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`opencost.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: opencost
-      port: 9090
+    - match: Host(`opencost.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: opencost
+          port: 9090
   tls: {}

@@ -5,11 +5,11 @@ metadata:
   namespace: ai
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`chat.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: open-webui
-      port: 80
+    - match: Host(`chat.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: open-webui
+          port: 80
   tls: {}

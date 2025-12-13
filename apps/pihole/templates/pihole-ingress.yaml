@@ -5,11 +5,11 @@ metadata:
   namespace: pihole
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`pihole.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: pihole-web
-      port: 80
+    - match: Host(`pihole.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: pihole-web
+          port: 80
   tls: {}

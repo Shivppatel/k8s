@@ -5,11 +5,11 @@ metadata:
   namespace: kube-system
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`home.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: home-assistant
-      port: 8080
+    - match: Host(`home.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: home-assistant
+          port: 8080
   tls: {}
