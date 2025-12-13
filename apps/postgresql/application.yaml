@@ -13,7 +13,7 @@ spec:
       recurse: false
   syncPolicy:
     automated:
-      prune: false  # Disable pruning to protect PVC
+      prune: false # Disable pruning to protect PVC
       selfHeal: true
     syncOptions:
       - CreateNamespace=true

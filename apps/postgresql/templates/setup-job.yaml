@@ -1,0 +1,154 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgresql-setup
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: OnFailure
+      volumes:
+        - name: immich-db-secret
+          secret:
+            secretName: immich-db-secret
+        - name: keycloak-db-secret
+          secret:
+            secretName: keycloak-db-secret
+        - name: n8n-db-secret
+          secret:
+            secretName: n8n-db-secret
+        - name: teslamate-db-secret
+          secret:
+            secretName: teslamate-db-secret
+        - name: authentik-db-secret
+          secret:
+            secretName: authentik-db-secret
+        - name: gitea-db-secret
+          secret:
+            secretName: gitea-db-secret
+        - name: outline-db-secret
+          secret:
+            secretName: outline-db-secret
+      containers:
+        - name: setup
+          image: ghcr.io/cloudnative-pg/postgresql:17
+          env:
+            - name: PGHOST
+              value: postgresql-rw.postgresql.svc.cluster.local
+            # CNPG auto-generates this secret: <cluster-name>-superuser
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-superuser
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-superuser
+                  key: password
+          volumeMounts:
+            - name: immich-db-secret
+              mountPath: /run/secrets/immich-db-secret
+            - name: keycloak-db-secret
+              mountPath: /run/secrets/keycloak-db-secret
+            - name: n8n-db-secret
+              mountPath: /run/secrets/n8n-db-secret
+            - name: teslamate-db-secret
+              mountPath: /run/secrets/teslamate-db-secret
+            - name: authentik-db-secret
+              mountPath: /run/secrets/authentik-db-secret
+            - name: gitea-db-secret
+              mountPath: /run/secrets/gitea-db-secret
+            - name: outline-db-secret
+              mountPath: /run/secrets/outline-db-secret
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+
+              # Wait for PostgreSQL to be ready
+              until pg_isready -h $PGHOST -p 5432 -U $PGUSER; do
+                echo "Waiting for PostgreSQL..."
+                sleep 2
+              done
+
+              # Ensure all users and databases exist (non-destructive)
+              for app in immich keycloak n8n teslamate authentik gitea outline; do
+                echo "Ensuring $app user and database exist..."
+                psql -c "DO \$\$ BEGIN CREATE USER $app WITH PASSWORD 'temp'; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$;"
+                
+                # Check if database exists, but don't recreate it if it has data
+                DB_EXISTS=$(psql -tAc "SELECT 1 FROM pg_database WHERE datname='$app'" 2>/dev/null || echo "")
+                if [ -z "$DB_EXISTS" ]; then
+                  echo "Creating database $app..."
+                  psql -c "CREATE DATABASE $app OWNER $app;"
+                else
+                  echo "Database $app already exists, skipping creation"
+                fi
+              done
+
+              echo "Setting up immich database..."
+              psql -d immich -c "CREATE EXTENSION IF NOT EXISTS cube;"
+              psql -d immich -c "CREATE EXTENSION IF NOT EXISTS earthdistance;"
+              psql -d immich -c "CREATE EXTENSION IF NOT EXISTS vector;"
+              psql -d immich -c "ALTER SCHEMA public OWNER TO immich;"
+              psql -d immich -c "GRANT ALL ON SCHEMA public TO immich;"
+
+              echo "Setting up keycloak database..."
+              psql -d keycloak -c "ALTER SCHEMA public OWNER TO keycloak;"
+              psql -d keycloak -c "GRANT ALL ON SCHEMA public TO keycloak;"
+
+              echo "Setting up n8n database..."
+              psql -d n8n -c "ALTER SCHEMA public OWNER TO n8n;"
+              psql -d n8n -c "GRANT ALL ON SCHEMA public TO n8n;"
+
+              echo "Setting up teslamate database..."
+              # TeslaMate migrations drop/recreate geo extensions; do it here with superuser
+              psql -d teslamate -c "DROP EXTENSION IF EXISTS earthdistance CASCADE;"
+              psql -d teslamate -c "DROP EXTENSION IF EXISTS cube CASCADE;"
+              psql -d teslamate -c "CREATE EXTENSION cube WITH SCHEMA public;"
+              psql -d teslamate -c "CREATE EXTENSION earthdistance WITH SCHEMA public;"
+              # Ensure extension is on latest version for TeslaMate migrations
+              psql -d teslamate -c "ALTER EXTENSION earthdistance UPDATE;"
+              # Give the application user ownership so future migrations can modify objects
+              psql -d teslamate -c "ALTER FUNCTION ll_to_earth(double precision, double precision) OWNER TO teslamate;"
+              psql -d teslamate -c "ALTER FUNCTION earth_box(earth, double precision) OWNER TO teslamate;"
+              psql -d teslamate -c "ALTER SCHEMA public OWNER TO teslamate;"
+              psql -d teslamate -c "GRANT ALL ON SCHEMA public TO teslamate;"
+              # Mark TeslaMate migration 20240929084639 as applied so it doesn't re-drop extensions
+              psql -d teslamate -c "INSERT INTO schema_migrations (version, inserted_at) VALUES ('20240929084639', NOW()) ON CONFLICT (version) DO NOTHING;"
+              # Mark TeslaMate migration 20250407155134 (earthdistance upgrade) as complete
+              psql -d teslamate -c "INSERT INTO schema_migrations (version, inserted_at) VALUES ('20250407155134', NOW()) ON CONFLICT (version) DO NOTHING;"
+
+              echo "Setting up authentik database..."
+              psql -d authentik -c "ALTER SCHEMA public OWNER TO authentik;"
+              psql -d authentik -c "GRANT ALL ON SCHEMA public TO authentik;"
+
+              echo "Setting up gitea database..."
+              psql -d gitea -c "ALTER SCHEMA public OWNER TO gitea;"
+              psql -d gitea -c "GRANT ALL ON SCHEMA public TO gitea;"
+
+              echo "Setting up outline database..."
+              psql -d outline -c "ALTER SCHEMA public OWNER TO outline;"
+              psql -d outline -c "GRANT ALL ON SCHEMA public TO outline;"
+
+              # Sync passwords from ExternalSecrets to database users
+              echo "Syncing passwords from ExternalSecrets..."
+              # Read secrets directly from mounted files or environment variables
+              for app in immich keycloak n8n teslamate authentik gitea outline; do
+                echo "Syncing password for $app..."
+                # Use environment variables or mount secrets as files
+                PASSWORD=$(cat /run/secrets/${app}-db-secret/password 2>/dev/null || echo "")
+                if [ -z "$PASSWORD" ]; then
+                  echo "Warning: Could not read password for $app, keeping existing password"
+                else
+                  psql -c "ALTER USER $app WITH PASSWORD '$PASSWORD';"
+                fi
+              done
+
+              echo "Setup complete!"

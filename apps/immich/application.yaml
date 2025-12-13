@@ -14,7 +14,7 @@ spec:
         - values.yaml
   syncPolicy:
     automated:
-      prune: false  # Protect photo library from deletion
+      prune: false # Protect photo library from deletion
       selfHeal: true
     syncOptions:
       - CreateNamespace=true

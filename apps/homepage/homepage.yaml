@@ -314,7 +314,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
-              value: shivpatel.xyz,homepage.shivpatel.xyz # required, may need port. See gethomepage.dev/installation/#homepage_allowed_hosts
+              value: shivpatel.xyz,homepage.shivpatel.xyz
           ports:
             - name: http
               containerPort: 3000
@@ -360,11 +360,11 @@ metadata:
   namespace: homepage
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`homepage.shivpatel.xyz`)
-    kind: Rule
-    services:
-    - name: homepage
-      port: 3000
+    - match: Host(`homepage.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: homepage
+          port: 3000
   tls: {}

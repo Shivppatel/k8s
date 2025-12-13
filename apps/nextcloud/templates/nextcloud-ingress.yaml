@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nextcloud-ingress
+  namespace: nextcloud
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`nextcloud.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: nextcloud
+          port: 8080
+  tls: {}

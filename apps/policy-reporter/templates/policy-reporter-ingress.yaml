@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: policy-reporter-ingress
+  namespace: kyverno
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`policy-reporter.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: policy-reporter-ui
+          port: 8080
+  tls: {}

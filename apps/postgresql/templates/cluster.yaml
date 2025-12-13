@@ -1,0 +1,51 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: PrunePropagationPolicy=foreground, Prune=false
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+spec:
+  instances: 3
+  enablePDB: true
+  minSyncReplicas: 1
+  maxSyncReplicas: 2
+
+  # Note: For pgvector support, you may need a custom image
+  # Options: ghcr.io/tensorchord/cloudnative-pgvecto.rs:17-v0.4.0 (uses 'vectors' extension)
+  # Or build custom image with pgvector
+  imageName: ghcr.io/cloudnative-pg/postgresql:17
+
+  # Let CNPG manage superuser - creates postgresql-superuser secret automatically
+  enableSuperuserAccess: true
+
+  # Bootstrap - create users, databases, and set permissions
+  bootstrap:
+    initdb:
+      database: postgres
+      owner: postgres
+      postInitSQL:
+        # Create users (managed roles will sync passwords later)
+        - CREATE USER immich WITH PASSWORD 'temp'
+        - CREATE USER keycloak WITH PASSWORD 'temp'
+        - CREATE USER n8n WITH PASSWORD 'temp'
+        - CREATE USER teslamate WITH PASSWORD 'temp'
+        - CREATE USER authentik WITH PASSWORD 'temp'
+        - CREATE USER gitea WITH PASSWORD 'temp'
+        - CREATE USER outline WITH PASSWORD 'temp'
+        # Create databases with correct ownership
+        - CREATE DATABASE immich OWNER immich
+        - CREATE DATABASE keycloak OWNER keycloak
+        - CREATE DATABASE n8n OWNER n8n
+        - CREATE DATABASE teslamate OWNER teslamate
+        - CREATE DATABASE authentik OWNER authentik
+        - CREATE DATABASE gitea OWNER gitea
+        - CREATE DATABASE outline OWNER outline
+
+  # Note: Application users are managed via ExternalSecrets
+  # CNPG creates users in bootstrap, ExternalSecrets manages passwords
+
+  storage:
+    size: 50Gi

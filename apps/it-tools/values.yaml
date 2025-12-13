@@ -71,7 +71,7 @@ it-tools:
     securityContext:
       capabilities:
         drop:
-        - ALL
+          - ALL
       readOnlyRootFilesystem: true
       runAsNonRoot: true
       runAsUser: 10099
@@ -102,7 +102,7 @@ it-tools:
   securityContext:
     capabilities:
       drop:
-      - ALL
+        - ALL
     readOnlyRootFilesystem: true
     runAsNonRoot: true
     runAsUser: 10099
@@ -161,8 +161,8 @@ it-tools:
 
   ## @section Nginx configuration parameters
   ## Nginx configuration parameters
-  ## @param nginxConf.existingConfigmap Provide an existing ConfigMap for the Nginx configuration 
-  ## @param nginxConf.cachePath Provide a cache path override (useful for other it-tools images such as Chainguard) 
+  ## @param nginxConf.existingConfigmap Provide an existing ConfigMap for the Nginx configuration
+  ## @param nginxConf.cachePath Provide a cache path override (useful for other it-tools images such as Chainguard)
   ##
   nginxConf:
     existingConfigmap: ""
@@ -170,13 +170,12 @@ it-tools:
 
   ## @section Extra volumes parameter
   ## Extra volumes parameter
-  ## @param extraVolumes Provide extra volumes for the main pod 
+  ## @param extraVolumes Provide extra volumes for the main pod
   ##
   extraVolumes: []
 
   ## @section Extra containers parameter
   ## Extra containers parameter
-  ## @param extraContainers Provide extra containers for the main pod 
+  ## @param extraContainers Provide extra containers for the main pod
   ##
   extraContainers: []
-

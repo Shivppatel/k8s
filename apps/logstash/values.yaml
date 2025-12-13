@@ -11,7 +11,7 @@ logstash:
     limits:
       cpu: "1000m"
       memory: "1Gi"
-  
+
   logstashConfig:
     logstash.yml: |
       http.host: 0.0.0.0
@@ -50,7 +50,7 @@ logstash:
         }
       }
 
-  secretMounts: 
+  secretMounts:
     - name: elasticsearch-master-certs
       secretName: elasticsearch-master-certs
       path: /usr/share/logstash/config/certs

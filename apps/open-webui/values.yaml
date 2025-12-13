@@ -7,11 +7,11 @@ open-webui:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
-          - matchExpressions:
-            - key: ram
-              operator: In
-              values:
-              - high
+            - matchExpressions:
+                - key: ram
+                  operator: In
+                  values:
+                    - high
 
     # Enable persistent storage for Ollama models
     persistentVolume:

@@ -3,7 +3,7 @@ elasticsearch:
   minimumMasterNodes: 2
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=30s"
   updateStrategy: OnDelete
-  
+
   readinessProbe:
     timeoutSeconds: 35
 

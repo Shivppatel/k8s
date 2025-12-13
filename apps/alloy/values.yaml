@@ -50,7 +50,7 @@ alloy:
             label = "app.kubernetes.io/instance=argocd"
           }
         }
-        
+
         discovery.relabel "argocd_metrics" {
           targets = discovery.kubernetes.argocd_pods.targets
           
@@ -425,7 +425,7 @@ alloy:
   controller:
     # -- Type of controller to use for deploying Grafana Alloy in the cluster.
     # Must be one of 'daemonset', 'deployment', or 'statefulset'.
-    type: 'daemonset'
+    type: "daemonset"
 
     # -- Number of pods to deploy. Ignored when controller.type is 'daemonset'.
     replicas: 1
@@ -469,7 +469,7 @@ alloy:
     topologySpreadConstraints: []
 
     # -- priorityClassName to apply to Grafana Alloy pods.
-    priorityClassName: ''
+    priorityClassName: ""
 
     # -- Extra pod annotations to add.
     podAnnotations: {}
@@ -578,21 +578,21 @@ alloy:
         resourcePolicy:
           # -- Configures the container policies for the Vertical Pod Autoscaler.
           containerPolicies:
-          - containerName: alloy
-            # -- The controlled resources for the Vertical Pod Autoscaler.
-            controlledResources:
-            - cpu
-            - memory
-            # -- The controlled values for the Vertical Pod Autoscaler. Needs to be either RequestsOnly or RequestsAndLimits.
-            controlledValues: "RequestsAndLimits"
-            # -- The maximum allowed values for the pods.
-            maxAllowed: {}
-            # cpu: 200m
-            # memory: 100Mi
-            # -- Defines the min allowed resources for the pod
-            minAllowed: {}
-            # cpu: 200m
-            # memory: 100Mi
+            - containerName: alloy
+              # -- The controlled resources for the Vertical Pod Autoscaler.
+              controlledResources:
+                - cpu
+                - memory
+              # -- The controlled values for the Vertical Pod Autoscaler. Needs to be either RequestsOnly or RequestsAndLimits.
+              controlledValues: "RequestsAndLimits"
+              # -- The maximum allowed values for the pods.
+              maxAllowed: {}
+              # cpu: 200m
+              # memory: 100Mi
+              # -- Defines the min allowed resources for the pod
+              minAllowed: {}
+              # cpu: 200m
+              # memory: 100Mi
 
         # -- Configures the update policy for the Vertical Pod Autoscaler.
         updatePolicy:
@@ -644,7 +644,7 @@ alloy:
     # -- NodePort port. Only takes effect when `service.type: NodePort`
     nodePort: 31128
     # -- Cluster IP, can be set to None, empty "" or an IP address
-    clusterIP: ''
+    clusterIP: ""
     # -- Value for internal traffic policy. 'Cluster' or 'Local'
     internalTrafficPolicy: Cluster
     annotations: {}
@@ -682,8 +682,7 @@ alloy:
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
     # ingressClassName: nginx
     # Values can be templated
-    annotations:
-      {}
+    annotations: {}
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
     labels: {}

@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: open-webui-ingress
+  namespace: ai
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`chat.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: open-webui
+          port: 80
+  tls: {}

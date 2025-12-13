@@ -13,12 +13,11 @@ argocd-apps:
         helm:
           valueFiles:
             - values.yaml
-      syncPolicy:
-        {}
+      syncPolicy: {}
         #automated:
         #prune: false
         #selfHeal: false
-  
+
   projects:
     - name: default
       namespace: argocd
@@ -31,7 +30,7 @@ argocd-apps:
       clusterResourceWhitelist:
         - group: "*"
           kind: "*"
-  
+
   applicationsets: []
 
   extensions: []

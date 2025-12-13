@@ -206,7 +206,6 @@ outline:
 
   # -- This is for setting up the auth.
   auth:
-
     # -- This is for setting up the slack. More information about slack can be found here: https://docs.getoutline.com/s/hosting/doc/slack-sgMujR8J9J
     slack:
       # -- This is for setting up the slack enabled.
@@ -453,7 +452,6 @@ outline:
 
   # -- This is for setting up the integrations. More information about integrations can be found here: https://docs.getoutline.com/s/hosting/doc/integrations-Oav5MXNDJk
   integrations:
-
     # -- This is for setting up the iframely. More information about iframely can be found here: https://docs.getoutline.com/s/hosting/doc/iframely-HwLF1EZ9mo
     iframely:
       # -- This is for setting up the iframely enabled.
