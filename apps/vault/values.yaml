@@ -11,4 +11,17 @@ vault:
     serverTelemetry:
       enabled: true
       prometheusRules:
-        enabled: true
+        enabled: true       
+
+
+
+
+
+
+
+
+
+
+
+
+
