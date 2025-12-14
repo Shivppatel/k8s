@@ -2,7 +2,7 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: k8s-dashboard-ingress
-  namespace: observability
+  namespace: kubernetes-dashboard
 spec:
   entryPoints:
     - websecure
