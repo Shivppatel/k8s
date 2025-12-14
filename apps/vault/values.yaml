@@ -9,6 +9,5 @@ vault:
       size: 10Gi
   global:
     serverTelemetry:
-      enabled: true
-      prometheusRules:
+      serviceMonitor:
         enabled: true
