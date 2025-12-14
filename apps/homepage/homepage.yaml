@@ -118,6 +118,10 @@ data:
             description: Ingress and stuff
 
     - Apps:
+        - EMQX:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/emqx.png
+            href: https://emqx.shivpatel.xyz/
+            description: MQTT broker and stuff
         - MiniO:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/minio.png
             href: https://minio.shivpatel.xyz/
