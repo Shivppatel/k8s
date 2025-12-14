@@ -29,7 +29,7 @@ teslamate:
               # -- Disables the MQTT feature if `true`
               DISABLE_MQTT: "false"
               # -- MQTT server host
-              MQTT_HOST: "mosquitto"
+              MQTT_HOST: "emqx.emqx.svc.cluster.local"
               # -- MQTT server port
               MQTT_PORT: 1883
               # -- MQTT username
