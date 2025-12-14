@@ -882,7 +882,7 @@ n8n:
   # -- The service monitor configuration. Please refer to the following link for more information: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md
   serviceMonitor:
     # -- When set true then use a ServiceMonitor to configure scraping
-    enabled: false
+    enabled: true
     # -- Set the namespace the ServiceMonitor should be deployed. If empty, the ServiceMonitor will be deployed in the same namespace as the n8n chart.
     namespace: ""
     # -- Set how frequently Prometheus should scrape

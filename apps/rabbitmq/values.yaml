@@ -13,3 +13,7 @@ rabbitmq:
     existingErlangSecret: rabbitmq
     # Force password update even with existing persisted data
     forcePassword: true
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true

@@ -17,3 +17,7 @@ redis:
       enabled: true
     updateStrategy:
       type: OnDelete
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true

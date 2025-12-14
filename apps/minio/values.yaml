@@ -17,3 +17,7 @@ minio:
     image:
       registry: docker.io
       repository: bitnamilegacy/minio-object-browser
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true

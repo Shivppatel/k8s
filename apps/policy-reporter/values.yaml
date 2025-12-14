@@ -4,3 +4,5 @@ policy-reporter:
       enabled: true
   ui:
     enabled: true
+  monitoring:
+    enabled: true

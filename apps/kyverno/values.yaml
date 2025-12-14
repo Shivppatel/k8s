@@ -7,3 +7,15 @@ kyverno:
       allowCrossNamespaceImport: true
       matchLabels:
         dashboards: "grafana"
+  admissionController:
+    serviceMonitor:
+      enabled: true
+  backgroundController:
+    serviceMonitor:
+      enabled: true
+  cleanupController:
+    serviceMonitor:
+      enabled: true
+  reportsController:
+    serviceMonitor:
+      enabled: true

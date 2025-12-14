@@ -256,7 +256,7 @@ emqx:
     runAsUser: 1000
 
   metrics:
-    enabled: false
+    enabled: true
     type: prometheus
 
   ssl:

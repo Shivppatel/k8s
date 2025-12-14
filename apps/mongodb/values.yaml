@@ -4,3 +4,7 @@ mongodb:
     repository: bitnamilegacy/mongodb
   updateStrategy:
     type: Recreate
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true

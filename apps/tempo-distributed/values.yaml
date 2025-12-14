@@ -1,2 +1,5 @@
 tempo-distributed:
   useExternalConfig: false
+  metaMonitoring:
+    serviceMonitor:
+      enabled: true
