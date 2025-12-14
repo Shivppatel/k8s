@@ -10,6 +10,6 @@ spec:
     - match: Host(`k8s-dashboard.shivpatel.xyz`)
       kind: Rule
       services:
-        - name: kubernetes-dashboard
+        - name: kubernetes-dashboard-web
           port: 8000
   tls: {}
