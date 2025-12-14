@@ -10,6 +10,6 @@ spec:
     - match: Host(`emqx.shivpatel.xyz`)
       kind: Rule
       services:
-        - name: emqx-dashboard
+        - name: emqx
           port: 18083
   tls: {}
