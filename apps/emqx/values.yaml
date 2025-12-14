@@ -25,7 +25,7 @@ emqx:
   # be added to the environment (must be manually created)
   # This can be useful for passwords and logins, etc.
 
-  # envFromSecret: "emqx-secrets"
+  envFromSecret: "emqx-dashboard-secret"
 
   ## Forces the recreation of pods during helm upgrades. This can be useful to update configuration values even if the container image did not change.
   recreatePods: false
@@ -119,18 +119,9 @@ emqx:
     #       sysctl -w net.netfilter.nf_conntrack_tcp_timeout_time_wait=30
 
   ## EMQX configuration item, see the documentation (https://hub.docker.com/r/emqx/emqx)
+  ## Note: Dashboard credentials are loaded via envFromSecret
   emqxConfig:
     EMQX_CLUSTER__DISCOVERY_STRATEGY: "dns"
-    EMQX_DASHBOARD__DEFAULT_USERNAME:
-      valueFrom:
-        secretKeyRef:
-          name: emqx-dashboard-secret
-          key: username
-    EMQX_DASHBOARD__DEFAULT_PASSWORD:
-      valueFrom:
-        secretKeyRef:
-          name: emqx-dashboard-secret
-          key: password
 
   ## EMQX Enterprise Edition requires manual creation of a Secret containing the licensed content. Write the name of Secret to the value of "emqxLicenseSecretName"
   ## Example:
