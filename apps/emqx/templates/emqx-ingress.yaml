@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: emqx-ingress
+  namespace: emqx
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`emqx.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: emqx-dashboard
+          port: 18083
+  tls: {}
