@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: k8s-dashboard-ingress
+  namespace: observability
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`k8s-dashboard.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: kubernetes-dashboard
+          port: 8000
+  tls: {}
