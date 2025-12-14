@@ -37,7 +37,6 @@ spec:
         - CREATE USER teslamate WITH PASSWORD 'temp'
         - CREATE USER authentik WITH PASSWORD 'temp'
         - CREATE USER gitea WITH PASSWORD 'temp'
-        - CREATE USER outline WITH PASSWORD 'temp'
         # Create databases with correct ownership
         - CREATE DATABASE immich OWNER immich
         - CREATE DATABASE keycloak OWNER keycloak
@@ -45,10 +44,6 @@ spec:
         - CREATE DATABASE teslamate OWNER teslamate
         - CREATE DATABASE authentik OWNER authentik
         - CREATE DATABASE gitea OWNER gitea
-        - CREATE DATABASE outline OWNER outline
-
-  # Note: Application users are managed via ExternalSecrets
-  # CNPG creates users in bootstrap, ExternalSecrets manages passwords
 
   storage:
     size: 50Gi
