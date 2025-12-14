@@ -802,7 +802,7 @@ outline:
     # -- DEPRECATED: Use passwordSecretKey field instead. This field will be removed in a future release.
     secretKey: "postgres-password"
     # -- This is for setting up the external postgresql secret key.
-    passwordSecretKey: "postgres-password"
+    passwordSecretKey: "password"
 
   # -- Minio configuration
   minio:
