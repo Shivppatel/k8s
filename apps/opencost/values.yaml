@@ -23,3 +23,6 @@ opencost:
         serviceName: kube-prometheus-stack-prometheus
         namespaceName: observability
         port: 9090
+    metrics:
+      serviceMonitor:
+        enabled: true
