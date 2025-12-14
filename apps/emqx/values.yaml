@@ -50,7 +50,7 @@ emqx:
   podManagementPolicy: Parallel
 
   persistence:
-    enabled: false
+    enabled: true
     size: 20Mi
     storageClassName: ""
     accessMode: ReadWriteOnce
