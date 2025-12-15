@@ -8,17 +8,17 @@ argo-cd:
     replicas: 1
     metrics:
       enabled: true
-      servicemonitor:
+      serviceMonitor:
         enabled: true
   dex:
     metrics:
       enabled: true
-      servicemonitor:
+      serviceMonitor:
         enabled: true
   redis:
     metrics:
       enabled: true
-      servicemonitor:
+      serviceMonitor:
         enabled: true
   server:
     autoscaling:
@@ -26,7 +26,7 @@ argo-cd:
       minReplicas: 2
     metrics:
       enabled: true
-      servicemonitor:
+      serviceMonitor:
         enabled: true
   repoServer:
     autoscaling:
@@ -34,16 +34,16 @@ argo-cd:
       minReplicas: 2
     metrics:
       enabled: true
-      servicemonitor:
+      serviceMonitor:
         enabled: true
   applicationSet:
     replicas: 2
     metrics:
       enabled: true
-      servicemonitor:
+      serviceMonitor:
         enabled: true
   notifications:
     metrics:
       enabled: true
-      servicemonitor:
+      serviceMonitor:
         enabled: true
