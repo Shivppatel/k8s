@@ -1,4 +1,9 @@
 kube-prometheus-stack:
+  # Disable monitoring for components that don't expose metrics
+  kubeEtcd:
+    enabled: false
+  kubeProxy:
+    enabled: false
   grafana:
     persistence:
       enabled: true
