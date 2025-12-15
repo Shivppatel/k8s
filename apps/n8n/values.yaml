@@ -341,7 +341,7 @@ n8n:
     # -- Persistence configuration for the main pod
     persistence:
       # -- Whether to enable persistence
-      enabled: false
+      enabled: true
       # -- Name of the volume to use for persistence
       volumeName: ""
       # -- Existing claim to use for persistence
@@ -517,7 +517,7 @@ n8n:
     # -- Persistence configuration for the worker pod
     persistence:
       # -- Whether to enable persistence
-      enabled: false
+      enabled: true
       # -- Name of the volume to use for persistence
       volumeName: ""
       # -- Existing claim to use for persistence
@@ -1011,14 +1011,14 @@ n8n:
           redis: 6379
 
       persistence:
-        enabled: false
+        enabled: true
 
   # -- External Redis parameters
   externalRedis:
     # -- Redis database for Bull queue.
     database: 0
     # -- External Redis server host
-    host: ""
+    host: "redis-master.redis.svc.cluster.local"
     # -- External Redis username
     username: ""
     # -- External Redis password
@@ -1027,7 +1027,7 @@ n8n:
     port: 6379
     # -- The name of an existing secret with Redis (must contain key `redis-password`) and Sentinel credentials.
     # When it's set, the `externalRedis.password` parameter is ignored
-    existingSecret: ""
+    existingSecret: "n8n-redis-secret"
     # -- List of Redis Cluster nodes. Setting this variable will create a Redis Cluster client instead of a Redis client, and n8n will ignore `externalRedis.host` and `externalRedis.port`.
     clusterNodes: []
       # - host: redis-1
@@ -1133,7 +1133,7 @@ n8n:
     # -- Minio persistence
     persistence:
       # -- Enable persistence
-      enabled: true
+      enabled: false
 
       # -- Minio persistence annotations
       annotations: {}
