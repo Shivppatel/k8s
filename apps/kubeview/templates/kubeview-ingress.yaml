@@ -11,5 +11,5 @@ spec:
       kind: Rule
       services:
         - name: kubeview
-          port: 80
+          port: 8000
   tls: {}
