@@ -26,8 +26,6 @@ vault:
           }
 
           service_registration "kubernetes" {}
-
-          disable_mlock = true
     dataStorage:
       enabled: true
       size: 10Gi
