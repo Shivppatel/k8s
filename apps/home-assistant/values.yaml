@@ -5,6 +5,9 @@ home-assistant:
   deploymentStrategy: Recreate
   serviceMonitor:
     enabled: true
+    bearerToken:
+      secretName: home-assistant-metrics-auth
+      secretKey: token
   ingress:
     external: true
   configuration:
