@@ -70,6 +70,10 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kibana.png
             href: https://kibana.shivpatel.xyz
             description: ES dashboards and stuff
+        - Kubeview:
+            icon: https://artifacthub.io/image/5646a77c-16ff-4174-a2b5-4603c5d4db5e@3x
+            href: https://kubeview.shivpatel.xyz
+            description: Kubeview and stuff
         - Policy Reporter:
             icon: https://kyverno.github.io/policy-reporter-docs/logo.png
             href: https://policy-reporter.shivpatel.xyz
