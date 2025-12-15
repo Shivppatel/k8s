@@ -3,5 +3,6 @@ uptime-kuma:
     repository: louislam/uptime-kuma
     pullPolicy: IfNotPresent
     tag: "2.0.2"
+  # Disable built-in ServiceMonitor, using custom one with secret ref
   serviceMonitor:
-    enabled: true
+    enabled: false
