@@ -1,0 +1,14 @@
+apiVersion: v2
+name: kubeview
+description: A Helm chart for Kubeview
+
+type: application
+
+version: 0.1.0
+
+appVersion: "2.1.1"
+
+dependencies:
+  - name: kubeview
+    repository: https://code.benco.io/kubeview/deploy/helm
+    version: 2.0.5
