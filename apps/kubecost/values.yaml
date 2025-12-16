@@ -1476,7 +1476,7 @@ kubecost:
     enabled: false
     image:
       repository: gcr.io/kubecost1/kubecost-network-costs
-      tag: v0.18.0
+      tag: v0.18.1
     imagePullPolicy: IfNotPresent
     updateStrategy:
       type: RollingUpdate
