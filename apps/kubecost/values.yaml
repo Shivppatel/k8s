@@ -1182,7 +1182,7 @@ kubecost:
         name: configmap-reload
         image:
           repository: quay.io/prometheus-operator/prometheus-config-reloader
-          tag: v0.86.1
+          tag: v0.87.1
           pullPolicy: IfNotPresent
         extraArgs: {}
         extraVolumeDirs: []
@@ -1195,7 +1195,7 @@ kubecost:
         name: configmap-reload
         image:
           repository: quay.io/prometheus-operator/prometheus-config-reloader
-          tag: v0.86.1
+          tag: v0.87.1
           pullPolicy: IfNotPresent
         extraArgs: {}
         extraVolumeDirs: []
