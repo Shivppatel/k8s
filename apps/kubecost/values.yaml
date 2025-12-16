@@ -1094,7 +1094,7 @@ kubecost:
       name: alertmanager
       image:
         repository: quay.io/prometheus/alertmanager
-        tag: v0.28.1
+        tag: v0.30.0
         pullPolicy: IfNotPresent
       priorityClassName: ""
       extraArgs: {}
