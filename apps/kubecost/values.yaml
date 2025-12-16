@@ -947,7 +947,7 @@ kubecost:
         rollingUpdate: null
       image:
         repository: quay.io/prometheus/prometheus
-        tag: v3.7.2
+        tag: v3.8.1
         pullPolicy: IfNotPresent
       priorityClassName: ""
       prefixURL: ""
