@@ -126,6 +126,10 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/emqx.png
             href: https://emqx.shivpatel.xyz/
             description: MQTT broker and stuff
+        - Kubecost:
+            icon: https://avatars.githubusercontent.com/u/45108136?s=200&v=4
+            href: https://kubecost.shivpatel.xyz/
+            description: Costs and stuff
         - MiniO:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/minio.png
             href: https://minio.shivpatel.xyz/
