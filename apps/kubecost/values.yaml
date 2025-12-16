@@ -302,8 +302,8 @@ kubecost:
             type: RuntimeDefault
       ## Set options for deploying with CI/CD tools like Argo CD.
       cicd:
-        enabled: false  # Set to true when using affected CI/CD tools for access to the below configuration options.
-        skipSanityChecks: false  # If true, skip all sanity/existence checks for resources like Secrets.
+        enabled: true  # Set to true when using affected CI/CD tools for access to the below configuration options.
+        skipSanityChecks: true  # If true, skip all sanity/existence checks for resources like Secrets.
 
     ## Kubecost Integrations
     ## Ref: https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=kubecost-postgres-integration
