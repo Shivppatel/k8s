@@ -216,11 +216,12 @@ data:
               url: https://jelly.shivpatel.xyz
               key: {{`{{HOMEPAGE_VAR_JELLYFIN_KEY}}`}}
               enableBlocks: true
-              enableNowPlaying: true
+              enableNowPlaying: false
               enableUser: true
               enableMediaControl: false
               showEpisodeNumber: true
               expandOneStreamToTwoRows: false
+              fields: ["movies", "episodes", "songs"]
         - Nextcloud:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/nextcloud.png
             href: https://nextcloud.shivpatel.xyz
