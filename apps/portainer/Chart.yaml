@@ -11,4 +11,4 @@ appVersion: "ce-latest-ee-2.33.3"
 dependencies:
   - name: portainer
     repository: https://portainer.github.io/k8s/
-    version: 2.33.5
+    version: 2.33.6
