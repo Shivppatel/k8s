@@ -142,10 +142,6 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/open-webui.png
             href: https://chat.shivpatel.xyz
             description: Local AI models and stuff
-        - OpenCost:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/opencost.png
-            href: https://opencost.shivpatel.xyz/
-            description: Costs and stuff
         - pgAdmin:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pgadmin.png
             href: https://pgadmin.shivpatel.xyz/
