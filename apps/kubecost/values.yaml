@@ -1,7 +1,7 @@
-kubecost:
+cost-analyzer:
   global:
     ## clusterId is required and must match the previous value of .Values.prometheus.server.global.external_labels.cluster_id, which must be removed.
-    clusterId: ""
+    clusterId: "homelab"
     federatedStorage:
       config: ""
       # A federated storage config can be provided via an existingSecret or via a string in helm values.
@@ -32,8 +32,8 @@ kubecost:
     ## Ref: https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=configuration-prometheus-guide
     ##
     prometheus:
-      enabled: true
-      fqdn: http://cost-analyzer-prometheus-server.default.svc  # Address of a Prometheus to connect to if enabled=false
+      enabled: false
+      fqdn: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090  # Address of a Prometheus to connect to if enabled=false
       insecureSkipVerify: false  # If true, Kubecost will not check the TLS cert of prometheus
       # queryServiceBasicAuthSecretName: dbsecret  # kubectl create secret generic dbsecret -n kubecost --from-file=USERNAME --from-file=PASSWORD
       # queryServiceBearerTokenSecretName: mcdbsecret  # kubectl create secret generic mcdbsecret -n kubecost --from-file=TOKEN
@@ -42,8 +42,8 @@ kubecost:
     ## Kubecost-bundled Grafana
     ##
     grafana:
-      enabled: true
-      domainName: cost-analyzer-grafana.default.svc  # Address to Grafana. Ignored if enabled=true.
+      enabled: false
+      domainName: kube-prometheus-stack-grafana.observability.svc.cluster.local  # Address to Grafana. Ignored if enabled=true.
       scheme: "http"
       proxy: true  # If true, the Kubecost frontend will route to your grafana through its service endpoint
       # fqdn: cost-analyzer-grafana.default.svc
@@ -374,7 +374,7 @@ kubecost:
     ## Kubecost 2.9 is intended to facilitate the upgrade to Kubecost 3.0.
     ## When upgrading to Kubecost 2.9, the finopsagent is enabled by default.
     ## This can be disabled if you are not upgrading the cluster to Kubecost 3.0 or do not mind losing a partial day of data.
-    enabled: true
+    enabled: false
     serviceAccount:
       create: true
       name: ""  # Set this to the same value as `.Values.serviceAccount.name` if you have attached an IAM role to your ServiceAccount.
@@ -961,7 +961,7 @@ kubecost:
         scrape_timeout: 60s
         evaluation_interval: 1m
         external_labels:
-          cluster_id: cluster-one  # This is no longer used in kubecost 2.9
+          cluster_id: homelab  # This is no longer used in kubecost 2.9
       remoteWrite: {}
       remoteRead: {}
       extraArgs:
@@ -1476,7 +1476,7 @@ kubecost:
     enabled: false
     image:
       repository: gcr.io/kubecost1/kubecost-network-costs
-      tag: v0.18.1
+      tag: v0.18.0
     imagePullPolicy: IfNotPresent
     updateStrategy:
       type: RollingUpdate
@@ -1600,7 +1600,7 @@ kubecost:
     fullImageName: ""
     image:
       repository: gcr.io/kubecost1/kubecost-modeling
-      tag: v0.1.33
+      tag: v0.1.31
     imagePullPolicy: IfNotPresent
 
     # Resource specification block for the forecasting container.
@@ -1918,7 +1918,7 @@ kubecost:
     enabled: false
     image:
       repository: gcr.io/kubecost1/cluster-controller
-      tag: v0.16.32
+      tag: v0.16.20
     imagePullPolicy: IfNotPresent
     extraEnv: []
     # - name: EXTRA_ENV_VAR
