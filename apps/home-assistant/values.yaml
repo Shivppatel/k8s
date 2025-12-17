@@ -6,7 +6,7 @@ home-assistant:
   hostNetwork: true
   initContainers:
     - name: install-hacs
-      image: alpine:3.19
+      image: alpine:3.23
       command: ["/bin/sh", "-c"]
       args:
         - |
