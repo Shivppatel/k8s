@@ -264,8 +264,8 @@ data:
                 timezone: America/New_York
                 integrations:
                     - type: ical
-                      url: {{`{{HOMEPAGE_VAR_GOOGLE_ICAL}}`}}
-                      name: Personal
+                      url: {{`{{HOMEPAGE_VAR_WORK_ICAL}}`}}
+                      name: Work
                       color: zinc
                       params:
                         showName: true
