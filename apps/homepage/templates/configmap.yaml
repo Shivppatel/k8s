@@ -262,25 +262,13 @@ data:
               view: monthly
               showTime: true
               timezone: America/New_York
-            #   integrations:
-            #     - type: sonarr
-            #       service_group: Arr
-            #       service_name: Sonarr
-            #       color: blue
-            #       params:
-            #         unmonitored: false
-            #     - type: radarr
-            #       service_group: Arr
-            #       service_name: Radarr
-            #       color: yellow
-            #       params:
-            #         unmonitored: false
-            #     - type: lidarr
-            #       service_group: Arr
-            #       service_name: Lidarr
-            #       color: green
-            #       params:
-            #         unmonitored: false
+              integrations:
+                - type: ical
+                  url: {{`{{HOMEPAGE_VAR_GOOGLE_ICAL}}`}}
+                  name: Personal
+                - type: ical
+                  url: {{`{{HOMEPAGE_VAR_WORK_ICAL}}`}}
+                  name: Work
 
   widgets.yaml: |
     # - resources:
