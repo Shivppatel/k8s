@@ -29,6 +29,9 @@ data:
     hideVersion: true
     hideErrors: true
     statusStyle: "dot"
+    layout:
+        QuickLinks:
+            iconsOnly: true
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |
@@ -46,6 +49,13 @@ data:
               icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-light.png
               href: https://github.com/Shivppatel/k8s/actions
   services.yaml: |
+    - QuickLinks:
+        - Github:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/github-light.png
+            href: https://github.com/Shivppatel/k8s
+        - Unifi:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/unifi.png
+            href: https://unifi.ui.com
     - Platform:
         - ArgoCD:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/argo-cd.png
