@@ -257,18 +257,18 @@ data:
     - Calendar:
         - " ":
             widget:
-              type: calendar
-              firstDayInWeek: sunday
-              view: monthly
-              showTime: true
-              timezone: America/New_York
-              integrations:
-                - type: ical
-                  url: {{`{{HOMEPAGE_VAR_GOOGLE_ICAL}}`}}
-                  name: Personal
-                - type: ical
-                  url: {{`{{HOMEPAGE_VAR_WORK_ICAL}}`}}
-                  name: Work
+                type: calendar
+                firstDayInWeek: sunday
+                view: monthly
+                showTime: true
+                timezone: America/New_York
+                integrations: # optional
+                    - type: ical # Show calendar events from another service
+                    url: {{`{{HOMEPAGE_VAR_GOOGLE_ICAL}}`}}
+                    name: Personal
+                    color: zinc
+                    params:
+                        showName: true
 
   widgets.yaml: |
     # - resources:
