@@ -55,6 +55,7 @@ data:
               type: argocd
               url: https://argocd.shivpatel.xyz
               key: {{`{{HOMEPAGE_VAR_ARGOCD_KEY}}`}}
+              fields: ["healthy", "outOfSync", "progressing", "degraded"]
         - Cloudflare:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/cloudflare.png
             href: https://one.dash.cloudflare.com/f548e19241cbc9a4cedf90c92d252e92/networks/connectors/cloudflare-tunnels/cfd_tunnel/e4f290c8-f16d-49ad-a2de-d009b45e7df5/edit?tab=publicHostname
@@ -64,6 +65,7 @@ data:
               accountid: f548e19241cbc9a4cedf90c92d252e92
               tunnelid: e4f290c8-f16d-49ad-a2de-d009b45e7df5
               key: {{`{{HOMEPAGE_VAR_CLOUDFLARE_KEY}}`}}
+              fields: ["status"]
         - Harbor:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/harbor.png
             href: https://harbor.shivpatel.xyz
@@ -200,6 +202,7 @@ data:
               url: https://immich.shivpatel.xyz
               key: {{`{{HOMEPAGE_VAR_IMMICH_KEY}}`}}
               version: 2
+              fields: ["photos", "videos", "storage"]
         - It-Tools:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/it-tools-light.png
             href: https://tools.shivpatel.xyz
@@ -227,6 +230,7 @@ data:
               url: https://nextcloud.shivpatel.xyz
               username: {{`{{HOMEPAGE_VAR_NEXTCLOUD_USERNAME}}`}}
               password: {{`{{HOMEPAGE_VAR_NEXTCLOUD_PASSWORD}}`}}
+              fields: ["cpuload", "memoryusage", "freespace"]
         - Open WebUI:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/open-webui.png
             href: https://chat.shivpatel.xyz
