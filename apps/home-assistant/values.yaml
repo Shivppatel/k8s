@@ -1,5 +1,5 @@
 home-assistant:
-  replicaCount: 3
+  replicaCount: 1
   persistence:
     enabled: true
   deploymentStrategy: Recreate
