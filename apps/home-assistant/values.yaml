@@ -1,8 +1,9 @@
 home-assistant:
-  replicaCount: 1
+  replicaCount: 3
   persistence:
     enabled: true
   deploymentStrategy: Recreate
+  hostNetwork: true
   serviceMonitor:
     enabled: true
     bearerToken:
