@@ -6,6 +6,16 @@ keycloak:
   image:
     repository: bitnamilegacy/keycloak
     tag: 26.3.3-debian-12-r0
+  production: true
+  proxy: edge
+  httpRelativePath: /
+  extraEnvVars:
+    - name: KC_HOSTNAME
+      value: "keycloak.shivpatel.xyz"
+    - name: KC_HOSTNAME_STRICT
+      value: "false"
+    - name: KC_HTTP_ENABLED
+      value: "true"
   externalDatabase:
     host: postgresql-rw.postgresql.svc.cluster.local
     port: 5432
