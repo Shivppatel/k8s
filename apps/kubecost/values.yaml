@@ -2180,7 +2180,7 @@ kubecost:
     sidecar:
       image:
         repository: ghcr.io/kiwigrid/k8s-sidecar
-        tag: 1.30.11
+        tag: 2.1.4
         pullPolicy: IfNotPresent
       resources: {}
       dashboards:
