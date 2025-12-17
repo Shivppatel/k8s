@@ -9,7 +9,15 @@ data:
   kubernetes.yaml: |
     mode: cluster
   settings.yaml: |
-    # background: https://images.unsplash.com/photo-1502790671504-542ad42d5189?auto=format&fit=crop&w=2560&q=80
+    headerStyle: clean
+    background:
+        image: https://s1.cdn.autoevolution.com/images/news/gallery/stunning-1991-porsche-911-special-commission-reveals-singer-expansion-in-taiwan_1.jpg
+        blur: md
+        saturate: 50
+        brightness: 50
+        opacity: 70
+    theme: dark
+    color: zinc
     providers:
       longhorn:
         url: http://longhorn-frontend.longhorn-system.svc.cluster.local
@@ -239,6 +247,13 @@ data:
             description: Network management
 
   widgets.yaml: |
+    # - resources:
+    #     cpu: true
+    #     memory: true
+    #     cputemp: true
+    #     uptime: true
+    #     units: metric
+    #     refresh: 3000
     - kubernetes:
         cluster:
           show: true
