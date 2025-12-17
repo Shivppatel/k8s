@@ -32,6 +32,8 @@ data:
     layout:
         QuickLinks:
             iconsOnly: true
+            style: row
+            columns: 10
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |
