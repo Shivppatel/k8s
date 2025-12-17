@@ -22,10 +22,13 @@ data:
       longhorn:
         url: http://longhorn-frontend.longhorn-system.svc.cluster.local
     quicklaunch:
-      searchDescriptions: true
-      hideInternetSearch: true
-      showSearchSuggestions: false
-      hideVisitURL: true
+        searchDescriptions: true
+        hideInternetSearch: true
+        showSearchSuggestions: true
+        hideVisitURL: true
+    hideVersion: true
+    hideErrors: true
+    statusStyle: "dot"
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |
@@ -245,6 +248,34 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/unifi.png
             href: https://unifi.ui.com
             description: Network management
+    
+    - Calendar:
+        - " ":
+            widget:
+              type: calendar
+              firstDayInWeek: sunday
+              view: monthly
+              showTime: true
+              timezone: TIME_ZONE
+              integrations:
+                - type: sonarr
+                  service_group: Arr
+                  service_name: Sonarr
+                  color: blue
+                  params:
+                    unmonitored: false
+                - type: radarr
+                  service_group: Arr
+                  service_name: Radarr
+                  color: yellow
+                  params:
+                    unmonitored: false
+                - type: lidarr
+                  service_group: Arr
+                  service_name: Lidarr
+                  color: green
+                  params:
+                    unmonitored: false
 
   widgets.yaml: |
     # - resources:
