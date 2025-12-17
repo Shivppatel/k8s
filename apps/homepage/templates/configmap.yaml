@@ -258,8 +258,8 @@ data:
         - " ":
             widget:
                 type: calendar
-                # firstDayInWeek: sunday
-                view: agenda
+                firstDayInWeek: sunday
+                view: monthly
                 showTime: true
                 timezone: America/New_York
                 integrations:
