@@ -43,7 +43,7 @@ cost-analyzer:
     ##
     grafana:
       enabled: false
-      domainName: http://kube-prometheus-stack-grafana.observability.svc.cluster.local  # Address to Grafana. Ignored if enabled=true.
+      domainName: kube-prometheus-stack-grafana.observability.svc.cluster.local  # Address to Grafana. Ignored if enabled=true.
       scheme: "http"
       proxy: true  # If true, the Kubecost frontend will route to your grafana through its service endpoint
       # fqdn: cost-analyzer-grafana.default.svc
