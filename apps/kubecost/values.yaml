@@ -1217,7 +1217,7 @@ kubecost:
       name: node-exporter
       image:
         repository: prom/node-exporter
-        tag: v1.9.1
+        tag: v1.10.2
         pullPolicy: IfNotPresent
       priorityClassName: ""
       updateStrategy:
