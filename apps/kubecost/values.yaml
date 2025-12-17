@@ -33,7 +33,7 @@ cost-analyzer:
     ##
     prometheus:
       enabled: false
-      fqdn: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local  # Address of a Prometheus to connect to if enabled=false
+      fqdn: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090  # Address of a Prometheus to connect to if enabled=false
       insecureSkipVerify: false  # If true, Kubecost will not check the TLS cert of prometheus
       # queryServiceBasicAuthSecretName: dbsecret  # kubectl create secret generic dbsecret -n kubecost --from-file=USERNAME --from-file=PASSWORD
       # queryServiceBearerTokenSecretName: mcdbsecret  # kubectl create secret generic mcdbsecret -n kubecost --from-file=TOKEN
