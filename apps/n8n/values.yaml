@@ -851,7 +851,7 @@ n8n:
   encryptionKey: ""
 
   # -- The name of an existing secret with encryption key. The secret must contain a key with the name N8N_ENCRYPTION_KEY.
-  existingEncryptionKeySecret: ""
+  existingEncryptionKeySecret: "n8n-encryption-key-secret"
 
   # -- For instance, the Schedule node uses it to know at what time the workflow should start. Find you timezone from here: https://momentjs.com/timezone/
   timezone: "Europe/Berlin"
