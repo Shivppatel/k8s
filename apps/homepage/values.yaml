@@ -1,0 +1,24 @@
+image:
+  repository: ghcr.io/gethomepage/homepage
+  tag: latest
+  pullPolicy: Always
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  host: homepage.shivpatel.xyz
+
+allowedHosts: "shivpatel.xyz,homepage.shivpatel.xyz"
+
+externalSecret:
+  enabled: true
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  vaultPath: secret/data/homepage
