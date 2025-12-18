@@ -263,6 +263,8 @@ data:
                         showName: true
 
   widgets.yaml: |
+    - logo:
+        icon: https://avatars.githubusercontent.com/u/42050563?v=4
     # - resources:
     #     cpu: true
     #     memory: true
