@@ -151,18 +151,10 @@ data:
             #   type: gitea
             #   url: http://gitea.shivpatel.xyz
             #   key: {{`{{HOMEPAGE_VAR_GITEA_KEY}}`}}
-        - Keycloak:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/keycloak.png
-            href: https://keycloak.shivpatel.xyz
-            description: Access management
         - MinIO:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/minio.png
             href: https://minio.shivpatel.xyz/
             description: Object storage
-        - n8n:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/n8n.png
-            href: https://n8n.shivpatel.xyz
-            description: Workflow automation
         - pgAdmin:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pgadmin.png
             href: https://pgadmin.shivpatel.xyz/
@@ -220,6 +212,10 @@ data:
             #   username: {{`{{HOMEPAGE_VAR_NEXTCLOUD_USERNAME}}`}}
             #   password: {{`{{HOMEPAGE_VAR_NEXTCLOUD_PASSWORD}}`}}
             #   fields: ["cpuload", "memoryusage", "freespace"]
+        - n8n:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/n8n.png
+            href: https://n8n.shivpatel.xyz
+            description: Workflow automation
         - Pi-hole:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pi-hole-unbound.png
             href: https://pihole.shivpatel.xyz/
