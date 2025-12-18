@@ -114,7 +114,12 @@ external-dns:
       drop: ["ALL"]
 
   # -- [Environment variables](https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/) for the `external-dns` container.
-  env: []
+  env:
+    - name: CF_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: cloudflare-api-key
+          key: apiKey
 
   # -- [Liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) configuration for the `external-dns` container.
   # @default -- See _values.yaml_
@@ -252,12 +257,7 @@ external-dns:
         # -- Image pull policy for the `webhook` container.
         pullPolicy: IfNotPresent
       # -- [Environment variables](https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/) for the `webhook` container.
-      env:
-        - name: CF_API_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: cloudflare-api-key
-              key: apiKey
+      env: []
       # -- Extra arguments to provide for the `webhook` container.
       args: []
       # -- Extra [volume mounts](https://kubernetes.io/docs/concepts/storage/volumes/) for the `webhook` container.
