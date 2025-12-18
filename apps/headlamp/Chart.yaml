@@ -11,4 +11,4 @@ appVersion: "0.38.0"
 dependencies:
   - name: headlamp
     repository: https://kubernetes-sigs.github.io/headlamp/
-    version: 0.38.0
+    version: 0.39.0
