@@ -11,7 +11,7 @@ data:
   settings.yaml: |
     headerStyle: clean
     background:
-        image: https://plus.unsplash.com/premium_photo-1661902398022-762e88ff3f82?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+        image: https://images.unsplash.com/photo-1604928141064-207cea6f571f?q=80&w=2728&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
         blur: md
         saturate: 50
         brightness: 50
