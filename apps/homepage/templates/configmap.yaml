@@ -277,6 +277,11 @@ data:
         total: true
         labels: true
         nodes: false
+    - search:
+        provider: google
+        focus: false
+        showSearchSuggestions: false
+        target: _blank
     - datetime:
         text_size: x1
         format:
