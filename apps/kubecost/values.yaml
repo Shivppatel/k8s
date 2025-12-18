@@ -1600,7 +1600,7 @@ cost-analyzer:
     fullImageName: ""
     image:
       repository: gcr.io/kubecost1/kubecost-modeling
-      tag: v0.1.31
+      tag: v0.1.33
     imagePullPolicy: IfNotPresent
 
     # Resource specification block for the forecasting container.
