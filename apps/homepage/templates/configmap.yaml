@@ -11,7 +11,7 @@ data:
   settings.yaml: |
     headerStyle: clean
     background:
-        image: https://s1.cdn.autoevolution.com/images/news/gallery/stunning-1991-porsche-911-special-commission-reveals-singer-expansion-in-taiwan_1.jpg
+        image: https://images.unsplash.com/photo-1573455494060-c5595004fb6c?q=80&w=2640&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
         blur: md
         saturate: 50
         brightness: 50
