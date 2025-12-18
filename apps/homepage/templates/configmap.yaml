@@ -195,10 +195,6 @@ data:
               key: {{`{{HOMEPAGE_VAR_IMMICH_KEY}}`}}
               version: 2
               fields: ["photos", "videos", "storage"]
-        - It-Tools:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/it-tools-light.png
-            href: https://tools.shivpatel.xyz
-            description: Developer utilities
         - Jellyfin:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyfin.png
             href: https://jelly.shivpatel.xyz
@@ -224,10 +220,6 @@ data:
               username: {{`{{HOMEPAGE_VAR_NEXTCLOUD_USERNAME}}`}}
               password: {{`{{HOMEPAGE_VAR_NEXTCLOUD_PASSWORD}}`}}
               fields: ["cpuload", "memoryusage", "freespace"]
-        - Open WebUI:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/open-webui.png
-            href: https://chat.shivpatel.xyz
-            description: Local AI chat
         - Pi-hole:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/pi-hole-unbound.png
             href: https://pihole.shivpatel.xyz/
@@ -237,10 +229,6 @@ data:
               url: http://pihole.shivpatel.xyz/
               version: 6
               key: {{`{{HOMEPAGE_VAR_PIHOLE_KEY}}`}}
-        - Teslamate:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/teslamate-light.png
-            href: https://tesla.shivpatel.xyz/
-            description: Tesla data logger
         - Unifi:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/unifi.png
             href: https://unifi.ui.com
