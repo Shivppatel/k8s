@@ -257,7 +257,7 @@ external-dns:
           valueFrom:
             secretKeyRef:
               name: cloudflare-api-key
-              key: token
+              key: apiKey
       # -- Extra arguments to provide for the `webhook` container.
       args: []
       # -- Extra [volume mounts](https://kubernetes.io/docs/concepts/storage/volumes/) for the `webhook` container.
