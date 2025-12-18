@@ -118,7 +118,7 @@ external-dns:
     - name: CF_API_TOKEN
       valueFrom:
         secretKeyRef:
-          name: cloudflare-api-key
+          name: external-cloudflare-secret
           key: apiKey
 
   # -- [Liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) configuration for the `external-dns` container.
