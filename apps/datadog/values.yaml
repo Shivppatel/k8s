@@ -2,3 +2,10 @@ datadog-operator:
   replicaCount: 1
   apiKeyExistingSecret: datadog-secret
   site: datadoghq.com
+datadog:
+  apiKeyExistingSecret: datadog-secret
+  site: datadoghq.com
+  clusterName: homelab
+  logs:
+    enabled: true
+    containerCollectAll: true
