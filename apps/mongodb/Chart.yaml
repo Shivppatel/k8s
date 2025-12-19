@@ -11,4 +11,4 @@ appVersion: "8.2.2"
 dependencies:
   - name: mongodb
     repository: https://charts.bitnami.com/bitnami
-    version: 18.1.19
+    version: 18.1.20
