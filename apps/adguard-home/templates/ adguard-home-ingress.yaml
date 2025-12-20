@@ -10,6 +10,6 @@ spec:
     - match: Host(`adguard.shivpatel.xyz`)
       kind: Rule
       services:
-        - name: adguard-home
+        - name: adguard-home-http
           port: 80
   tls: {}
