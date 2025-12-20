@@ -23,13 +23,14 @@ datadog:
               fieldRef:
                 apiVersion: v1
                 fieldPath: spec.nodeName
-  site: datadoghq.com
-  clusterName: homelab
-  apiKeyExistingSecret: datadog-secret
-  clusterChecks:
-    enabled: true
-  orchestratorExplorer:
-    enabled: true
-  logs:
-    enabled: true
-    containerCollectAll: true
+  datadog:
+    site: datadoghq.com
+    clusterName: homelab
+    apiKeyExistingSecret: datadog-secret
+    clusterChecks:
+      enabled: true
+    orchestratorExplorer:
+      enabled: true
+    logs:
+      enabled: true
+      containerCollectAll: true
