@@ -5,6 +5,8 @@ datadog-operator:
   clusterName: homelab
 datadog:
   datadog:
+    kubelet:
+      tlsVerify: false
     site: datadoghq.com
     clusterName: homelab
     apiKeyExistingSecret: datadog-secret
