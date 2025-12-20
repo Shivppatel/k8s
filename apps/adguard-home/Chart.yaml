@@ -1,0 +1,14 @@
+apiVersion: v2
+name: adguard-home
+description: A Helm chart for AdGuard Home
+
+type: application
+
+version: 0.1.0
+
+appVersion: "v0.107.51"
+
+dependencies:
+  - name: adguard-home
+    repository: https://grafana.github.io/helm-charts
+    version: 0.24.0
