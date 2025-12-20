@@ -4,19 +4,6 @@ datadog-operator:
   site: datadoghq.com
   clusterName: homelab
 datadog:
-  agents:
-    rbac:
-      create: true
-      clusterRole:
-        rules:
-          - apiGroups:
-              - ""
-            resources:
-              - nodes
-            verbs:
-              - get
-              - list
-              - watch
     containers:
       agent:
         env:
