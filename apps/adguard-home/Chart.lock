@@ -1,6 +1,0 @@
-dependencies:
-- name: adguard-home
-  repository: https://helm-charts.rm3l.org
-  version: 0.24.0
-digest: sha256:ead7491a301715eb0b4fd4bbd61f95604871c978d8e75c6226e46e5efc49219b
-generated: "2025-12-20T00:25:20.723713-05:00"
