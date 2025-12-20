@@ -4,25 +4,25 @@ datadog-operator:
   site: datadoghq.com
   clusterName: homelab
 datadog:
-  # agents:
-  #   containers:
-  #     agent:
-  #       env:
-  #         - name: NODE_NAME
-  #           valueFrom:
-  #             fieldRef:
-  #               apiVersion: v1
-  #               fieldPath: spec.nodeName
-  #         - name: DD_KUBERNETES_KUBELET_NODENAME
-  #           valueFrom:
-  #             fieldRef:
-  #               apiVersion: v1
-  #               fieldPath: spec.nodeName
-  #         - name: DD_HOSTNAME
-  #           valueFrom:
-  #             fieldRef:
-  #               apiVersion: v1
-  #               fieldPath: spec.nodeName
+  agents:
+    containers:
+      agent:
+        env:
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: spec.nodeName
+          - name: DD_KUBERNETES_KUBELET_NODENAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: spec.nodeName
+          - name: DD_HOSTNAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: spec.nodeName
   datadog:
     site: datadoghq.com
     clusterName: homelab
