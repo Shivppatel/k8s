@@ -2,14 +2,16 @@ datadog-operator:
   replicaCount: 1
   apiKeyExistingSecret: datadog-secret
   site: datadoghq.com
+  clusterName: homelab
 datadog:
-  site: "datadoghq.com"
-  clusterName: "homelab"
-  apiKeyExistingSecret: "datadog-secret"
-  clusterChecks:
-    enabled: true
-  orchestratorExplorer:
-    enabled: true
-  logs:
-    enabled: true
-    containerCollectAll: true
+  datadog:
+    site: datadoghq.com
+    clusterName: homelab
+    apiKeyExistingSecret: datadog-secret
+    clusterChecks:
+      enabled: true
+    orchestratorExplorer:
+      enabled: true
+    logs:
+      enabled: true
+      containerCollectAll: true
