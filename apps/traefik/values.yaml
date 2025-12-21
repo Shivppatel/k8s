@@ -25,6 +25,20 @@ traefik:
     enabled: true
 
   metrics:
+    addInternals: true
     prometheus:
       serviceMonitor:
         enabled: true
+    datadog:
+      ## Address instructs exporter to send metrics to datadog-agent at this address.
+      address: "127.0.0.1:8125"
+      ## The interval used by the exporter to push metrics to datadog-agent. Default=10s
+      # pushInterval: 30s
+      ## The prefix to use for metrics collection. Default="traefik"
+      # prefix: traefik
+      ## Enable metrics on entry points. Default=true
+      # addEntryPointsLabels: false
+      ## Enable metrics on routers. Default=false
+      addRoutersLabels: true
+      ## Enable metrics on services. Default=true
+      # addServicesLabels: false
