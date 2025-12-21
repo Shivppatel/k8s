@@ -8,7 +8,6 @@ spec:
     - websecure
   routes:
     - match: HostSNI(`postgresql-rw.shivpatel.xyz`)
-      kind: Rule
       services:
         - name: postgresql-rw
           port: 5432
