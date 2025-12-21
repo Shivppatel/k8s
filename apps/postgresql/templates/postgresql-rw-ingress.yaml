@@ -5,11 +5,9 @@ metadata:
   namespace: postgresql
 spec:
   entryPoints:
-    - websecure
+    - postgres
   routes:
     - match: HostSNI(`postgresql-rw.shivpatel.xyz`)
       services:
         - name: postgresql-rw
           port: 5432
-  tls:
-    passthrough: true
