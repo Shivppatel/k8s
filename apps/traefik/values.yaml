@@ -16,6 +16,13 @@ traefik:
         targetPort: 5432
         protocol: TCP
 
+  ports:
+    postgres:
+      port: 5432
+      expose: true
+      exposedPort: 5432
+      protocol: TCP
+
   additionalArguments:
     - --entryPoints.web.http.redirections.entryPoint.to=websecure
     - --entryPoints.web.http.redirections.entryPoint.scheme=https
