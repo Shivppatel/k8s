@@ -5,7 +5,7 @@ metadata:
   namespace: postgresql
 spec:
   entryPoints:
-    - postgres
+    - websecure
   routes:
     - match: HostSNI(`postgresql-rw.shivpatel.xyz`)
       services:
