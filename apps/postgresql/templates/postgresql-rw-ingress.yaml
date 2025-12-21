@@ -11,3 +11,5 @@ spec:
       services:
         - name: postgresql-rw
           port: 5432
+  tls:
+    passthrough: true
