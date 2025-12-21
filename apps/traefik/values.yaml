@@ -10,17 +10,13 @@ traefik:
   service:
     type: LoadBalancer
     loadBalancerIP: "192.168.20.20" # Choose an available IP from your MetalLB range
-    additionalPorts:
-      - name: postgres
-        port: 5432
-        targetPort: 5432
-        protocol: TCP
 
+  # TCP entrypoint for Postgres
   ports:
     postgres:
-      port: 5432
-      expose: true
-      exposedPort: 5432
+      port: 5432          # container/entrypoint port
+      expose: true        # publish it via Service
+      exposedPort: 5432   # Service port
       protocol: TCP
 
   additionalArguments:
