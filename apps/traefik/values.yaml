@@ -15,7 +15,8 @@ traefik:
   ports:
     postgres:
       port: 5432          # container/entrypoint port
-      expose: true        # publish it via Service
+      expose:
+        default: true     # publish it via Service
       exposedPort: 5432   # Service port
       protocol: TCP
 
