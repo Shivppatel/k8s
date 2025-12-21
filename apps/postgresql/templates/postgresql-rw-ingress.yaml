@@ -1,5 +1,5 @@
 apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
+kind: IngressRouteTCP
 metadata:
   name: postgresql-rw-ingress
   namespace: postgresql
@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`postgresql-rw.shivpatel.xyz`)
+    - match: HostSNI(`postgresql-rw.shivpatel.xyz`)
       kind: Rule
       services:
         - name: postgresql-rw
