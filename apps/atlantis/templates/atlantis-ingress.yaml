@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: atlantis-ingress
+  namespace: atlantis
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`atlantis.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: atlantis
+          port: 4141
+  tls: {}
