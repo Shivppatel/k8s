@@ -14,5 +14,5 @@ spec:
   data:
     - secretKey: token
       remoteRef:
-        key: secret/data/cloudflared/tunnel
+        key: secret/data/cloudflare/tunnel
         property: token
