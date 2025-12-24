@@ -21,30 +21,12 @@ atlantis:
   # Accepts: debug, info, warn, or error.
   logLevel: ""
 
-  # -- If using GitHub, please enter your values as follows.
-  # The chart will perform the base64 encoding for values that are stored in secrets.
-  # The 'hostname' key is exclusive to GitHub Enterprise installations.
-  # Check values.yaml for examples.
-  github:
-    user: foo
-    token: bar
-    secret: baz
-    hostname: shivppatel
-
-  # -- If using a GitHub App, please enter your values as follows.
-  # The chart will perform the base64 encoding for you for values that are stored in secrets.
-  # installationId is necessary when there are multiple installs of the Github App.
-  # Check values.yaml for examples.
-  githubApp: {}
-  # githubApp:
-  #   id: 123456
-  #   installationId: 1
-  #   slug: foo
-  #   key: |
-  #     -----BEGIN PRIVATE KEY-----
-  #     ...
-  #     -----END PRIVATE KEY-----
-  #   secret: baz
+  githubApp:
+    # Managed via ExternalSecret (github-secret); keep empty to avoid embedding secrets in values.
+    id: ""
+    slug: ""
+    key: ""
+    secret: ""
 
   # -- If using Gitea, please enter your values as follows.
   # The 'baseUrl' key is exclusive to self-hosted Gitea installations.
@@ -480,10 +462,8 @@ atlantis:
   # Note that any variables set here will be ignored if also defined in the env block of the atlantis statefulset.
   # For example, providing ATLANTIS_GH_USER here and defining a value for github.user will result in the github.user value being used.
   # Check values.yaml for examples.
-  loadEnvFromSecrets: []
-  # loadEnvFromSecrets:
-  #   - secret_one
-  #   - secret_two
+  loadEnvFromSecrets:
+    - github-secret
 
   # -- Optionally specify additional Kubernetes ConfigMaps to load environment variables from.
   # All key-value pairs within these ConfigMaps will be set as environment variables.

@@ -1,0 +1,33 @@
+{
+ "description": "Terraform Pull Request Automation at https://atlantis.shivpatel.xyz",
+ "default_events": [
+  "check_run",
+  "create",
+  "delete",
+  "issue_comment",
+  "issues",
+  "pull_request_review_comment",
+  "pull_request_review",
+  "pull_request",
+  "push"
+ ],
+ "name": "Atlantis for atlantis.shivpatel.xyz",
+ "default_permissions": {
+  "actions": "read",
+  "administration": "read",
+  "checks": "write",
+  "contents": "write",
+  "issues": "write",
+  "members": "read",
+  "pull_requests": "write",
+  "repository_hooks": "write",
+  "statuses": "write"
+ },
+ "public": false,
+ "redirect_url": "https://atlantis.shivpatel.xyz/github-app/exchange-code",
+ "url": "https://atlantis.shivpatel.xyz",
+ "hook_attributes": {
+  "url": "https://atlantis.shivpatel.xyz/events",
+  "active": true
+ }
+}
