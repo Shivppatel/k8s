@@ -10,5 +10,5 @@ appVersion: "1.9.4"
 
 dependencies:
   - name: librechat
-    repository: ghcr.io/danny-avila/librechat-chart/librechat
+    repository: file://./charts/librechat
     version: 1.9.4
