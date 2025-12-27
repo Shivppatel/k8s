@@ -275,7 +275,7 @@ librechat:
 
   # MongoDB Parameters
   mongodb:
-    enabled: false
+    enabled: true
     auth:
       enabled: false
     databases:

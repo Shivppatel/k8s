@@ -138,7 +138,7 @@ diagnosticMode:
 ##
 image:
   registry: docker.io
-  repository: bitnami/mongodb
+  repository: bitnamilegacy/mongodb
   tag: 8.0.13-debian-12-r0
   digest: ""
   ## Specify a imagePullPolicy
