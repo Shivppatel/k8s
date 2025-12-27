@@ -162,7 +162,7 @@ librechat:
     annotations: {}
 
   ingress:
-    enabled: true
+    enabled: false
     className: ""
     annotations: {}
       # kubernetes.io/ingress.class: nginx
