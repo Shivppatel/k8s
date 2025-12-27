@@ -101,7 +101,7 @@ librechat:
 
   # only lite RAG is supported
   librechat-rag-api:
-    enabled: false
+    enabled: true
     # can be azure, openai, huggingface or huggingfacetei
     embeddingsProvider: openai
 
