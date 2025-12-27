@@ -1,0 +1,14 @@
+apiVersion: v2
+name: librechat
+description: A Helm chart for LibreChat
+
+type: application
+
+version: 0.1.0
+
+appVersion: "1.9.4"
+
+dependencies:
+  - name: librechat
+    repository: ghcr.io/danny-avila/librechat-chart/librechat
+    version: 1.9.4
