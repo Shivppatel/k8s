@@ -14,4 +14,4 @@ dependencies:
     version: 2.16.0
   - name: datadog
     repository: https://helm.datadoghq.com
-    version: 3.157.2
+    version: 3.157.3
