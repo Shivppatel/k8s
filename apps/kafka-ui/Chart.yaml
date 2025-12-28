@@ -1,0 +1,14 @@
+apiVersion: v2
+name: kafka-ui
+description: A Helm chart for Kafka-UI
+
+type: application
+
+version: 0.1.0
+
+appVersion: "v1.4.2"
+
+dependencies:
+  - name: kafka-ui
+    repository: https://ui.charts.kafbat.io/
+    version: 1.5.3
