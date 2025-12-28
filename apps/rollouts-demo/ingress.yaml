@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rollouts-demo
+  namespace: rollouts-demo
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`rollouts-demo.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: rollouts-demo-active
+          port: 80
+  tls: {}
