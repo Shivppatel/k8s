@@ -12,6 +12,12 @@ spec:
     helm:
       valueFiles:
         - values.yaml
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
   destination:
     server: https://kubernetes.default.svc
     namespace: argo-rollouts
