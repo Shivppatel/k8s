@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: canary-demo
+  namespace: canary-demo
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`canary.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: canary-demo
+          port: 80
+  tls: {}
