@@ -10,6 +10,6 @@ spec:
     - match: Host(`rollouts.shivpatel.xyz`)
       kind: Rule
       services:
-        - name: argo-rollouts
+        - name: argo-rollouts-dashboard
           port: 3100
   tls: {}
