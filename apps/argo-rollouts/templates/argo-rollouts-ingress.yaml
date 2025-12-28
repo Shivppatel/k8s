@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argo-rollouts-ingress
+  namespace: argo-rollouts
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`rollouts.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: argo-rollouts-dashboard
+          port: 3100
+  tls: {}
