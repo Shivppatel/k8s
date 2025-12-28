@@ -41,14 +41,13 @@ filebeat:
             - /var/log/containers/*.log
           processors:
           - add_kubernetes_metadata:
-              host: ${NODE_NAME}
+              host: 'http://elasticsearch-master.logging.svc.cluster.local:9200'
               matchers:
               - logs_path:
                   logs_path: "/var/log/containers/"
 
         output.elasticsearch:
-          host: '${NODE_NAME}'
-          hosts: '["http://elasticsearch-master.logging.svc.cluster.local:9200}"]'
+          host: 'http://elasticsearch-master.logging.svc.cluster.local:9200'
           username: '${ELASTICSEARCH_USERNAME}'
           password: '${ELASTICSEARCH_PASSWORD}'
           protocol: http
@@ -120,12 +119,10 @@ filebeat:
               - /usr/share/filebeat/logs/filebeat
 
         output.elasticsearch:
-          host: "${NODE_NAME}"
-          hosts: '["http://elasticsearch-master.logging.svc.cluster.local:9200"]'
+          host: "http://elasticsearch-master.logging.svc.cluster.local:9200"
           username: "${ELASTICSEARCH_USERNAME}"
           password: "${ELASTICSEARCH_PASSWORD}"
           protocol: http
-          ssl.certificate_authorities: ["/usr/share/filebeat/certs/ca.crt"]
     nodeSelector: {}
     # A list of secrets and their paths to mount inside the pod
     # This is useful for mounting certificates for security other sensitive values
