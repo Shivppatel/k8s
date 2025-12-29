@@ -1,0 +1,21 @@
+apiVersion: v2
+appVersion: v0.8.1
+dependencies:
+- condition: mongodb.enabled
+  name: mongodb
+  repository: https://charts.bitnami.com/bitnami
+  version: 16.5.45
+- condition: meilisearch.enabled
+  name: meilisearch
+  repository: https://meilisearch.github.io/meilisearch-kubernetes
+  version: 0.11.0
+- condition: librechat-rag-api.enabled
+  name: librechat-rag-api
+  repository: file://../librechat-rag-api
+  version: 0.5.2
+description: A Helm chart for LibreChat
+home: https://www.librechat.ai
+icon: https://www.librechat.ai/librechat_alt.svg
+name: librechat
+type: application
+version: 1.9.4

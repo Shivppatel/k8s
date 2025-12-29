@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: librechat-ingress
+  namespace: librechat
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`librechat.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: librechat-librechat
+          port: 3080
+  tls: {}
