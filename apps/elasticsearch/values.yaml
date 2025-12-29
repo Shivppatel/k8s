@@ -4,6 +4,18 @@ elasticsearch:
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=30s"
   updateStrategy: OnDelete
 
+  extraEnvs:
+    - name: ELASTIC_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: elasticsearch-master-credentials
+          key: password
+    - name: ELASTIC_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: elasticsearch-master-credentials
+          key: username
+
   secret:
     enabled: false
 
