@@ -64,3 +64,6 @@ datadog:
       enabled: true
     processAgent:
       processCollection: true
+  # Disable CRDs in the main datadog chart because datadog-operator installs them
+  datadog-crds:
+    enabled: false
