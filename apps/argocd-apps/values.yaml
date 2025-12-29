@@ -144,17 +144,17 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    authentik:
-      name: authentik
-      namespace: argocd
-      destination:
-        namespace: authentik
-        server: "https://kubernetes.default.svc"
-      project: default
-      source:
-        path: apps/authentik
-        repoURL: "git@github.com:shivppatel/k8s.git"
-        targetRevision: main
+    # authentik:
+    #   name: authentik
+    #   namespace: argocd
+    #   destination:
+    #     namespace: authentik
+    #     server: "https://kubernetes.default.svc"
+    #   project: default
+    #   source:
+    #     path: apps/authentik
+    #     repoURL: "git@github.com:shivppatel/k8s.git"
+    #     targetRevision: main
 
     keycloak:
       name: keycloak
