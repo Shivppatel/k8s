@@ -9,10 +9,10 @@ datadog-operator:
       datadogAgents: true
       datadogMetrics: true
       datadogPodAutoscalers: true
-      datadogMonitors: true
-      datadogSLOs: true
-      datadogDashboards: true
-      datadogGenericResources: true
+      datadogMonitors: false
+      datadogSLOs: false
+      datadogDashboards: false
+      datadogGenericResources: false
 datadog:
   datadog:
     kubelet:
