@@ -578,7 +578,9 @@ argocd-apps:
         targetRevision: main
 
   projects:
-    - name: default
+    default:
+      name: default
+
       namespace: argocd
       description: "default applications"
       destinations:
@@ -590,6 +592,6 @@ argocd-apps:
         - group: "*"
           kind: "*"
 
-  applicationsets: []
+  applicationsets: {}
 
   extensions: []
