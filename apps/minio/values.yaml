@@ -5,6 +5,10 @@ minio:
     drivesPerNode: 2
     updateStrategy:
       type: OnDelete
+  auth:
+    existingSecret: "minio-root-credentials"
+    rootUserSecretKey: "root-user"
+    rootPasswordSecretKey: "root-password"
   image:
     registry: docker.io
     repository: bitnamilegacy/minio

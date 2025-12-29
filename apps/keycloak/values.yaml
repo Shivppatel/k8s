@@ -6,7 +6,11 @@ keycloak:
   image:
     repository: bitnamilegacy/keycloak
     tag: 26.3.3-debian-12-r0
+  auth:
+    existingSecret: "keycloak-admin-credentials"
+    passwordSecretKey: "admin-password"
   replicaCount: 3
+
   production: true
   proxyHeaders: xforwarded
   httpRelativePath: /
