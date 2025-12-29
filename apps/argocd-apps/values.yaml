@@ -2,6 +2,7 @@ argocd-apps:
   applications:
     # Root App - The App of Apps itself
     argocd-apps:
+      name: argocd-apps
       namespace: argocd
       destination:
         namespace: argocd
@@ -23,6 +24,7 @@ argocd-apps:
 
     # Monitoring & Observability
     kube-prometheus-stack:
+      name: kube-prometheus-stack
       namespace: argocd
       destination:
         namespace: monitoring
@@ -34,6 +36,7 @@ argocd-apps:
         targetRevision: main
 
     loki:
+      name: loki
       namespace: argocd
       destination:
         namespace: monitoring
@@ -45,6 +48,7 @@ argocd-apps:
         targetRevision: main
 
     alloy:
+      name: alloy
       namespace: argocd
       destination:
         namespace: monitoring
@@ -56,6 +60,7 @@ argocd-apps:
         targetRevision: main
 
     datadog:
+      name: datadog
       namespace: argocd
       destination:
         namespace: monitoring
@@ -67,6 +72,7 @@ argocd-apps:
         targetRevision: main
 
     tempo-distributed:
+      name: tempo-distributed
       namespace: argocd
       destination:
         namespace: monitoring
@@ -78,6 +84,7 @@ argocd-apps:
         targetRevision: main
 
     filebeat:
+      name: filebeat
       namespace: argocd
       destination:
         namespace: monitoring
@@ -89,6 +96,7 @@ argocd-apps:
         targetRevision: main
 
     logstash:
+      name: logstash
       namespace: argocd
       destination:
         namespace: monitoring
@@ -100,6 +108,7 @@ argocd-apps:
         targetRevision: main
 
     policy-reporter:
+      name: policy-reporter
       namespace: argocd
       destination:
         namespace: policy-reporter
@@ -112,6 +121,7 @@ argocd-apps:
 
     # Security & Identity
     vault:
+      name: vault
       namespace: argocd
       destination:
         namespace: vault
@@ -123,6 +133,7 @@ argocd-apps:
         targetRevision: main
 
     external-secrets:
+      name: external-secrets
       namespace: argocd
       destination:
         namespace: external-secrets
@@ -134,6 +145,7 @@ argocd-apps:
         targetRevision: main
 
     authentik:
+      name: authentik
       namespace: argocd
       destination:
         namespace: authentik
@@ -145,6 +157,7 @@ argocd-apps:
         targetRevision: main
 
     keycloak:
+      name: keycloak
       namespace: argocd
       destination:
         namespace: keycloak
@@ -156,6 +169,7 @@ argocd-apps:
         targetRevision: main
 
     kyverno:
+      name: kyverno
       namespace: argocd
       destination:
         namespace: kyverno
@@ -168,6 +182,7 @@ argocd-apps:
 
     # Infrastructure & Networking
     cert-manager:
+      name: cert-manager
       namespace: argocd
       destination:
         namespace: cert-manager
@@ -179,6 +194,7 @@ argocd-apps:
         targetRevision: main
 
     traefik:
+      name: traefik
       namespace: argocd
       destination:
         namespace: traefik
@@ -190,6 +206,7 @@ argocd-apps:
         targetRevision: main
 
     cloudflared:
+      name: cloudflared
       namespace: argocd
       destination:
         namespace: cloudflared
@@ -201,6 +218,7 @@ argocd-apps:
         targetRevision: main
 
     external-dns:
+      name: external-dns
       namespace: argocd
       destination:
         namespace: external-dns
@@ -212,6 +230,7 @@ argocd-apps:
         targetRevision: main
 
     metallb:
+      name: metallb
       namespace: argocd
       destination:
         namespace: metallb-system
@@ -223,6 +242,7 @@ argocd-apps:
         targetRevision: main
 
     reloader:
+      name: reloader
       namespace: argocd
       destination:
         namespace: reloader
@@ -234,6 +254,7 @@ argocd-apps:
         targetRevision: main
 
     metrics-server:
+      name: metrics-server
       namespace: argocd
       destination:
         namespace: kube-system
@@ -245,6 +266,7 @@ argocd-apps:
         targetRevision: main
 
     longhorn:
+      name: longhorn
       namespace: argocd
       destination:
         namespace: longhorn-system
@@ -257,6 +279,7 @@ argocd-apps:
 
     # Databases & Queues
     cloudnative-pg:
+      name: cloudnative-pg
       namespace: argocd
       destination:
         namespace: cnpg-system
@@ -268,6 +291,7 @@ argocd-apps:
         targetRevision: main
 
     postgresql:
+      name: postgresql
       namespace: argocd
       destination:
         namespace: database
@@ -279,6 +303,7 @@ argocd-apps:
         targetRevision: main
 
     mongodb:
+      name: mongodb
       namespace: argocd
       destination:
         namespace: database
@@ -290,6 +315,7 @@ argocd-apps:
         targetRevision: main
 
     redis:
+      name: redis
       namespace: argocd
       destination:
         namespace: database
@@ -301,6 +327,7 @@ argocd-apps:
         targetRevision: main
 
     kafka:
+      name: kafka
       namespace: argocd
       destination:
         namespace: kafka
@@ -312,6 +339,7 @@ argocd-apps:
         targetRevision: main
 
     kafka-ui:
+      name: kafka-ui
       namespace: argocd
       destination:
         namespace: kafka
@@ -323,6 +351,7 @@ argocd-apps:
         targetRevision: main
 
     rabbitmq:
+      name: rabbitmq
       namespace: argocd
       destination:
         namespace: database
@@ -334,6 +363,7 @@ argocd-apps:
         targetRevision: main
 
     elasticsearch:
+      name: elasticsearch
       namespace: argocd
       destination:
         namespace: logging
@@ -345,6 +375,7 @@ argocd-apps:
         targetRevision: main
 
     emqx:
+      name: emqx
       namespace: argocd
       destination:
         namespace: emqx
@@ -357,6 +388,7 @@ argocd-apps:
 
     # Tools & Services
     argocd:
+      name: argocd
       namespace: argocd
       destination:
         namespace: argocd
@@ -368,6 +400,7 @@ argocd-apps:
         targetRevision: main
 
     argo-rollouts:
+      name: argo-rollouts
       namespace: argocd
       destination:
         namespace: argo-rollouts
@@ -379,6 +412,7 @@ argocd-apps:
         targetRevision: main
 
     rollouts-demo:
+      name: rollouts-demo
       namespace: argocd
       destination:
         namespace: rollouts-demo
@@ -390,6 +424,7 @@ argocd-apps:
         targetRevision: main
 
     canary-demo:
+      name: canary-demo
       namespace: argocd
       destination:
         namespace: canary-demo
@@ -401,6 +436,7 @@ argocd-apps:
         targetRevision: main
 
     atlantis:
+      name: atlantis
       namespace: argocd
       destination:
         namespace: atlantis
@@ -412,6 +448,7 @@ argocd-apps:
         targetRevision: main
 
     gitea:
+      name: gitea
       namespace: argocd
       destination:
         namespace: gitea
@@ -423,6 +460,7 @@ argocd-apps:
         targetRevision: main
 
     harbor:
+      name: harbor
       namespace: argocd
       destination:
         namespace: harbor
@@ -434,6 +472,7 @@ argocd-apps:
         targetRevision: main
 
     headlamp:
+      name: headlamp
       namespace: argocd
       destination:
         namespace: kube-system
@@ -445,6 +484,7 @@ argocd-apps:
         targetRevision: main
 
     kubecost:
+      name: kubecost
       namespace: argocd
       destination:
         namespace: kubecost
@@ -456,6 +496,7 @@ argocd-apps:
         targetRevision: main
 
     it-tools:
+      name: it-tools
       namespace: argocd
       destination:
         namespace: tools
@@ -467,6 +508,7 @@ argocd-apps:
         targetRevision: main
 
     n8n:
+      name: n8n
       namespace: argocd
       destination:
         namespace: automation
@@ -479,6 +521,7 @@ argocd-apps:
 
     # Apps
     home-assistant:
+      name: home-assistant
       namespace: argocd
       destination:
         namespace: home-assistant
@@ -490,6 +533,7 @@ argocd-apps:
         targetRevision: main
 
     homepage:
+      name: homepage
       namespace: argocd
       destination:
         namespace: homepage
@@ -501,6 +545,7 @@ argocd-apps:
         targetRevision: main
 
     immich:
+      name: immich
       namespace: argocd
       destination:
         namespace: immich
@@ -512,6 +557,7 @@ argocd-apps:
         targetRevision: main
 
     nextcloud:
+      name: nextcloud
       namespace: argocd
       destination:
         namespace: nextcloud
@@ -523,6 +569,7 @@ argocd-apps:
         targetRevision: main
 
     open-webui:
+      name: open-webui
       namespace: argocd
       destination:
         namespace: open-webui
@@ -534,6 +581,7 @@ argocd-apps:
         targetRevision: main
 
     pgadmin4:
+      name: pgadmin4
       namespace: argocd
       destination:
         namespace: database
@@ -545,6 +593,7 @@ argocd-apps:
         targetRevision: main
 
     teslamate:
+      name: teslamate
       namespace: argocd
       destination:
         namespace: teslamate
@@ -556,6 +605,7 @@ argocd-apps:
         targetRevision: main
 
     uptime-kuma:
+      name: uptime-kuma
       namespace: argocd
       destination:
         namespace: monitoring
@@ -567,6 +617,7 @@ argocd-apps:
         targetRevision: main
 
     kibana:
+      name: kibana
       namespace: argocd
       destination:
         namespace: logging
@@ -579,6 +630,8 @@ argocd-apps:
 
   projects:
     default:
+      name: default
+
       namespace: argocd
       description: "default applications"
       destinations:
