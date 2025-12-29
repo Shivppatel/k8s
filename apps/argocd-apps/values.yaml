@@ -27,7 +27,7 @@ argocd-apps:
       name: kube-prometheus-stack
       namespace: argocd
       destination:
-        namespace: monitoring
+        namespace: observability
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -39,7 +39,7 @@ argocd-apps:
       name: loki
       namespace: argocd
       destination:
-        namespace: monitoring
+        namespace: observability
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -51,7 +51,7 @@ argocd-apps:
       name: alloy
       namespace: argocd
       destination:
-        namespace: monitoring
+        namespace: observability
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -63,7 +63,7 @@ argocd-apps:
       name: datadog
       namespace: argocd
       destination:
-        namespace: monitoring
+        namespace: datadog
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -75,7 +75,7 @@ argocd-apps:
       name: tempo-distributed
       namespace: argocd
       destination:
-        namespace: monitoring
+        namespace: tempo-distributed
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -87,7 +87,7 @@ argocd-apps:
       name: filebeat
       namespace: argocd
       destination:
-        namespace: monitoring
+        namespace: logging
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -99,7 +99,7 @@ argocd-apps:
       name: logstash
       namespace: argocd
       destination:
-        namespace: monitoring
+        namespace: logging
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -111,7 +111,7 @@ argocd-apps:
       name: policy-reporter
       namespace: argocd
       destination:
-        namespace: policy-reporter
+        namespace: kyverno
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -277,12 +277,24 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
+    minio:
+      name: minio
+      namespace: argocd
+      destination:
+        namespace: minio
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/minio
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
     # Databases & Queues
     cloudnative-pg:
       name: cloudnative-pg
       namespace: argocd
       destination:
-        namespace: cnpg-system
+        namespace: cloudnative-pg
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -294,7 +306,7 @@ argocd-apps:
       name: postgresql
       namespace: argocd
       destination:
-        namespace: database
+        namespace: postgresql
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -306,7 +318,7 @@ argocd-apps:
       name: mongodb
       namespace: argocd
       destination:
-        namespace: database
+        namespace: mongodb
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -318,7 +330,7 @@ argocd-apps:
       name: redis
       namespace: argocd
       destination:
-        namespace: database
+        namespace: redis
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -354,7 +366,7 @@ argocd-apps:
       name: rabbitmq
       namespace: argocd
       destination:
-        namespace: database
+        namespace: rabbitmq
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -499,7 +511,7 @@ argocd-apps:
       name: it-tools
       namespace: argocd
       destination:
-        namespace: tools
+        namespace: it-tools
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -511,7 +523,7 @@ argocd-apps:
       name: n8n
       namespace: argocd
       destination:
-        namespace: automation
+        namespace: n8n
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -572,7 +584,7 @@ argocd-apps:
       name: open-webui
       namespace: argocd
       destination:
-        namespace: open-webui
+        namespace: ai
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -584,7 +596,7 @@ argocd-apps:
       name: pgadmin4
       namespace: argocd
       destination:
-        namespace: database
+        namespace: pgadmin4
         server: "https://kubernetes.default.svc"
       project: default
       source:
@@ -608,7 +620,7 @@ argocd-apps:
       name: uptime-kuma
       namespace: argocd
       destination:
-        namespace: monitoring
+        namespace: uptime-kuma
         server: "https://kubernetes.default.svc"
       project: default
       source:
