@@ -1,7 +1,8 @@
 argocd-apps:
   applications:
     # Root App - The App of Apps itself
-    - name: argocd-apps
+    argocd-apps:
+      name: argocd-apps
       namespace: argocd
       destination:
         namespace: argocd
@@ -22,7 +23,8 @@ argocd-apps:
           - CreateNamespace=true
 
     # Monitoring & Observability
-    - name: kube-prometheus-stack
+    kube-prometheus-stack:
+      name: kube-prometheus-stack
       namespace: argocd
       destination:
         namespace: monitoring
@@ -33,7 +35,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: loki
+    loki:
+      name: loki
       namespace: argocd
       destination:
         namespace: monitoring
@@ -44,7 +47,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: alloy
+    alloy:
+      name: alloy
       namespace: argocd
       destination:
         namespace: monitoring
@@ -55,7 +59,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: datadog
+    datadog:
+      name: datadog
       namespace: argocd
       destination:
         namespace: monitoring
@@ -66,7 +71,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: tempo-distributed
+    tempo-distributed:
+      name: tempo-distributed
       namespace: argocd
       destination:
         namespace: monitoring
@@ -77,7 +83,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: filebeat
+    filebeat:
+      name: filebeat
       namespace: argocd
       destination:
         namespace: monitoring
@@ -88,7 +95,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: logstash
+    logstash:
+      name: logstash
       namespace: argocd
       destination:
         namespace: monitoring
@@ -99,7 +107,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: policy-reporter
+    policy-reporter:
+      name: policy-reporter
       namespace: argocd
       destination:
         namespace: policy-reporter
@@ -111,7 +120,8 @@ argocd-apps:
         targetRevision: main
 
     # Security & Identity
-    - name: vault
+    vault:
+      name: vault
       namespace: argocd
       destination:
         namespace: vault
@@ -122,7 +132,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: external-secrets
+    external-secrets:
+      name: external-secrets
       namespace: argocd
       destination:
         namespace: external-secrets
@@ -133,7 +144,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: authentik
+    authentik:
+      name: authentik
       namespace: argocd
       destination:
         namespace: authentik
@@ -144,7 +156,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: keycloak
+    keycloak:
+      name: keycloak
       namespace: argocd
       destination:
         namespace: keycloak
@@ -155,7 +168,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: kyverno
+    kyverno:
+      name: kyverno
       namespace: argocd
       destination:
         namespace: kyverno
@@ -167,7 +181,8 @@ argocd-apps:
         targetRevision: main
 
     # Infrastructure & Networking
-    - name: cert-manager
+    cert-manager:
+      name: cert-manager
       namespace: argocd
       destination:
         namespace: cert-manager
@@ -178,7 +193,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: traefik
+    traefik:
+      name: traefik
       namespace: argocd
       destination:
         namespace: traefik
@@ -189,7 +205,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: cloudflared
+    cloudflared:
+      name: cloudflared
       namespace: argocd
       destination:
         namespace: cloudflared
@@ -200,7 +217,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: external-dns
+    external-dns:
+      name: external-dns
       namespace: argocd
       destination:
         namespace: external-dns
@@ -211,7 +229,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: metallb
+    metallb:
+      name: metallb
       namespace: argocd
       destination:
         namespace: metallb-system
@@ -222,7 +241,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: reloader
+    reloader:
+      name: reloader
       namespace: argocd
       destination:
         namespace: reloader
@@ -233,7 +253,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: metrics-server
+    metrics-server:
+      name: metrics-server
       namespace: argocd
       destination:
         namespace: kube-system
@@ -244,7 +265,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: longhorn
+    longhorn:
+      name: longhorn
       namespace: argocd
       destination:
         namespace: longhorn-system
@@ -256,7 +278,8 @@ argocd-apps:
         targetRevision: main
 
     # Databases & Queues
-    - name: cloudnative-pg
+    cloudnative-pg:
+      name: cloudnative-pg
       namespace: argocd
       destination:
         namespace: cnpg-system
@@ -267,7 +290,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: postgresql
+    postgresql:
+      name: postgresql
       namespace: argocd
       destination:
         namespace: database
@@ -278,7 +302,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: mongodb
+    mongodb:
+      name: mongodb
       namespace: argocd
       destination:
         namespace: database
@@ -289,7 +314,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: redis
+    redis:
+      name: redis
       namespace: argocd
       destination:
         namespace: database
@@ -300,7 +326,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: kafka
+    kafka:
+      name: kafka
       namespace: argocd
       destination:
         namespace: kafka
@@ -311,7 +338,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: kafka-ui
+    kafka-ui:
+      name: kafka-ui
       namespace: argocd
       destination:
         namespace: kafka
@@ -322,7 +350,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: rabbitmq
+    rabbitmq:
+      name: rabbitmq
       namespace: argocd
       destination:
         namespace: database
@@ -333,7 +362,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: elasticsearch
+    elasticsearch:
+      name: elasticsearch
       namespace: argocd
       destination:
         namespace: logging
@@ -344,7 +374,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: emqx
+    emqx:
+      name: emqx
       namespace: argocd
       destination:
         namespace: emqx
@@ -356,7 +387,8 @@ argocd-apps:
         targetRevision: main
 
     # Tools & Services
-    - name: argocd
+    argocd:
+      name: argocd
       namespace: argocd
       destination:
         namespace: argocd
@@ -367,7 +399,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: argo-rollouts
+    argo-rollouts:
+      name: argo-rollouts
       namespace: argocd
       destination:
         namespace: argo-rollouts
@@ -378,7 +411,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: rollouts-demo
+    rollouts-demo:
+      name: rollouts-demo
       namespace: argocd
       destination:
         namespace: rollouts-demo
@@ -389,7 +423,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: canary-demo
+    canary-demo:
+      name: canary-demo
       namespace: argocd
       destination:
         namespace: canary-demo
@@ -400,7 +435,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: atlantis
+    atlantis:
+      name: atlantis
       namespace: argocd
       destination:
         namespace: atlantis
@@ -411,7 +447,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: gitea
+    gitea:
+      name: gitea
       namespace: argocd
       destination:
         namespace: gitea
@@ -422,7 +459,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: harbor
+    harbor:
+      name: harbor
       namespace: argocd
       destination:
         namespace: harbor
@@ -433,7 +471,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: headlamp
+    headlamp:
+      name: headlamp
       namespace: argocd
       destination:
         namespace: kube-system
@@ -444,7 +483,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: kubecost
+    kubecost:
+      name: kubecost
       namespace: argocd
       destination:
         namespace: kubecost
@@ -455,7 +495,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: it-tools
+    it-tools:
+      name: it-tools
       namespace: argocd
       destination:
         namespace: tools
@@ -466,7 +507,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: n8n
+    n8n:
+      name: n8n
       namespace: argocd
       destination:
         namespace: automation
@@ -478,7 +520,8 @@ argocd-apps:
         targetRevision: main
 
     # Apps
-    - name: home-assistant
+    home-assistant:
+      name: home-assistant
       namespace: argocd
       destination:
         namespace: home-assistant
@@ -489,7 +532,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: homepage
+    homepage:
+      name: homepage
       namespace: argocd
       destination:
         namespace: homepage
@@ -500,7 +544,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: immich
+    immich:
+      name: immich
       namespace: argocd
       destination:
         namespace: immich
@@ -511,7 +556,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: nextcloud
+    nextcloud:
+      name: nextcloud
       namespace: argocd
       destination:
         namespace: nextcloud
@@ -522,7 +568,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: open-webui
+    open-webui:
+      name: open-webui
       namespace: argocd
       destination:
         namespace: open-webui
@@ -533,7 +580,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: pgadmin4
+    pgadmin4:
+      name: pgadmin4
       namespace: argocd
       destination:
         namespace: database
@@ -544,7 +592,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: teslamate
+    teslamate:
+      name: teslamate
       namespace: argocd
       destination:
         namespace: teslamate
@@ -555,7 +604,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: uptime-kuma
+    uptime-kuma:
+      name: uptime-kuma
       namespace: argocd
       destination:
         namespace: monitoring
@@ -566,7 +616,8 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
 
-    - name: kibana
+    kibana:
+      name: kibana
       namespace: argocd
       destination:
         namespace: logging
