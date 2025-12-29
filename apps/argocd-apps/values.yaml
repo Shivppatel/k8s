@@ -1,22 +1,581 @@
 argocd-apps:
   applications:
-    - name: root
+    # Root App - The App of Apps itself
+    - name: argocd-apps
       namespace: argocd
       destination:
         namespace: argocd
         server: "https://kubernetes.default.svc"
       project: default
       source:
-        path: apps/argocd-apps-of-apps
+        path: apps/argocd-apps
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
         helm:
           valueFiles:
             - values.yaml
-      syncPolicy: {}
-        #automated:
-        #prune: false
-        #selfHeal: false
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
+    # Monitoring & Observability
+    - name: kube-prometheus-stack
+      namespace: argocd
+      destination:
+        namespace: monitoring
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/kube-prometheus-stack
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: loki
+      namespace: argocd
+      destination:
+        namespace: monitoring
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/loki
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: alloy
+      namespace: argocd
+      destination:
+        namespace: monitoring
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/alloy
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: datadog
+      namespace: argocd
+      destination:
+        namespace: monitoring
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/datadog
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: tempo-distributed
+      namespace: argocd
+      destination:
+        namespace: monitoring
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/tempo-distributed
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: filebeat
+      namespace: argocd
+      destination:
+        namespace: monitoring
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/filebeat
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: logstash
+      namespace: argocd
+      destination:
+        namespace: monitoring
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/logstash
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: policy-reporter
+      namespace: argocd
+      destination:
+        namespace: policy-reporter
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/policy-reporter
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    # Security & Identity
+    - name: vault
+      namespace: argocd
+      destination:
+        namespace: vault
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/vault
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: external-secrets
+      namespace: argocd
+      destination:
+        namespace: external-secrets
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/external-secrets
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: authentik
+      namespace: argocd
+      destination:
+        namespace: authentik
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/authentik
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: keycloak
+      namespace: argocd
+      destination:
+        namespace: keycloak
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/keycloak
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: kyverno
+      namespace: argocd
+      destination:
+        namespace: kyverno
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/kyverno
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    # Infrastructure & Networking
+    - name: cert-manager
+      namespace: argocd
+      destination:
+        namespace: cert-manager
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/cert-manager
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: traefik
+      namespace: argocd
+      destination:
+        namespace: traefik
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/traefik
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: cloudflared
+      namespace: argocd
+      destination:
+        namespace: cloudflared
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/cloudflared
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: external-dns
+      namespace: argocd
+      destination:
+        namespace: external-dns
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/external-dns
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: metallb
+      namespace: argocd
+      destination:
+        namespace: metallb-system
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/metallb
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: reloader
+      namespace: argocd
+      destination:
+        namespace: reloader
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/reloader
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: metrics-server
+      namespace: argocd
+      destination:
+        namespace: kube-system
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/metrics-server
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: longhorn
+      namespace: argocd
+      destination:
+        namespace: longhorn-system
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/longhorn
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    # Databases & Queues
+    - name: cloudnative-pg
+      namespace: argocd
+      destination:
+        namespace: cnpg-system
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/cloudnative-pg
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: postgresql
+      namespace: argocd
+      destination:
+        namespace: database
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/postgresql
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: mongodb
+      namespace: argocd
+      destination:
+        namespace: database
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/mongodb
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: redis
+      namespace: argocd
+      destination:
+        namespace: database
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/redis
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: kafka
+      namespace: argocd
+      destination:
+        namespace: kafka
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/kafka
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: kafka-ui
+      namespace: argocd
+      destination:
+        namespace: kafka
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/kafka-ui
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: rabbitmq
+      namespace: argocd
+      destination:
+        namespace: database
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/rabbitmq
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: elasticsearch
+      namespace: argocd
+      destination:
+        namespace: logging
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/elasticsearch
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: emqx
+      namespace: argocd
+      destination:
+        namespace: emqx
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/emqx
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    # Tools & Services
+    - name: argocd
+      namespace: argocd
+      destination:
+        namespace: argocd
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/argocd
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: argo-rollouts
+      namespace: argocd
+      destination:
+        namespace: argo-rollouts
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/argo-rollouts
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: rollouts-demo
+      namespace: argocd
+      destination:
+        namespace: rollouts-demo
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/rollouts-demo
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: canary-demo
+      namespace: argocd
+      destination:
+        namespace: canary-demo
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/canary-demo
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: atlantis
+      namespace: argocd
+      destination:
+        namespace: atlantis
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/atlantis
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: gitea
+      namespace: argocd
+      destination:
+        namespace: gitea
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/gitea
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: harbor
+      namespace: argocd
+      destination:
+        namespace: harbor
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/harbor
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: headlamp
+      namespace: argocd
+      destination:
+        namespace: kube-system
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/headlamp
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: kubecost
+      namespace: argocd
+      destination:
+        namespace: kubecost
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/kubecost
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: it-tools
+      namespace: argocd
+      destination:
+        namespace: tools
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/it-tools
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: n8n
+      namespace: argocd
+      destination:
+        namespace: automation
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/n8n
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    # Apps
+    - name: home-assistant
+      namespace: argocd
+      destination:
+        namespace: home-assistant
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/home-assistant
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: homepage
+      namespace: argocd
+      destination:
+        namespace: homepage
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/homepage
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: immich
+      namespace: argocd
+      destination:
+        namespace: immich
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/immich
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: nextcloud
+      namespace: argocd
+      destination:
+        namespace: nextcloud
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/nextcloud
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: open-webui
+      namespace: argocd
+      destination:
+        namespace: open-webui
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/open-webui
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: pgadmin4
+      namespace: argocd
+      destination:
+        namespace: database
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/pgadmin4
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: teslamate
+      namespace: argocd
+      destination:
+        namespace: teslamate
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/teslamate
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: uptime-kuma
+      namespace: argocd
+      destination:
+        namespace: monitoring
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/uptime-kuma
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+
+    - name: kibana
+      namespace: argocd
+      destination:
+        namespace: logging
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/kibana
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
 
   projects:
     - name: default
