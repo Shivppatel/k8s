@@ -34,6 +34,13 @@ argocd-apps:
         path: apps/kube-prometheus-stack
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
 
     loki:
       name: loki
@@ -46,6 +53,12 @@ argocd-apps:
         path: apps/loki
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     alloy:
       name: alloy
@@ -58,6 +71,12 @@ argocd-apps:
         path: apps/alloy
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     datadog:
       name: datadog
@@ -70,6 +89,12 @@ argocd-apps:
         path: apps/datadog
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     tempo-distributed:
       name: tempo-distributed
@@ -82,6 +107,12 @@ argocd-apps:
         path: apps/tempo-distributed
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     filebeat:
       name: filebeat
@@ -94,6 +125,12 @@ argocd-apps:
         path: apps/filebeat
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     logstash:
       name: logstash
@@ -106,6 +143,12 @@ argocd-apps:
         path: apps/logstash
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     policy-reporter:
       name: policy-reporter
@@ -118,6 +161,12 @@ argocd-apps:
         path: apps/policy-reporter
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     # Security & Identity
     vault:
@@ -131,6 +180,18 @@ argocd-apps:
         path: apps/vault
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+      ignoreDifferences:
+        - group: admissionregistration.k8s.io
+          kind: MutatingWebhookConfiguration
+          name: vault-agent-injector-cfg
+          jsonPointers:
+            - /webhooks/0/clientConfig/caBundle
 
     external-secrets:
       name: external-secrets
@@ -143,6 +204,14 @@ argocd-apps:
         path: apps/external-secrets
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+          - SkipDryRunOnMissingResource=true
 
     # authentik:
     #   name: authentik
@@ -167,6 +236,17 @@ argocd-apps:
         path: apps/keycloak
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+      ignoreDifferences:
+        - group: external-secrets.io
+          kind: ExternalSecret
+          jqPathExpressions:
+            - .spec.refreshInterval
 
     kyverno:
       name: kyverno
@@ -179,6 +259,12 @@ argocd-apps:
         path: apps/kyverno
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     # Infrastructure & Networking
     cert-manager:
@@ -192,6 +278,12 @@ argocd-apps:
         path: apps/cert-manager
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     traefik:
       name: traefik
@@ -204,6 +296,12 @@ argocd-apps:
         path: apps/traefik
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     cloudflared:
       name: cloudflared
@@ -216,6 +314,12 @@ argocd-apps:
         path: apps/cloudflared
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     external-dns:
       name: external-dns
@@ -228,6 +332,12 @@ argocd-apps:
         path: apps/external-dns
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     metallb:
       name: metallb
@@ -240,6 +350,12 @@ argocd-apps:
         path: apps/metallb
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     reloader:
       name: reloader
@@ -252,6 +368,12 @@ argocd-apps:
         path: apps/reloader
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     metrics-server:
       name: metrics-server
@@ -264,6 +386,12 @@ argocd-apps:
         path: apps/metrics-server
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     longhorn:
       name: longhorn
@@ -276,6 +404,12 @@ argocd-apps:
         path: apps/longhorn
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     minio:
       name: minio
@@ -288,6 +422,12 @@ argocd-apps:
         path: apps/minio
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     # Databases & Queues
     cloudnative-pg:
@@ -301,6 +441,13 @@ argocd-apps:
         path: apps/cloudnative-pg
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
 
     postgresql:
       name: postgresql
@@ -367,6 +514,12 @@ argocd-apps:
         path: apps/mongodb
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     redis:
       name: redis
@@ -379,6 +532,12 @@ argocd-apps:
         path: apps/redis
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     kafka:
       name: kafka
@@ -391,6 +550,12 @@ argocd-apps:
         path: apps/kafka
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     kafka-ui:
       name: kafka-ui
@@ -403,6 +568,12 @@ argocd-apps:
         path: apps/kafka-ui
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     rabbitmq:
       name: rabbitmq
@@ -415,6 +586,17 @@ argocd-apps:
         path: apps/rabbitmq
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+      ignoreDifferences:
+        - group: external-secrets.io
+          kind: ExternalSecret
+          jqPathExpressions:
+            - .spec.refreshInterval
 
     elasticsearch:
       name: elasticsearch
@@ -427,6 +609,12 @@ argocd-apps:
         path: apps/elasticsearch
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     emqx:
       name: emqx
@@ -439,6 +627,12 @@ argocd-apps:
         path: apps/emqx
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     # Tools & Services
     argocd:
@@ -452,6 +646,12 @@ argocd-apps:
         path: apps/argocd
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     argo-rollouts:
       name: argo-rollouts
@@ -464,6 +664,12 @@ argocd-apps:
         path: apps/argo-rollouts
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     rollouts-demo:
       name: rollouts-demo
@@ -476,6 +682,12 @@ argocd-apps:
         path: apps/rollouts-demo
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     canary-demo:
       name: canary-demo
@@ -488,6 +700,12 @@ argocd-apps:
         path: apps/canary-demo
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     atlantis:
       name: atlantis
@@ -500,6 +718,12 @@ argocd-apps:
         path: apps/atlantis
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     gitea:
       name: gitea
@@ -512,6 +736,12 @@ argocd-apps:
         path: apps/gitea
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     harbor:
       name: harbor
@@ -524,6 +754,12 @@ argocd-apps:
         path: apps/harbor
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     headlamp:
       name: headlamp
@@ -536,6 +772,12 @@ argocd-apps:
         path: apps/headlamp
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     kubecost:
       name: kubecost
@@ -548,6 +790,12 @@ argocd-apps:
         path: apps/kubecost
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     it-tools:
       name: it-tools
@@ -560,6 +808,12 @@ argocd-apps:
         path: apps/it-tools
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     n8n:
       name: n8n
@@ -572,6 +826,17 @@ argocd-apps:
         path: apps/n8n
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+      ignoreDifferences:
+        - group: external-secrets.io
+          kind: ExternalSecret
+          jqPathExpressions:
+            - .spec.refreshInterval
 
     # Apps
     home-assistant:
@@ -585,6 +850,12 @@ argocd-apps:
         path: apps/home-assistant
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     homepage:
       name: homepage
@@ -597,6 +868,17 @@ argocd-apps:
         path: apps/homepage
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+      ignoreDifferences:
+        - group: external-secrets.io
+          kind: ExternalSecret
+          jqPathExpressions:
+            - .spec.refreshInterval
 
     immich:
       name: immich
@@ -609,6 +891,19 @@ argocd-apps:
         path: apps/immich
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - PrunePropagationPolicy=foreground
+      ignoreDifferences:
+        - group: ""
+          kind: PersistentVolumeClaim
+          jqPathExpressions:
+            - .metadata.annotations
+            - .metadata.labels
 
     nextcloud:
       name: nextcloud
@@ -621,6 +916,12 @@ argocd-apps:
         path: apps/nextcloud
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     open-webui:
       name: open-webui
@@ -633,6 +934,12 @@ argocd-apps:
         path: apps/open-webui
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     pgadmin4:
       name: pgadmin4
@@ -645,6 +952,12 @@ argocd-apps:
         path: apps/pgadmin4
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     teslamate:
       name: teslamate
@@ -657,6 +970,12 @@ argocd-apps:
         path: apps/teslamate
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     uptime-kuma:
       name: uptime-kuma
@@ -669,6 +988,12 @@ argocd-apps:
         path: apps/uptime-kuma
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
     kibana:
       name: kibana
@@ -681,6 +1006,12 @@ argocd-apps:
         path: apps/kibana
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
 
   projects:
     default:
