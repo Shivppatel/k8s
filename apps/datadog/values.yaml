@@ -3,6 +3,16 @@ datadog-operator:
   apiKeyExistingSecret: datadog-secret
   site: datadoghq.com
   clusterName: homelab
+  installCRDs: true
+  datadogCRDs:
+    crds:
+      datadogAgents: true
+      datadogMetrics: true
+      datadogPodAutoscalers: true
+      datadogMonitors: true
+      datadogSLOs: true
+      datadogDashboards: true
+      datadogGenericResources: true
 datadog:
   datadog:
     kubelet:
@@ -67,3 +77,11 @@ datadog:
   # Disable CRDs in the main datadog chart because datadog-operator installs them
   datadog-crds:
     enabled: false
+
+  # Also disable CRDs that might be enabled via the 'operator' block in the main chart
+  operator:
+    datadogCRDs:
+      datadogMonitors: false
+      datadogSLOs: false
+      datadogDashboards: false
+      datadogGenericResources: false
