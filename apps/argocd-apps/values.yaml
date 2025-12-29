@@ -310,9 +310,51 @@ argocd-apps:
         server: "https://kubernetes.default.svc"
       project: default
       source:
-        path: apps/postgresql
+        path: apps/postgresql/templates
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+        directory:
+          recurse: false
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+          - RespectIgnoreDifferences=true
+          - PrunePropagationPolicy=foreground
+      ignoreDifferences:
+        - group: external-secrets.io
+          kind: ExternalSecret
+          jqPathExpressions:
+            - .status
+            - .spec.data[].remoteRef.conversionStrategy
+            - .spec.data[].remoteRef.decodingStrategy
+            - .spec.data[].remoteRef.metadataPolicy
+        - group: postgresql.cnpg.io
+          kind: Cluster
+          managedFieldsManagers:
+            - cnpg-controller-manager
+          jqPathExpressions:
+            - .status
+            - .spec.failoverDelay
+            - .spec.logLevel
+            - .spec.monitoring
+            - .spec.postgresGID
+            - .spec.postgresUID
+            - .spec.postgresql
+            - .spec.bootstrap.initdb.encoding
+            - .spec.bootstrap.initdb.localeCType
+            - .spec.bootstrap.initdb.localeCollate
+            - .spec.managed.roles[].connectionLimit
+            - .spec.managed.roles[].ensure
+            - .spec.managed.roles[].inherit
+        - group: ""
+          kind: PersistentVolumeClaim
+          jqPathExpressions:
+            - .metadata.annotations
+            - .metadata.labels
 
     mongodb:
       name: mongodb
