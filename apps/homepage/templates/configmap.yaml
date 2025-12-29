@@ -56,6 +56,10 @@ data:
             #   url: https://argocd.shivpatel.xyz
             #   key: {{`{{HOMEPAGE_VAR_ARGOCD_KEY}}`}}
             #   fields: ["healthy", "outOfSync", "progressing", "degraded"]
+        - Argo Rollouts:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/argo-cd.png
+            href: https://rollouts.shivpatel.xyz
+            description: Progressive delivery        
         - Cloudflare:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/cloudflare.png
             href: https://one.dash.cloudflare.com/f548e19241cbc9a4cedf90c92d252e92/networks/connectors/cloudflare-tunnels/cfd_tunnel/e4f290c8-f16d-49ad-a2de-d009b45e7df5/edit?tab=publicHostname
