@@ -353,9 +353,9 @@ gitea:
     ## @param gitea.admin.passwordMode Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated
     admin:
       # existingSecret: gitea-admin-secret
-      existingSecret:
-      username: gitea_admin
-      password: r8sA8CPHD9!bt6d
+      existingSecret: gitea-admin-secret
+      username: admin
+      # password: ""
       email: "gitea@local.domain"
       passwordMode: keepUpdated
 

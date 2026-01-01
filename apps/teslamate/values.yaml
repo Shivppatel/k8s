@@ -37,7 +37,11 @@ teslamate:
             # -- MQTT password
             # MQTT_PASSWORD:
             # -- Teslamate encryption key
-            ENCRYPTION_KEY: "MySuperSecretEncryptionKey"
+            ENCRYPTION_KEY:
+              valueFrom:
+                secretKeyRef:
+                  name: teslamate-encryption-key-secret
+                  key: encryption-key
             # -- Override database password from secret
             DATABASE_PASS:
               valueFrom:
@@ -155,8 +159,8 @@ teslamate:
   postgresql:
     enabled: false
     auth:
-      postgresPassword: teslamate-pass
-      password: teslamate-pass
+      # postgresPassword: ""
+      # password: ""
       database: teslamate
       username: teslamate
     primary:
