@@ -11,4 +11,4 @@ appVersion: "v1.4.2"
 dependencies:
   - name: kafka-ui
     repository: https://ui.charts.kafbat.io/
-    version: 1.5.3
+    version: 1.6.0
