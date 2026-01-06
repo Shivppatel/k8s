@@ -33,6 +33,17 @@ datadog:
         - containerPort: 4318
           hostPort: 4318
           name: "otel-http"
+    kubernetesResourcesLabelsAsTags:
+      pods:
+        shivpatel.xyz/env: env
+        shivpatel.xyz/team: team
+        shivpatel.xyz/service: service
+        shivpatel.xyz/tier: tier
+      deployments.apps:
+        shivpatel.xyz/env: env
+        shivpatel.xyz/team: team
+        shivpatel.xyz/service: service
+        shivpatel.xyz/tier: tier
     apm:
       instrumentation:
         enabled: true
