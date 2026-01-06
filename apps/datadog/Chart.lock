@@ -4,6 +4,6 @@ dependencies:
   version: 2.16.0
 - name: datadog
   repository: https://helm.datadoghq.com
-  version: 3.157.5
-digest: sha256:e17087d6f1badc6fed8dd5297ffbb3dd2179c30612d303dc4dd6796007097817
-generated: "2025-12-31T08:33:37.816395754Z"
+  version: 3.157.6
+digest: sha256:9b25fda298bce1b26ba48d21710503683d2599e54c7b9c210ea065c61a63dd04
+generated: "2026-01-05T13:00:24.929582762Z"
