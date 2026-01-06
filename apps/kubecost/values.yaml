@@ -947,7 +947,7 @@ cost-analyzer:
         rollingUpdate: null
       image:
         repository: quay.io/prometheus/prometheus
-        tag: v3.8.1
+        tag: v3.9.0
         pullPolicy: IfNotPresent
       priorityClassName: ""
       prefixURL: ""
