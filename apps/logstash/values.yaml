@@ -1,5 +1,13 @@
 logstash:
   replicas: 1
+  labels:
+    app.kubernetes.io/name: logstash
+    app.kubernetes.io/instance: logstash
+    app.kubernetes.io/managed-by: helm
+    shivpatel.xyz/team: observability
+    shivpatel.xyz/service: logstash
+    shivpatel.xyz/tier: "High"
+    shivpatel.xyz/env: homelab
   persistence:
     enabled: true
     size: "5Gi"
