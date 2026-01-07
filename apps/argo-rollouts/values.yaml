@@ -264,7 +264,19 @@ argo-rollouts:
   crdAnnotations: {}
 
   # -- Annotations for the all deployed pods
-  podAnnotations: {}
+  podAnnotations:
+    annotations:
+      ad.datadoghq.com/argo-rollouts.checks: |
+        {
+          "argo_rollouts": {
+            "init_config": {},
+            "instances": [
+              {
+                "openmetrics_endpoint": "http://%%host%%:8090/metrics"
+              }
+            ]
+          }
+        }
 
   # -- Security Context to set on pod level
   podSecurityContext:
