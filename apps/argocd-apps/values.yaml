@@ -167,6 +167,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     # Security & Identity
     vault:
