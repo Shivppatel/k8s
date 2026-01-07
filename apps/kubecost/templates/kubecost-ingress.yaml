@@ -10,6 +10,6 @@ spec:
     - match: Host(`kubecost.shivpatel.xyz`)
       kind: Rule
       services:
-        - name: kubecost-cost-analyzer
+        - name: kubecost-frontend
           port: 9090
   tls: {}
