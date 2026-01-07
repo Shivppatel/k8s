@@ -6,11 +6,11 @@ logstash:
 
   resources:
     requests:
-      cpu: "200m"
+      cpu: "500m"
       memory: "1Gi"
     limits:
       cpu: "1000m"
-      memory: "1Gi"
+      memory: "2Gi"
 
   service:
     type: ClusterIP
