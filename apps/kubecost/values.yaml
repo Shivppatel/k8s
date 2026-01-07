@@ -22,7 +22,7 @@ cost-analyzer:
 
     ## If your DNS server doesn't live in the same zone as Kubecost
     ##
-    zone: ""  # cluster.local
+    zone: "" # cluster.local
     ## The chartName and currentVersion are used for safety checks only and should not be modified or passed in a Helm values file.
     chartName: "kubecost"
 
@@ -33,19 +33,19 @@ cost-analyzer:
     ##
     prometheus:
       enabled: false
-      fqdn: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090  # Address of a Prometheus to connect to if enabled=false
-      insecureSkipVerify: false  # If true, Kubecost will not check the TLS cert of prometheus
+      fqdn: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090 # Address of a Prometheus to connect to if enabled=false
+      insecureSkipVerify: false # If true, Kubecost will not check the TLS cert of prometheus
       # queryServiceBasicAuthSecretName: dbsecret  # kubectl create secret generic dbsecret -n kubecost --from-file=USERNAME --from-file=PASSWORD
       # queryServiceBearerTokenSecretName: mcdbsecret  # kubectl create secret generic mcdbsecret -n kubecost --from-file=TOKEN
-      kubeRBACProxy: false  # If true, Kubecost will use kube-rbac-proxy to authenticate with in cluster Prometheus for openshift
+      kubeRBACProxy: false # If true, Kubecost will use kube-rbac-proxy to authenticate with in cluster Prometheus for openshift
 
     ## Kubecost-bundled Grafana
     ##
     grafana:
       enabled: false
-      domainName: kube-prometheus-stack-grafana.observability.svc.cluster.local  # Address to Grafana. Ignored if enabled=true.
+      domainName: kube-prometheus-stack-grafana.observability.svc.cluster.local # Address to Grafana. Ignored if enabled=true.
       scheme: "http"
-      proxy: true  # If true, the Kubecost frontend will route to your grafana through its service endpoint
+      proxy: true # If true, the Kubecost frontend will route to your grafana through its service endpoint
       # fqdn: cost-analyzer-grafana.default.svc
 
     ## Google Cloud Managed Service for Prometheus (GMP)
@@ -86,8 +86,8 @@ cost-analyzer:
       name: mimir-proxy
       image: nginxinc/nginx-unprivileged
       port: 8085
-      mimirEndpoint: ""  # If your Mimir query endpoint is http://example.com/prometheus, use http://example.com/
-      orgIdentifier: ""  # Your Grafana Mimir tenant ID
+      mimirEndpoint: "" # If your Mimir query endpoint is http://example.com/prometheus, use http://example.com/
+      orgIdentifier: "" # Your Grafana Mimir tenant ID
       basicAuth:
         # username: user
         # password: pwd
@@ -170,15 +170,15 @@ cost-analyzer:
       #     - type: diagnostic          # Alerts when kubecost is unable to compute costs - ie: Prometheus unreachable
       #       window: 10m
 
-      alertmanager:  # Supply an alertmanager FQDN to receive notifications from the app.
-        enabled: false  # If true, allow kubecost to write to your alertmanager
-        fqdn: http://cost-analyzer-prometheus-server.default.svc  # example fqdn. Ignored if prometheus.enabled: true
+      alertmanager: # Supply an alertmanager FQDN to receive notifications from the app.
+        enabled: false # If true, allow kubecost to write to your alertmanager
+        fqdn: http://cost-analyzer-prometheus-server.default.svc # example fqdn. Ignored if prometheus.enabled: true
 
     ## Kubecost Saved Reports
     ## Ref: https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=ui-reports
     ##
     savedReports:
-      enabled: false  # If true, overwrites report parameters set through UI
+      enabled: false # If true, overwrites report parameters set through UI
       reports:
         - title: "Example Saved Report 0"
           window: "today"
@@ -186,8 +186,8 @@ cost-analyzer:
           chartDisplay: "category"
           idle: "separate"
           rate: "cumulative"
-          accumulate: false   # daily resolution
-          filters:            # Ref: https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=filter-parameters-v2
+          accumulate: false # daily resolution
+          filters: # Ref: https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=filter-parameters-v2
             - key: "cluster"
               operator: ":"
               value: "dev"
@@ -198,7 +198,7 @@ cost-analyzer:
           idle: "share"
           rate: "monthly"
           accumulate: false
-          filters:              # Ref: https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=filter-parameters-v2
+          filters: # Ref: https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=filter-parameters-v2
             - key: "namespace"
               operator: "!:"
               value: "kubecost"
@@ -208,25 +208,25 @@ cost-analyzer:
           chartDisplay: "category"
           idle: "hide"
           rate: "daily"
-          accumulate: true  # entire window resolution
-          filters: []       # if no filters, specify empty array
+          accumulate: true # entire window resolution
+          filters: [] # if no filters, specify empty array
     assetReports:
-      enabled: false  # If true, overwrites report parameters set through UI
+      enabled: false # If true, overwrites report parameters set through UI
       reports:
-      - title: "Example Asset Report 0"
-        window: "today"
-        aggregateBy: "type"
-        accumulate: false  # daily resolution
-        filters:
-          - property: "cluster"
-            value: "cluster-one"
+        - title: "Example Asset Report 0"
+          window: "today"
+          aggregateBy: "type"
+          accumulate: false # daily resolution
+          filters:
+            - property: "cluster"
+              value: "cluster-one"
     cloudCostReports:
-      enabled: false  # If true, overwrites report parameters set through UI
+      enabled: false # If true, overwrites report parameters set through UI
       reports:
         - title: "Cloud Cost Report 0"
           window: "today"
           aggregateBy: "service"
-          accumulate: false  # daily resolution
+          accumulate: false # daily resolution
           # filters:
           #   - property: "service"
           #     value: "service1" # corresponds to a value to filter cloud cost aggregate by service data on.
@@ -234,8 +234,8 @@ cost-analyzer:
     ## Globally set annotations and labels
     ##
     podAnnotations: {}
-    annotations: {}  # Applies to all controllers (Deployments, StatefulSets, DaemonSets).
-    additionalLabels: {}  # Applies to Deployments, StatefulSets, DaemonSets, and their pod templates
+    annotations: {} # Applies to all controllers (Deployments, StatefulSets, DaemonSets).
+    additionalLabels: {} # Applies to Deployments, StatefulSets, DaemonSets, and their pod templates
 
     ## Globally set security context
     ##
@@ -253,7 +253,7 @@ cost-analyzer:
       readOnlyRootFilesystem: true
       capabilities:
         drop:
-        - ALL
+          - ALL
 
     ## Installs custom CA certificates onto Kubecost pods
     ##
@@ -268,33 +268,33 @@ cost-analyzer:
         readOnlyRootFilesystem: true
         seccompProfile:
           type: RuntimeDefault
-      caCertsSecret: ca-certs-secret  # The name of the Secret containing custom CA certificates to mount to the cost-model container.
+      caCertsSecret: ca-certs-secret # The name of the Secret containing custom CA certificates to mount to the cost-model container.
       # caCertsConfig: ca-certs-config  # The name of the ConfigMap containing the CA trust configuration.
       resources: {}
-      caCertsMountPath: /etc/pki/ca-trust/source/anchors  # The path where the custom CA certificates will be mounted in the init container
+      caCertsMountPath: /etc/pki/ca-trust/source/anchors # The path where the custom CA certificates will be mounted in the init container
 
     ## Platform-specific configurations
     ##
     platforms:
       ## Deploying to OpenShift (OCP) requires enabling this option.
       openshift:
-        enabled: false  # Deploy Kubecost to OpenShift.
+        enabled: false # Deploy Kubecost to OpenShift.
         route:
-          enabled: false  # Create an OpenShift Route.
-          annotations: {}  # Add annotations to the Route.
+          enabled: false # Create an OpenShift Route.
+          annotations: {} # Add annotations to the Route.
           # host: kubecost.apps.okd4.example.com  # Add a custom host for your Route.
 
         ## OPTIONAL. The following configs only to be enabled when using a Prometheus instance already installed in the cluster.
-        createMonitoringClusterRoleBinding: false  # Create a ClusterRoleBinding to grant the Kubecost serviceaccount access to query Prometheus.
-        createMonitoringResourceReaderRoleBinding: false  # Create a Role and Role Binding to allow Prometheus to list and watch Kubecost resources.
-        monitoringServiceAccountName: prometheus-k8s  # Name of the Prometheus serviceaccount to bind to the Resource Reader Role Binding.
-        monitoringServiceAccountNamespace: openshift-monitoring  # Namespace of the Prometheus serviceaccount to bind to the Resource Reader Role Binding.
+        createMonitoringClusterRoleBinding: false # Create a ClusterRoleBinding to grant the Kubecost serviceaccount access to query Prometheus.
+        createMonitoringResourceReaderRoleBinding: false # Create a Role and Role Binding to allow Prometheus to list and watch Kubecost resources.
+        monitoringServiceAccountName: prometheus-k8s # Name of the Prometheus serviceaccount to bind to the Resource Reader Role Binding.
+        monitoringServiceAccountNamespace: openshift-monitoring # Namespace of the Prometheus serviceaccount to bind to the Resource Reader Role Binding.
 
         ## Create Security Context Constraint resources for the DaemonSets requiring additional privileges.
         scc:
-          nodeExporter: false  # Creates an SCC for Prometheus Node Exporter. This requires Node Exporter be enabled.
-          networkCosts: false  # Creates an SCC for Kubecost network-costs. This requires network-costs be enabled.
-          clusterController: false  # Creates an SCC for Kubecost Cluster Controller. This requires clusterController be enabled.
+          nodeExporter: false # Creates an SCC for Prometheus Node Exporter. This requires Node Exporter be enabled.
+          networkCosts: false # Creates an SCC for Kubecost network-costs. This requires network-costs be enabled.
+          clusterController: false # Creates an SCC for Kubecost Cluster Controller. This requires clusterController be enabled.
         ## When OpenShift is enabled, the following securityContext will be applied to all resources unless they define their own.
         securityContext:
           runAsNonRoot: true
@@ -302,29 +302,29 @@ cost-analyzer:
             type: RuntimeDefault
       ## Set options for deploying with CI/CD tools like Argo CD.
       cicd:
-        enabled: true  # Set to true when using affected CI/CD tools for access to the below configuration options.
-        skipSanityChecks: true  # If true, skip all sanity/existence checks for resources like Secrets.
+        enabled: true # Set to true when using affected CI/CD tools for access to the below configuration options.
+        skipSanityChecks: true # If true, skip all sanity/existence checks for resources like Secrets.
 
     ## Kubecost Integrations
     ## Ref: https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=kubecost-postgres-integration
     ##
     integrations:
       turbonomic:
-        enabled: false         # Set to true to enable the Turbonomic integration
-        clientId: ""           # Client ID generated from the OAuth Client created
-        clientSecret: ""       # Client Secret generated from the OAuth Client created
-        role: ""               # Role that the OAuth Client was created with (e.g. ADMINISTRATOR, SITE_ADMIN, etc.)
-        host: ""               # URL to your turbonomic API. EG: https://turbonomic.example.com/
-        insecureClient: false  # Do not verify certificate
+        enabled: false # Set to true to enable the Turbonomic integration
+        clientId: "" # Client ID generated from the OAuth Client created
+        clientSecret: "" # Client Secret generated from the OAuth Client created
+        role: "" # Role that the OAuth Client was created with (e.g. ADMINISTRATOR, SITE_ADMIN, etc.)
+        host: "" # URL to your turbonomic API. EG: https://turbonomic.example.com/
+        insecureClient: false # Do not verify certificate
       postgres:
         enabled: false
-        runInterval: "12h"      # How frequently to run the integration.
-        databaseHost: ""        # REQUIRED. ex: my.postgres.database.azure.com
-        databasePort: ""        # REQUIRED. ex: 5432
-        databaseName: ""        # REQUIRED. ex: postgres
-        databaseUser: ""        # REQUIRED. ex: myusername
-        databasePassword: ""    # REQUIRED. ex: mypassword
-        databaseSecretName: ""  # OPTIONAL. Specify your own k8s secret containing the above credentials. Must have key "creds.json".
+        runInterval: "12h" # How frequently to run the integration.
+        databaseHost: "" # REQUIRED. ex: my.postgres.database.azure.com
+        databasePort: "" # REQUIRED. ex: 5432
+        databaseName: "" # REQUIRED. ex: postgres
+        databaseUser: "" # REQUIRED. ex: myusername
+        databasePassword: "" # REQUIRED. ex: mypassword
+        databaseSecretName: "" # OPTIONAL. Specify your own k8s secret containing the above credentials. Must have key "creds.json".
 
         ## Configure what Postgres table to write to, and what parameters to pass
         ## when querying Kubecost's APIs. Ensure all parameters are enclosed in
@@ -374,10 +374,10 @@ cost-analyzer:
     ## Kubecost 2.9 is intended to facilitate the upgrade to Kubecost 3.0.
     ## When upgrading to Kubecost 2.9, the finopsagent is enabled by default.
     ## This can be disabled if you are not upgrading the cluster to Kubecost 3.0 or do not mind losing a partial day of data.
-    enabled: false
+    enabled: true
     serviceAccount:
       create: true
-      name: ""  # Set this to the same value as `.Values.serviceAccount.name` if you have attached an IAM role to your ServiceAccount.
+      name: "" # Set this to the same value as `.Values.serviceAccount.name` if you have attached an IAM role to your ServiceAccount.
       automountServiceAccountToken: true
       annotations: {}
     persistence:
@@ -399,7 +399,7 @@ cost-analyzer:
       ## @param persistence.accessModes Persistent Volume Access Modes
       ##
       accessModes:
-      - ReadWriteOnce
+        - ReadWriteOnce
       ## @param persistence.size PVC Storage Request for the FinOps Agent data volume
       ##
       size: 8Gi
@@ -426,7 +426,7 @@ cost-analyzer:
         enabled: false
 
   # generated at http://kubecost.com/install, used for alerts tracking and free trials
-  kubecostToken:  # ""
+  kubecostToken: # ""
 
   # Advanced pipeline for custom prices, enterprise key required
   pricingCsv:
@@ -434,7 +434,7 @@ cost-analyzer:
     location:
       provider: "AWS"
       region: "us-east-1"
-      URI: s3://kc-csv-test/pricing_schema.csv  # a valid file URI
+      URI: s3://kc-csv-test/pricing_schema.csv # a valid file URI
       csvAccessCredentials: pricing-schema-access-secret
 
   # Enterprise custom pricing, enterprise key required
@@ -495,18 +495,18 @@ cost-analyzer:
   ## Ref: https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=configuration-user-management-ssooidc
   oidc:
     enabled: false
-    clientID: ""  # Application client_id parameter obtained from provider. Used to make requests to server.
-    clientSecret: ""  # Application/client client_secret parameter obtained from provider. Used to make requests to server.
-    secretName: "kubecost-oidc-secret"  # K8s secret where clientsecret will be stored
+    clientID: "" # Application client_id parameter obtained from provider. Used to make requests to server.
+    clientSecret: "" # Application/client client_secret parameter obtained from provider. Used to make requests to server.
+    secretName: "kubecost-oidc-secret" # K8s secret where clientsecret will be stored
     existingCustomSecret:
       enabled: false
-      name: ""  # Name of an existing clientSecret. Overrides the usage of oidc.clientSecret and oidc.secretName.
-    authURL: ""  # Authorization endpoint for your identity provider
-    loginRedirectURL: ""  # Kubecost URL endpoint which handles auth flow
-    discoveryURL: ""  # Your identity provider's endpoint sharing OIDC configuration
-    skipOnlineTokenValidation: false  # If true, validate JWT claims locally
-    useClientSecretPost: false  # If true, only use client_secret_post method. Otherwise attempt to send the secret in both the header and the body.
-    hostedDomain: ""  # Optional, blocks access to the auth domain specified in the hd claim of the provider ID token
+      name: "" # Name of an existing clientSecret. Overrides the usage of oidc.clientSecret and oidc.secretName.
+    authURL: "" # Authorization endpoint for your identity provider
+    loginRedirectURL: "" # Kubecost URL endpoint which handles auth flow
+    discoveryURL: "" # Your identity provider's endpoint sharing OIDC configuration
+    skipOnlineTokenValidation: false # If true, validate JWT claims locally
+    useClientSecretPost: false # If true, only use client_secret_post method. Otherwise attempt to send the secret in both the header and the body.
+    hostedDomain: "" # Optional, blocks access to the auth domain specified in the hd claim of the provider ID token
     rbac:
       enabled: false
       # groups:
@@ -530,8 +530,8 @@ cost-analyzer:
   ## Kubecost Teams (enterprise key required)
   ## Ref: https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=ui-teams
   teams:
-    teamsConfigMapName: ""  # Name of the ConfigMap containing the teams configuration, if manually created, which overrides any other configured teams
-    teamsConfig: []  # List of teams configurations, if teamsConfigMapName is not set, which will override UI-configured teams
+    teamsConfigMapName: "" # Name of the ConfigMap containing the teams configuration, if manually created, which overrides any other configured teams
+    teamsConfig: [] # List of teams configurations, if teamsConfigMapName is not set, which will override UI-configured teams
       # - id: ''
       #   name: helm-team
       #   roles:
@@ -591,8 +591,8 @@ cost-analyzer:
 
   kubecostFrontend:
     enabled: true
-    deployMethod: singlepod  # haMode or singlepod - haMode is currently only supported with Enterprise tier
-    haReplicas: 2  # only used with haMode
+    deployMethod: singlepod # haMode or singlepod - haMode is currently only supported with Enterprise tier
+    haReplicas: 2 # only used with haMode
     image: "gcr.io/kubecost1/frontend"
     imagePullPolicy: IfNotPresent
     # fullImageName overrides the default image construction logic. The exact
@@ -620,7 +620,7 @@ cost-analyzer:
       periodSeconds: 5
       failureThreshold: 6
     ipv6:
-      enabled: true  # disable if the cluster does not support ipv6
+      enabled: true # disable if the cluster does not support ipv6
     # timeoutSeconds: 600  # should be rarely used, but can be increased if needed
     # allow customizing nginx-conf server block
     # extraServerConfig: |-
@@ -633,19 +633,19 @@ cost-analyzer:
 
     # set to true to set all upstreams to use <service>.<namespace>.svc.cluster.local instead of just <service>.<namespace>
     useDefaultFqdn: false
-  #  model:
-  #    fqdn: kubecost-model.kubecost.svc.cluster.local:9003
-  #  forecasting:
-  #    fqdn: kubecost-forcasting.kubecost.svc.cluster.local:5000
-  #  aggregator:
-  #    fqdn: kubecost-aggregator.kubecost.svc.cluster.local:9004
-  #  cloudCost:
-  #    fqdn: kubecost-cloud-cost.kubecost.svc.cluster.local:9005
-  #  multiClusterDiagnostics:
-  #    fqdn: kubecost-multi-diag.kubecost.svc.cluster.local:9007
-  #  clusterController:
-  #    fqdn: cluster-controller.kubecost.svc.cluster.local:9731
-  #
+    #  model:
+    #    fqdn: kubecost-model.kubecost.svc.cluster.local:9003
+    #  forecasting:
+    #    fqdn: kubecost-forcasting.kubecost.svc.cluster.local:5000
+    #  aggregator:
+    #    fqdn: kubecost-aggregator.kubecost.svc.cluster.local:9004
+    #  cloudCost:
+    #    fqdn: kubecost-cloud-cost.kubecost.svc.cluster.local:9005
+    #  multiClusterDiagnostics:
+    #    fqdn: kubecost-multi-diag.kubecost.svc.cluster.local:9007
+    #  clusterController:
+    #    fqdn: cluster-controller.kubecost.svc.cluster.local:9731
+    #
 
     # Configurable headers for nginx responses.
     nginxHeaders:
@@ -653,7 +653,7 @@ cost-analyzer:
       server:
         - "'Access-Control-Allow-Origin' '*' always;"
         - "'Access-Control-Allow-Methods' 'GET, PUT, POST, DELETE, OPTIONS' always;"
-        - "Content-Security-Policy \"default-src 'self' 'unsafe-inline' http: https: ws: data:; frame-ancestors 'none';\";"
+        - 'Content-Security-Policy "default-src ''self'' ''unsafe-inline'' http: https: ws: data:; frame-ancestors ''none'';";'
         - Cache-Control "must-revalidate";
 
   # Kubecost Metrics deploys a separate pod which will emit kubernetes specific metrics required
@@ -670,10 +670,10 @@ cost-analyzer:
     imagePullPolicy: IfNotPresent
     name: aps
     port: 8005
-    region: us-west-2  # The AWS region
-    host: aps-workspaces.us-west-2.amazonaws.com  # The hostname for AMP service.
+    region: us-west-2 # The AWS region
+    host: aps-workspaces.us-west-2.amazonaws.com # The hostname for AMP service.
     # role_arn: arn:aws:iam::<account>:role/role-name # The AWS IAM role to assume.
-    extraEnv:  # Pass extra env variables to sigV4Proxy
+    extraEnv: # Pass extra env variables to sigV4Proxy
     # - name: AWS_ACCESS_KEY_ID
     #   value: <access_key>
     # - name: AWS_SECRET_ACCESS_KEY
@@ -716,7 +716,7 @@ cost-analyzer:
             type: RuntimeDefault
           capabilities:
             drop:
-            - ALL
+              - ALL
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 1001
@@ -732,18 +732,18 @@ cost-analyzer:
       # pre-existing secret for plugin configuration
       existingCustomSecret:
         enabled: false
-        name: ""  # name of the secret containing plugin config
+        name: "" # name of the secret containing plugin config
 
       secretName: kubecost-plugin-secret
 
       # uncomment this to define plugin configuration via the values file
       # configs:
-        # datadog: |
-        #   {
-        #   "datadog_site": "<INSERT_DATADOG_SITE>",
-        #   "datadog_api_key": "<INSERT_DATADOG_API_KEY>",
-        #   "datadog_app_key": "<INSERT_DATADOG_APP_KEY>"
-        #   }
+      # datadog: |
+      #   {
+      #   "datadog_site": "<INSERT_DATADOG_SITE>",
+      #   "datadog_api_key": "<INSERT_DATADOG_API_KEY>",
+      #   "datadog_app_key": "<INSERT_DATADOG_APP_KEY>"
+      #   }
 
     allocation:
       # Enables or disables adding node labels to allocation data (i.e. workloads).
@@ -812,7 +812,7 @@ cost-analyzer:
     annotations:
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
-    paths: ["/"]  # There's no need to route specifically to the pods-- we have an nginx deployed that handles routing
+    paths: ["/"] # There's no need to route specifically to the pods-- we have an nginx deployed that handles routing
     pathType: ImplementationSpecific
     hosts:
       - cost-analyzer.local
@@ -834,7 +834,7 @@ cost-analyzer:
   # Define persistent volume for cost-analyzer, more information at https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=installation-next-steps-kubecost
   persistentVolume:
     size: 32Gi
-    enabled: true  # Note that setting this to false means configurations will be wiped out on pod restart.
+    enabled: true # Note that setting this to false means configurations will be wiped out on pod restart.
     # storageClass: "-" #
     # existingClaim: kubecost-cost-analyzer # a claim in the same namespace as kubecost
     labels: {}
@@ -849,7 +849,7 @@ cost-analyzer:
     annotations: {}
     # loadBalancerSourceRanges: []
     sessionAffinity:
-      enabled: false  # Makes sure that connections from a client are passed to the same Pod each time, when set to `true`. You should set it when you enabled authentication through OIDC or SAML integration.
+      enabled: false # Makes sure that connections from a client are passed to the same Pod each time, when set to `true`. You should set it when you enabled authentication through OIDC or SAML integration.
       timeoutSeconds: 10800
 
   prometheus:
@@ -859,7 +859,7 @@ cost-analyzer:
     # nameOverride: ""
 
     rbac:
-      create: true  # Create the RBAC resources for Prometheus.
+      create: true # Create the RBAC resources for Prometheus.
 
     serviceAccounts:
       alertmanager:
@@ -961,7 +961,7 @@ cost-analyzer:
         scrape_timeout: 60s
         evaluation_interval: 1m
         external_labels:
-          cluster_id: homelab  # This is no longer used in kubecost 2.9
+          cluster_id: homelab # This is no longer used in kubecost 2.9
       remoteWrite: {}
       remoteRead: {}
       extraArgs:
@@ -1263,7 +1263,7 @@ cost-analyzer:
           - job_name: prometheus
             static_configs:
               - targets:
-                - localhost:9090
+                  - localhost:9090
 
           # A scrape configuration for running Prometheus on a Kubernetes cluster.
           # This uses separate scrape configs for cluster components (i.e. API server, node)
@@ -1271,7 +1271,7 @@ cost-analyzer:
           #
           # Kubernetes labels will be added as Prometheus labels on metrics via the
           # `labelmap` relabeling action.
-          - job_name: 'kubernetes-nodes-cadvisor'
+          - job_name: "kubernetes-nodes-cadvisor"
 
             # Default to scraping over https. If required, just disable this or change to
             # `http`.
@@ -1331,7 +1331,7 @@ cost-analyzer:
           #
           # Kubernetes labels will be added as Prometheus labels on metrics via the
           # `labelmap` relabeling action.
-          - job_name: 'kubernetes-nodes'
+          - job_name: "kubernetes-nodes"
 
             # Default to scraping over https. If required, just disable this or change to
             # `http`.
@@ -1369,7 +1369,7 @@ cost-analyzer:
 
             metric_relabel_configs:
               - source_labels: [__name__]
-                regex: (kubelet_volume_stats_used_bytes)  # this metric is in alpha
+                regex: (kubelet_volume_stats_used_bytes) # this metric is in alpha
                 action: keep
 
           # Scrape config for service endpoints.
@@ -1383,27 +1383,34 @@ cost-analyzer:
           # * `prometheus.io/path`: If the metrics path is not `/metrics` override this.
           # * `prometheus.io/port`: If the metrics are exposed on a different port to the
           # service then set this appropriately.
-          - job_name: 'kubernetes-service-endpoints'
+          - job_name: "kubernetes-service-endpoints"
 
             kubernetes_sd_configs:
               - role: endpoints
 
             relabel_configs:
-              - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+              - source_labels:
+                  [__meta_kubernetes_service_annotation_prometheus_io_scrape]
                 action: keep
                 regex: true
               - source_labels: [__meta_kubernetes_endpoints_name]
                 action: keep
                 regex: (.*node-exporter|kubecost-network-costs)
-              - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+              - source_labels:
+                  [__meta_kubernetes_service_annotation_prometheus_io_scheme]
                 action: replace
                 target_label: __scheme__
                 regex: (https?)
-              - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+              - source_labels:
+                  [__meta_kubernetes_service_annotation_prometheus_io_path]
                 action: replace
                 target_label: __metrics_path__
                 regex: (.+)
-              - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+              - source_labels:
+                  [
+                    __address__,
+                    __meta_kubernetes_service_annotation_prometheus_io_port,
+                  ]
                 action: replace
                 target_label: __address__
                 regex: ([^:]+)(?::\d+)?;(\d+)
@@ -1498,8 +1505,8 @@ cost-analyzer:
     port: 3001
     # this daemonset can use significant resources on large clusters: https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=dashboard-network-traffic-cost-allocation
     resources:
-      limits:  # remove the limits by setting cpu: null
-        cpu: 500m  # can be less, will depend on cluster size
+      limits: # remove the limits by setting cpu: null
+        cpu: 500m # can be less, will depend on cluster size
         # memory: it is not recommended to set a memory limit
       requests:
         cpu: 50m
@@ -1518,7 +1525,7 @@ cost-analyzer:
           # IPv4 Link Local Address Space
           - "169.254.0.0/16"
           # Private Address Ranges in RFC-1918
-          - "10.0.0.0/8"  # Remove this entry if using Multi-AZ Kubernetes
+          - "10.0.0.0/8" # Remove this entry if using Multi-AZ Kubernetes
           - "172.16.0.0/12"
           - "192.168.0.0/16"
 
@@ -1746,10 +1753,10 @@ cost-analyzer:
     dbTrimMemoryOnClose: true
 
     persistentConfigsStorage:
-      storageClass: ""  # default storage class
+      storageClass: "" # default storage class
       storageRequest: 1Gi
     aggregatorDbStorage:
-      storageClass: ""  # default storage class
+      storageClass: "" # default storage class
       storageRequest: 128Gi
 
     resources: {}
@@ -1932,9 +1939,9 @@ cost-analyzer:
     resources: {}
     affinity: {}
     nodeSelector: {}
-    primaryKubecostURL: ""  # URL for secondary clusters to connect to primary Kubecost (ex: https://kubecost.myorganization.com)
-    kubecostAPIKey: ""  # API Key for secondary clusters to authenticate with primary
-    createClusterControllerSecret: true  # disable if you want to use your own secret manager
+    primaryKubecostURL: "" # URL for secondary clusters to connect to primary Kubecost (ex: https://kubecost.myorganization.com)
+    kubecostAPIKey: "" # API Key for secondary clusters to authenticate with primary
+    createClusterControllerSecret: true # disable if you want to use your own secret manager
     secretName: controller-secrets
     actionConfigs:
       # this configures the Kubecost Cluster Turndown action
@@ -1966,17 +1973,17 @@ cost-analyzer:
       # this configures the Kubecost Cluster Sizing action
       # for more details, see documentation at https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=savings-actions
       clusterRightsize:
-          # startTime: '2024-01-02T15:04:05Z'
-          # frequencyMinutes: 1440
-          # lastCompleted: ''
-          # recommendationParams:
-          #   window: 48h
-          #   architecture: ''
-          #   targetUtilization: 0.8
-          #   minNodeCount: 1
-          #   allowSharedCore: false
-          # allowCostIncrease: false
-          # recommendationType: ''
+        # startTime: '2024-01-02T15:04:05Z'
+        # frequencyMinutes: 1440
+        # lastCompleted: ''
+        # recommendationParams:
+        #   window: 48h
+        #   architecture: ''
+        #   targetUtilization: 0.8
+        #   minNodeCount: 1
+        #   allowSharedCore: false
+        # allowCostIncrease: false
+        # recommendationType: ''
       # This configures the Kubecost Continuous Request Sizing Action
       #
       # Using this configuration overrides annotation-based configuration of
@@ -2030,7 +2037,7 @@ cost-analyzer:
       # If true, will cause all (supported) workloads to be have their requests
       # automatically right-sized on a regular basis.
       defaultResizeAll: false
-  #  fqdn: kubecost-cluster-controller.kubecost.svc.cluster.local:9731
+    #  fqdn: kubecost-cluster-controller.kubecost.svc.cluster.local:9731
     namespaceTurndown:
       rbac:
         enabled: true
@@ -2049,7 +2056,7 @@ cost-analyzer:
     # googleAnalyticsTag is only included in our Enterprise offering.
     # googleAnalyticsTag: G-XXXXXXXXX
 
-  serviceMonitor:  # the kubecost included prometheus uses scrapeConfigs and does not support service monitors. The following options assume an existing prometheus that supports serviceMonitors.
+  serviceMonitor: # the kubecost included prometheus uses scrapeConfigs and does not support service monitors. The following options assume an existing prometheus that supports serviceMonitors.
     enabled: false
     interval: 1m
     scrapeTimeout: 10s
@@ -2070,17 +2077,17 @@ cost-analyzer:
       additionalLabels: {}
       metricRelabelings: []
       relabelings:
-      - action: replace
-        sourceLabels:
-        - __meta_kubernetes_namespace
-        targetLabel: namespace
+        - action: replace
+          sourceLabels:
+            - __meta_kubernetes_namespace
+          targetLabel: namespace
   prometheusRule:
     enabled: false
     additionalLabels: {}
 
   supportNFS: false
   # initChownDataImage ensures all Kubecost filepath permissions on PV or local storage are set up correctly.
-  initChownDataImage: "busybox"  # Supports a fully qualified Docker image, e.g. registry.hub.docker.com/library/busybox:latest
+  initChownDataImage: "busybox" # Supports a fully qualified Docker image, e.g. registry.hub.docker.com/library/busybox:latest
   initChownData:
     resources: {}
 
@@ -2206,7 +2213,7 @@ cost-analyzer:
     ## set root_url to "%(protocol)s://%(domain)s:%(http_port)s/kubecost/grafana". No change is necessary here if kubecost runs at a root URL
     grafana.ini:
       server:
-        serve_from_sub_path: false  # Set to false on Grafana v10+
+        serve_from_sub_path: false # Set to false on Grafana v10+
         root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana"
       paths:
         data: /var/lib/grafana/data
@@ -2225,7 +2232,7 @@ cost-analyzer:
         org_name: Main Org.
 
   serviceAccount:
-    create: true  # Set this to false if you're bringing your own service account.
+    create: true # Set this to false if you're bringing your own service account.
     annotations: {}
 
   awsstore:
@@ -2240,7 +2247,6 @@ cost-analyzer:
   ## Ref: https://www.ibm.com/docs/en/kubecost/self-hosted/2.x?topic=cluster-etl-federation
   ##
   federatedETL:
-
     ## If true, installs the minimal set of components required for a Federated ETL cluster.
     agentOnly: false
 
@@ -2450,57 +2456,57 @@ cost-analyzer:
   #     GCP: []
   #     Azure: []
 
-    ## Specify an existing Kubernetes Secret holding the cloud integration information. This Secret must contain
-    ## a key with name `cloud-integration.json` and the contents must be in a specific format. It is expected
-    ## to exist in the release Namespace. This is mutually exclusive with cloudIntegrationJSON where only one must be defined.
-    # cloudIntegrationSecret: "cloud-integration"
+  ## Specify an existing Kubernetes Secret holding the cloud integration information. This Secret must contain
+  ## a key with name `cloud-integration.json` and the contents must be in a specific format. It is expected
+  ## to exist in the release Namespace. This is mutually exclusive with cloudIntegrationJSON where only one must be defined.
+  # cloudIntegrationSecret: "cloud-integration"
 
-    ## Specify the cloud integration information in JSON form if pointing to an existing Secret is not desired or you'd rather
-    ## define the cloud integration information directly in the values file. This will result in a new Secret being created
-    ## named `cloud-integration` in the release Namespace. It is mutually exclusive with the cloudIntegrationSecret where only one must be defined.
-    # cloudIntegrationJSON: |-
-    #   {
-    #     "aws": [
-    #       {
-    #         "athenaBucketName": "s3://AWS_cloud_integration_athenaBucketName",
-    #         "athenaRegion": "AWS_cloud_integration_athenaRegion",
-    #         "athenaDatabase": "AWS_cloud_integration_athenaDatabase",
-    #         "athenaTable": "AWS_cloud_integration_athenaBucketName",
-    #         "projectID": "AWS_cloud_integration_athena_projectID",
-    #         "serviceKeyName": "AWS_cloud_integration_athena_serviceKeyName",
-    #         "serviceKeySecret": "AWS_cloud_integration_athena_serviceKeySecret"
-    #       }
-    #     ],
-    #     "azure": [
-    #       {
-    #         "azureSubscriptionID": "my-subscription-id",
-    #         "azureStorageAccount": "my-storage-account",
-    #         "azureStorageAccessKey": "my-storage-access-key",
-    #         "azureStorageContainer": "my-storage-container"
-    #       }
-    #     ],
-    #     "gcp": [
-    #       {
-    #         "projectID": "my-project-id",
-    #         "billingDataDataset": "detailedbilling.my-billing-dataset",
-    #         "key": {
-    #           "type": "service_account",
-    #           "project_id": "my-project-id",
-    #           "private_key_id": "my-private-key-id",
-    #           "private_key": "my-pem-encoded-private-key",
-    #           "client_email": "my-service-account-name@my-project-id.iam.gserviceaccount.com",
-    #           "client_id": "my-client-id",
-    #           "auth_uri": "auth-uri",
-    #           "token_uri": "token-uri",
-    #           "auth_provider_x509_cert_url": "my-x509-provider-cert",
-    #           "client_x509_cert_url": "my-x509-cert-url"
-    #         }
-    #       }
-    #     ]
-    #   }
+  ## Specify the cloud integration information in JSON form if pointing to an existing Secret is not desired or you'd rather
+  ## define the cloud integration information directly in the values file. This will result in a new Secret being created
+  ## named `cloud-integration` in the release Namespace. It is mutually exclusive with the cloudIntegrationSecret where only one must be defined.
+  # cloudIntegrationJSON: |-
+  #   {
+  #     "aws": [
+  #       {
+  #         "athenaBucketName": "s3://AWS_cloud_integration_athenaBucketName",
+  #         "athenaRegion": "AWS_cloud_integration_athenaRegion",
+  #         "athenaDatabase": "AWS_cloud_integration_athenaDatabase",
+  #         "athenaTable": "AWS_cloud_integration_athenaBucketName",
+  #         "projectID": "AWS_cloud_integration_athena_projectID",
+  #         "serviceKeyName": "AWS_cloud_integration_athena_serviceKeyName",
+  #         "serviceKeySecret": "AWS_cloud_integration_athena_serviceKeySecret"
+  #       }
+  #     ],
+  #     "azure": [
+  #       {
+  #         "azureSubscriptionID": "my-subscription-id",
+  #         "azureStorageAccount": "my-storage-account",
+  #         "azureStorageAccessKey": "my-storage-access-key",
+  #         "azureStorageContainer": "my-storage-container"
+  #       }
+  #     ],
+  #     "gcp": [
+  #       {
+  #         "projectID": "my-project-id",
+  #         "billingDataDataset": "detailedbilling.my-billing-dataset",
+  #         "key": {
+  #           "type": "service_account",
+  #           "project_id": "my-project-id",
+  #           "private_key_id": "my-private-key-id",
+  #           "private_key": "my-pem-encoded-private-key",
+  #           "client_email": "my-service-account-name@my-project-id.iam.gserviceaccount.com",
+  #           "client_id": "my-client-id",
+  #           "auth_uri": "auth-uri",
+  #           "token_uri": "token-uri",
+  #           "auth_provider_x509_cert_url": "my-x509-provider-cert",
+  #           "client_x509_cert_url": "my-x509-cert-url"
+  #         }
+  #       }
+  #     ]
+  #   }
 
-    # ingestPodUID: false # Enables using UIDs to uniquely ID pods. This requires either Kubecost's replicated KSM metrics, or KSM v2.1.0+. This may impact performance, and changes the default cost-model allocation behavior.
-    # regionOverrides: "region1,region2,region3" # list of regions which will override default costmodel provider regions
+  # ingestPodUID: false # Enables using UIDs to uniquely ID pods. This requires either Kubecost's replicated KSM metrics, or KSM v2.1.0+. This may impact performance, and changes the default cost-model allocation behavior.
+  # regionOverrides: "region1,region2,region3" # list of regions which will override default costmodel provider regions
 
   # Explicit names of various ConfigMaps to use. If not set, a default will apply.
   # pricingConfigmapName: ""
