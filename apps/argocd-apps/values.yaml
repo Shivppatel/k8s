@@ -169,6 +169,25 @@ argocd-apps:
           - CreateNamespace=true
           - ServerSideApply=true
 
+    vector:
+      name: vector
+      namespace: argocd
+      destination:
+        namespace: vector
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/vector
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+
     # Security & Identity
     vault:
       name: vault
