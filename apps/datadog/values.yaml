@@ -1,19 +1,7 @@
-datadog-operator:
-  replicaCount: 1
-  apiKeyExistingSecret: datadog-secret
-  site: datadoghq.com
-  clusterName: homelab
-  installCRDs: true
-  datadogCRDs:
-    crds:
-      datadogAgents: true
-      datadogMetrics: true
-      datadogPodAutoscalers: true
-      datadogMonitors: false
-      datadogSLOs: false
-      datadogDashboards: false
-      datadogGenericResources: false
 datadog:
+  fullnameOverride: datadog
+  operator:
+    fullnameOverride: datadog-operator
   datadog:
     kubelet:
       tlsVerify: false
@@ -74,9 +62,8 @@ datadog:
       enabled: true
     processAgent:
       processCollection: true
-  operator:
-    datadogCRDs:
-      datadogMonitors: false
-      datadogSLOs: false
-      datadogDashboards: false
-      datadogGenericResources: false
+  agents:
+    updateStrategy:
+      rollingUpdate:
+        maxUnavailable: 30%
+      type: RollingUpdate
