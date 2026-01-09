@@ -1,7 +1,4 @@
 datadog:
-  fullnameOverride: datadog
-  operator:
-    fullnameOverride: datadog-operator
   dynamicInstrumentationGo:
     enabled: true
   remoteConfiguration:
