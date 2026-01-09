@@ -4,6 +4,8 @@ datadog:
     fullnameOverride: datadog-operator
   dynamicInstrumentationGo:
     enabled: true
+  remoteConfiguration:
+    enabled: true
   datadog:
     kubelet:
       tlsVerify: false
