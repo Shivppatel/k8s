@@ -1,0 +1,14 @@
+apiVersion: v2
+name: vector
+description: A Helm chart for Vector
+
+type: application
+
+version: 0.1.0
+
+appVersion: "0.52.0-distroless-libc"
+
+dependencies:
+  - name: vector
+    repository: https://helm.vector.dev
+    version: 0.49.0
