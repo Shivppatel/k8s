@@ -25,7 +25,7 @@ datadog-operator:
   # appKeyExistingSecret -- Use existing Secret which stores APP key instead of creating a new one
 
   ## If set, this parameter takes precedence over "appKey".
-  appKeyExistingSecret: # <DATADOG_APP_KEY_SECRET>
+  appKeyExistingSecret: datadog-secret
 
   image:
     # image.repository -- Repository to use for Datadog Operator image
@@ -249,73 +249,3 @@ datadog-operator:
 
     # allowCreatePodsExec is required for `remote_copy` mode of the CWS Instrumentation feature.
     allowCreatePodsExec: false
-# datadog:
-#   dynamicInstrumentationGo:
-#     enabled: true
-#   remoteConfiguration:
-#     enabled: true
-#   datadog:
-#     kubelet:
-#       tlsVerify: false
-#     site: datadoghq.com
-#     clusterName: homelab
-#     apiKeyExistingSecret: datadog-secret
-#     clusterChecks:
-#       enabled: true
-#     orchestratorExplorer:
-#       enabled: true
-#     otelCollector:
-#       enabled: true
-#       ports:
-#         - containerPort: 4317
-#           hostPort: 4317
-#           name: "otel-grpc"
-#         - containerPort: 4318
-#           hostPort: 4318
-#           name: "otel-http"
-#     apm:
-#       instrumentation:
-#         enabled: true
-#         targets:
-#           - name: "default-target"
-#             ddTraceVersions:
-#               java: "1"
-#               python: "4"
-#               js: "5"
-#               php: "1"
-#               dotnet: "3"
-#               ruby: "2"
-#             ddTraceConfigs:
-#               - name: "DD_PROFILING_ENABLED"
-#                 value: "auto"
-#     logs:
-#       enabled: true
-#       containerCollectAll: true
-#     asm:
-#       threats:
-#         enabled: true
-#       sca:
-#         enabled: true
-#       iast:
-#         enabled: true
-#     securityAgent:
-#       runtime:
-#         enabled: true
-#       compliance:
-#         enabled: true
-#     sbom:
-#       containerImage:
-#         enabled: true
-#       host:
-#         enabled: true
-#     serviceMonitoring:
-#       enabled: true
-#     networkMonitoring:
-#       enabled: true
-#     processAgent:
-#       processCollection: true
-#   agents:
-#     updateStrategy:
-#       rollingUpdate:
-#         maxUnavailable: 30%
-#       type: RollingUpdate
