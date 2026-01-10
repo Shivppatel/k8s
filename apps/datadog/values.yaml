@@ -6,26 +6,17 @@ datadog-operator:
   # appKey -- Your Datadog APP key
   appKey: # <DATADOG_APP_KEY>
 
+  # appKeyExistingSecret -- Use existing Secret which stores APP key instead of creating a new one
+  ## If set, this parameter takes precedence over "appKey".
+  appKeyExistingSecret: datadog-secret
+
   # clusterName -- Set a unique cluster name reporting from the Datadog Operator.
   clusterName: homelab
 
-  # site -- The site of the Datadog intake to send data to (documentation: https://docs.datadoghq.com/getting_started/site/)
-
-  ## Set to 'datadoghq.com' to send data to the US1 site (default).
-  ## Set to 'datadoghq.eu' to send data to the EU site.
-  ## Set to 'us3.datadoghq.com' to send data to the US3 site.
-  ## Set to 'us5.datadoghq.com' to send data to the US5 site.
-  ## Set to 'ddog-gov.com' to send data to the US1-FED site.
-  ## Set to 'ap1.datadoghq.com' to send data to the AP1 site.
   site: datadoghq.com
 
   # env -- Define any environment variables to be passed to the operator.
   env: []
-
-  # appKeyExistingSecret -- Use existing Secret which stores APP key instead of creating a new one
-
-  ## If set, this parameter takes precedence over "appKey".
-  appKeyExistingSecret: datadog-secret
 
   image:
     # image.repository -- Repository to use for Datadog Operator image
@@ -84,7 +75,7 @@ datadog-operator:
     enabled: false
   remoteConfiguration:
     # remoteConfiguration.enabled -- If true, enables Remote Configuration in the Datadog Operator (beta). Requires clusterName, API and App keys to be set.
-    enabled: true
+    enabled: false
 
   deployment:
     # deployment.annotations -- Allows setting additional annotations for the deployment resource
