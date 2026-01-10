@@ -1,6 +1,6 @@
 apiVersion: v2
-name: datadog
-description: A Helm chart for Datadog
+name: datadog-operator
+description: A Helm chart for Datadog Operator
 
 type: application
 
