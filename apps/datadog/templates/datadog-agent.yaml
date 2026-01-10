@@ -6,6 +6,8 @@ spec:
   global:
     clusterName: "homelab"
     site: "datadoghq.com"
+    kubelet:
+      tlsVerify: false
     credentials:
       apiSecret:
         secretName: "datadog-secret"
