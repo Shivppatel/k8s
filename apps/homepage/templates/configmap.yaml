@@ -78,10 +78,6 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/headlamp.png
             href: https://headlamp.shivpatel.xyz
             description: Kubernetes dashboard
-        - Kubecost:
-            icon: https://avatars.githubusercontent.com/u/45108136?s=200&v=4
-            href: https://kubecost.shivpatel.xyz/
-            description: Cost monitoring
         - Longhorn:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/longhorn.png
             href: https://longhorn.shivpatel.xyz
@@ -114,6 +110,10 @@ data:
             #   url: https://grafana.shivpatel.xyz
             #   username: {{`{{HOMEPAGE_VAR_GRAFANA_USERNAME}}`}}
             #   password: {{`{{HOMEPAGE_VAR_GRAFANA_PASSWORD}}`}}
+        - Kubecost:
+            icon: https://avatars.githubusercontent.com/u/45108136?s=200&v=4
+            href: https://kubecost.shivpatel.xyz/
+            description: Cost monitoring
         - Policy Reporter:
             icon: https://kyverno.github.io/policy-reporter-docs/logo.png
             href: https://policy-reporter.shivpatel.xyz
