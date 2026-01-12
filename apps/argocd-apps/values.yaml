@@ -114,42 +114,6 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
-    filebeat:
-      name: filebeat
-      namespace: argocd
-      destination:
-        namespace: logging
-        server: "https://kubernetes.default.svc"
-      project: default
-      source:
-        path: apps/filebeat
-        repoURL: "git@github.com:shivppatel/k8s.git"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-
-    logstash:
-      name: logstash
-      namespace: argocd
-      destination:
-        namespace: logging
-        server: "https://kubernetes.default.svc"
-      project: default
-      source:
-        path: apps/logstash
-        repoURL: "git@github.com:shivppatel/k8s.git"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-
     policy-reporter:
       name: policy-reporter
       namespace: argocd
@@ -598,24 +562,6 @@ argocd-apps:
           jqPathExpressions:
             - .spec.refreshInterval
 
-    elasticsearch:
-      name: elasticsearch
-      namespace: argocd
-      destination:
-        namespace: logging
-        server: "https://kubernetes.default.svc"
-      project: default
-      source:
-        path: apps/elasticsearch
-        repoURL: "git@github.com:shivppatel/k8s.git"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-
     emqx:
       name: emqx
       namespace: argocd
@@ -991,24 +937,6 @@ argocd-apps:
       project: default
       source:
         path: apps/uptime-kuma
-        repoURL: "git@github.com:shivppatel/k8s.git"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-
-    kibana:
-      name: kibana
-      namespace: argocd
-      destination:
-        namespace: logging
-        server: "https://kubernetes.default.svc"
-      project: default
-      source:
-        path: apps/kibana
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
       syncPolicy:

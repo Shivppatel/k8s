@@ -114,10 +114,6 @@ data:
             #   url: https://grafana.shivpatel.xyz
             #   username: {{`{{HOMEPAGE_VAR_GRAFANA_USERNAME}}`}}
             #   password: {{`{{HOMEPAGE_VAR_GRAFANA_PASSWORD}}`}}
-        - Kibana:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kibana.png
-            href: https://kibana.shivpatel.xyz
-            description: Log analytics
         - Policy Reporter:
             icon: https://kyverno.github.io/policy-reporter-docs/logo.png
             href: https://policy-reporter.shivpatel.xyz
