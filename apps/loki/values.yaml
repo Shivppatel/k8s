@@ -21,7 +21,26 @@ loki:
     ruler:
       enable_api: true
 
+    extraEnv:
+      - name: MINIO_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: loki-s3-secret
+            key: MINIO_ACCESS_KEY
+      - name: MINIO_SECRET_KEY
+        valueFrom:
+          secretKeyRef:
+            name: loki-s3-secret
+            key: MINIO_SECRET_KEY
+
     storage:
+      type: s3
+      s3:
+        endpoint: http://minio.minio.svc.cluster.local:9000
+        accessKeyId: "${MINIO_ACCESS_KEY}"
+        secretAccessKey: "${MINIO_SECRET_KEY}"
+        s3ForcePathStyle: true
+        insecure: true
       bucketNames:
         chunks: loki-chunks
         ruler: loki-ruler
