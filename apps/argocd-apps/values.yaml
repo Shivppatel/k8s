@@ -462,8 +462,6 @@ argocd-apps:
         path: apps/postgresql/templates
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-        directory:
-          recurse: false
       syncPolicy:
         automated:
           prune: false
