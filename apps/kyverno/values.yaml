@@ -8,14 +8,62 @@ kyverno:
       matchLabels:
         dashboards: "grafana"
   admissionController:
+    podAnnotations:
+      ad.datadoghq.com/svc-metrics.checks: |
+        {
+          "kyverno": {
+            "init_config": {},
+            "instances": [
+              {
+                "openmetrics_endpoint": "http://%%host%%:8000/metrics"
+              }
+            ]
+          }
+        }
     serviceMonitor:
       enabled: true
   backgroundController:
+    podAnnotations:
+      ad.datadoghq.com/background-controller-metrics.checks: |
+        {
+          "kyverno": {
+            "init_config": {},
+            "instances": [
+              {
+                "openmetrics_endpoint": "http://%%host%%:8000/metrics"
+              }
+            ]
+          }
+        }
     serviceMonitor:
       enabled: true
   cleanupController:
+    podAnnotations:
+      ad.datadoghq.com/cleanup-controller-metrics.checks: |
+        {
+          "kyverno": {
+            "init_config": {},
+            "instances": [
+              {
+                "openmetrics_endpoint": "http://%%host%%:8000/metrics"
+              }
+            ]
+          }
+        }
     serviceMonitor:
       enabled: true
   reportsController:
+    podAnnotations:
+      ad.datadoghq.com/reports-controller-metrics.checks: |
+        {
+          "kyverno": {
+            "init_config": {},
+            "instances": [
+              {
+                "openmetrics_endpoint": "http://%%host%%:8000/metrics"
+              }
+            ]
+          }
+        }
     serviceMonitor:
       enabled: true
