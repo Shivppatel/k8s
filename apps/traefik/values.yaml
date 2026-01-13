@@ -32,8 +32,7 @@ traefik:
             "init_config": {},
             "instances": [
               {
-                "openmetrics_endpoint": "http://%%host%%:8082/metrics",
-                "traefik_proxy_api_endpoint": "http://%%host%%:8080"
+                "openmetrics_endpoint": "http://%%host%%:9100/metrics"
               }
             ]
           }
