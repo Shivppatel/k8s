@@ -28,11 +28,12 @@ traefik:
     podAnnotations:
       ad.datadoghq.com/traefik.checks: |
         {
-          "traefik": {
+          "traefik_mesh": {
             "init_config": {},
             "instances": [
               {
-                "openmetrics_endpoint": "http://%%host%%:8000/metrics"
+                "openmetrics_endpoint": "http://%%host%%:8082/metrics",
+                "traefik_proxy_api_endpoint": "http://%%host%%:8080"
               }
             ]
           }
