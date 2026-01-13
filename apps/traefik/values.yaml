@@ -24,6 +24,20 @@ traefik:
   persistence:
     enabled: true
 
+  deployments:
+    podAnnotations:
+      ad.datadoghq.com/traefik.checks: |
+        {
+          "traefik": {
+            "init_config": {},
+            "instances": [
+              {
+                "openmetrics_endpoint": "http://%%host%%:8000/metrics"
+              }
+            ]
+          }
+        }
+
   metrics:
     addInternals: true
     prometheus:
