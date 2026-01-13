@@ -10,6 +10,6 @@ spec:
     - match: Host(`redis.shivpatel.xyz`)
       kind: Rule
       services:
-        - name: redis
-          port: 80
+        - name: redis-master
+          port: 6379
   tls: {}
