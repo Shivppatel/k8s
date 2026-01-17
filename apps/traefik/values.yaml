@@ -26,17 +26,17 @@ traefik:
 
   deployment:
     podAnnotations:
-      ad.datadoghq.com/traefik.checks: |
-        {
-          "traefik_mesh": {
-            "init_config": {},
-            "instances": [
-              {
-                "openmetrics_endpoint": "http://%%host%%:9100/metrics"
-              }
-            ]
-          }
+    ad.datadoghq.com/traefik.checks: |
+      {
+        "traefik_mesh": {
+          "init_config": {},
+          "instances": [
+            {
+              "traefik_controller_api_endpoint": "http://%%host%%:9000"
+            }
+          ]
         }
+      }
 
   metrics:
     addInternals: true
