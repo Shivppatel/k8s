@@ -32,7 +32,7 @@ traefik:
             "init_config": {},
             "instances": [
               {
-                "traefik_controller_api_endpoint": "http://%%host%%:9000"
+                "openmetrics_endpoint": "http://%%host%%:9100/metrics"
               }
             ]
           }
