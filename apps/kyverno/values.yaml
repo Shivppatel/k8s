@@ -9,7 +9,7 @@ kyverno:
         dashboards: "grafana"
   admissionController:
     podAnnotations:
-      ad.datadoghq.com/svc-metrics.checks: |
+      ad.datadoghq.com/kyverno.checks: |
         {
           "kyverno": {
             "init_config": {},
@@ -24,7 +24,7 @@ kyverno:
       enabled: true
   backgroundController:
     podAnnotations:
-      ad.datadoghq.com/background-controller-metrics.checks: |
+      ad.datadoghq.com/controller.checks: |
         {
           "kyverno": {
             "init_config": {},
@@ -39,7 +39,7 @@ kyverno:
       enabled: true
   cleanupController:
     podAnnotations:
-      ad.datadoghq.com/cleanup-controller-metrics.checks: |
+      ad.datadoghq.com/controller.checks: |
         {
           "kyverno": {
             "init_config": {},
@@ -54,7 +54,7 @@ kyverno:
       enabled: true
   reportsController:
     podAnnotations:
-      ad.datadoghq.com/reports-controller-metrics.checks: |
+      ad.datadoghq.com/controller.checks: |
         {
           "kyverno": {
             "init_config": {},
