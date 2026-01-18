@@ -15,10 +15,10 @@ argocd-apps:
         helm:
           valueFiles:
             - values.yaml
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -34,10 +34,10 @@ argocd-apps:
         path: apps/kube-prometheus-stack
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
@@ -53,10 +53,10 @@ argocd-apps:
         path: apps/loki
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -71,10 +71,10 @@ argocd-apps:
         path: apps/alloy
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -89,10 +89,10 @@ argocd-apps:
         path: apps/datadog
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -107,10 +107,10 @@ argocd-apps:
         path: apps/tempo-distributed
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -125,10 +125,10 @@ argocd-apps:
         path: apps/policy-reporter
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
@@ -145,10 +145,10 @@ argocd-apps:
         path: apps/vault
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
       ignoreDifferences:
@@ -169,10 +169,10 @@ argocd-apps:
         path: apps/external-secrets
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
@@ -201,10 +201,10 @@ argocd-apps:
         path: apps/keycloak
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
       ignoreDifferences:
@@ -224,10 +224,10 @@ argocd-apps:
         path: apps/kyverno
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
@@ -244,10 +244,10 @@ argocd-apps:
         path: apps/cert-manager
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -262,10 +262,10 @@ argocd-apps:
         path: apps/traefik
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -280,10 +280,10 @@ argocd-apps:
         path: apps/cloudflared
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -298,10 +298,10 @@ argocd-apps:
         path: apps/external-dns
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -316,10 +316,10 @@ argocd-apps:
         path: apps/metallb
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -334,10 +334,10 @@ argocd-apps:
         path: apps/reloader
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -352,10 +352,10 @@ argocd-apps:
         path: apps/metrics-server
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -370,10 +370,10 @@ argocd-apps:
         path: apps/longhorn
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -388,10 +388,10 @@ argocd-apps:
         path: apps/minio
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -407,10 +407,10 @@ argocd-apps:
         path: apps/cloudnative-pg
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
@@ -478,10 +478,10 @@ argocd-apps:
         path: apps/mongodb
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -496,10 +496,10 @@ argocd-apps:
         path: apps/redis
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -514,10 +514,10 @@ argocd-apps:
         path: apps/kafka
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -532,10 +532,10 @@ argocd-apps:
         path: apps/kafka-ui
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -550,10 +550,10 @@ argocd-apps:
         path: apps/rabbitmq
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
       ignoreDifferences:
@@ -573,10 +573,10 @@ argocd-apps:
         path: apps/emqx
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -592,10 +592,10 @@ argocd-apps:
         path: apps/argocd
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -633,10 +633,10 @@ argocd-apps:
         path: apps/rollouts-demo
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -651,10 +651,10 @@ argocd-apps:
         path: apps/canary-demo
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -687,10 +687,10 @@ argocd-apps:
         path: apps/gitea
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -705,10 +705,10 @@ argocd-apps:
         path: apps/harbor
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -723,10 +723,10 @@ argocd-apps:
         path: apps/headlamp
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -741,10 +741,10 @@ argocd-apps:
         path: apps/kubecost
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -759,10 +759,10 @@ argocd-apps:
         path: apps/it-tools
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -777,10 +777,10 @@ argocd-apps:
         path: apps/n8n
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
       ignoreDifferences:
@@ -801,10 +801,10 @@ argocd-apps:
         path: apps/home-assistant
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -819,10 +819,10 @@ argocd-apps:
         path: apps/homepage
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
       ignoreDifferences:
@@ -867,10 +867,10 @@ argocd-apps:
         path: apps/nextcloud
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -885,10 +885,10 @@ argocd-apps:
         path: apps/open-webui
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -903,10 +903,10 @@ argocd-apps:
         path: apps/pgadmin4
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -921,10 +921,10 @@ argocd-apps:
         path: apps/teslamate
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
@@ -939,10 +939,10 @@ argocd-apps:
         path: apps/uptime-kuma
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # syncPolicy:
+        #   automated:
+        #     prune: true
+        #     selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
