@@ -58,17 +58,3 @@ spec:
       enabled: true
     liveProcessCollection:
       enabled: true
-    autoscaling:
-      workload:
-        enabled: true
-    eventCollection:
-      unbundleEvents: true
-  override:
-    clusterAgent:
-      env:
-        - name: DD_AUTOSCALING_FAILOVER_ENABLED
-          value: "true"
-    nodeAgent:
-      env:
-        - name: DD_AUTOSCALING_FAILOVER_ENABLED
-          value: "true"
