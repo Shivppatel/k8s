@@ -95,6 +95,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     tempo-distributed:
       name: tempo-distributed
