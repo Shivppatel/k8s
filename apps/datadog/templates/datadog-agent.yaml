@@ -17,6 +17,8 @@ spec:
       enabled: true
     orchestratorExplorer:
       enabled: true
+    helmCheck:
+      enabled: true
     apm:
       instrumentation:
         enabled: true
