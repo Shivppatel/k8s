@@ -1,14 +1,14 @@
 apiVersion: v2
-name: open-webui
-description: A Helm chart for Open WebUI
+name: openspeedtest
+description: A Helm chart for OpenSpeedTest
 
 type: application
 
 version: 0.1.0
 
-appVersion: "0.6.36"
+appVersion: "v2.0.0"
 
 dependencies:
-  - name: open-webui
-    repository: https://helm.openwebui.com
-    version: 10.2.1
+  - name: openspeedtest
+    repository: https://openspeedtest.github.io/Helm-chart/
+    version: 0.1.2
