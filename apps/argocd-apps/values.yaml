@@ -324,24 +324,6 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
-    openspeedtest:
-      name: openspeedtest
-      namespace: argocd
-      destination:
-        namespace: openspeedtest
-        server: "https://kubernetes.default.svc"
-      project: default
-      source:
-        path: apps/openspeedtest
-        repoURL: "git@github.com:shivppatel/k8s.git"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-
     reloader:
       name: reloader
       namespace: argocd
