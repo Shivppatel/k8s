@@ -3,6 +3,8 @@ loki:
     extraEnvFrom:
       - secretRef:
           name: loki-s3-secret
+    extraArgs:
+      - -config.expand-env=true
   loki:
     commonConfig:
       replication_factor: 1
