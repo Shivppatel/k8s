@@ -1,4 +1,8 @@
 loki:
+  global:
+    extraEnvFrom:
+      - secretRef:
+          name: loki-s3-secret
   loki:
     commonConfig:
       replication_factor: 1
@@ -20,19 +24,6 @@ loki:
       max_global_streams_per_user: 0
     ruler:
       enable_api: true
-
-    extraEnv:
-      - name: MINIO_ACCESS_KEY
-        valueFrom:
-          secretKeyRef:
-            name: loki-s3-secret
-            key: MINIO_ACCESS_KEY
-      - name: MINIO_SECRET_KEY
-        valueFrom:
-          secretKeyRef:
-            name: loki-s3-secret
-            key: MINIO_SECRET_KEY
-
     storage:
       type: s3
       s3:
