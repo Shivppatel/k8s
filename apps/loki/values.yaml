@@ -8,6 +8,9 @@ loki:
   loki:
     commonConfig:
       replication_factor: 1
+    server:
+      grpc_server_max_recv_msg_size: 16777216
+      grpc_server_max_send_msg_size: 16777216
     schemaConfig:
       configs:
         - from: "2024-04-01"
