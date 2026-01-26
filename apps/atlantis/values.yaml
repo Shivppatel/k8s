@@ -42,7 +42,8 @@ atlantis:
   # -- When referencing Terraform modules in private repositories, it may be helpful
   # (necessary?) to use redirection in a .gitconfig.
   # Check values.yaml for examples.
-  gitconfig: ""
+  gitconfig: |
+    # Initial gitconfig
   # gitconfig: |
   # [url "https://YOUR_GH_TOKEN@github.com"]
   #   insteadOf = https://github.com
