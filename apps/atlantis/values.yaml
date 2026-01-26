@@ -57,7 +57,7 @@ atlantis:
   # -- When true gitconfig file is mounted as read only.
   # When false, the gitconfig value will be copied to '/home/atlantis/.gitconfig' before starting the atlantis process,
   # instead of being mounted as a file.
-  gitconfigReadOnly: true
+  gitconfigReadOnly: false
 
   # -- If managing secrets outside the chart for the gitconfig, use this variable to reference the secret name
   gitconfigSecretName: ""
@@ -594,7 +594,8 @@ atlantis:
 
   # -- Optionally specify extra arguments for the Atlantis pod.
   # Check values.yaml for examples.
-  extraArgs: []
+  extraArgs:
+    - --write-git-creds
   # extraArgs:
   #   - --disable-autoplan
   #   - --disable-repo-locking
