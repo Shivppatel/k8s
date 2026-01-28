@@ -87,6 +87,8 @@ spec:
                   enabled: true
                   include:
                     - ".*"
+                collect_schemas:
+                  enabled: true
                 # Collect query metrics
                 collect_activity_metrics: true
                 collect_database_size_metrics: true
