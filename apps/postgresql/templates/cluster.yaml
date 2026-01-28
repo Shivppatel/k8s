@@ -51,3 +51,19 @@ spec:
 
   storage:
     size: 50Gi
+
+  # PostgreSQL configuration for Datadog Database Monitoring
+  postgresql:
+    parameters:
+      # Required for pg_stat_statements
+      shared_preload_libraries: "pg_stat_statements"
+      # Track all statements including those from nested function calls
+      pg_stat_statements.track: "all"
+      # Maximum number of statements tracked
+      pg_stat_statements.max: "10000"
+      # Disable tracking of utility commands to reduce noise
+      pg_stat_statements.track_utility: "off"
+      # Increase query size tracking for better visibility
+      track_activity_query_size: "4096"
+      # Enable I/O timing for query analysis
+      track_io_timing: "on"
