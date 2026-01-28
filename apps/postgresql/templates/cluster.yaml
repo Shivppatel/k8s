@@ -38,6 +38,7 @@ spec:
         - CREATE USER teslamate WITH PASSWORD 'temp'
         - CREATE USER authentik WITH PASSWORD 'temp'
         - CREATE USER gitea WITH PASSWORD 'temp'
+        - CREATE USER datadog WITH PASSWORD 'temp'
         # Create databases with correct ownership
         - CREATE DATABASE terraform OWNER terraform
         - CREATE DATABASE immich OWNER immich
@@ -46,6 +47,7 @@ spec:
         - CREATE DATABASE teslamate OWNER teslamate
         - CREATE DATABASE authentik OWNER authentik
         - CREATE DATABASE gitea OWNER gitea
+        - CREATE DATABASE datadog OWNER datadog
 
   storage:
     size: 50Gi
