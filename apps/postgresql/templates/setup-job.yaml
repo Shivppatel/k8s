@@ -83,7 +83,7 @@ spec:
               done
 
               # Ensure all users and databases exist (non-destructive)
-              for app in immich keycloak n8n terraform teslamate authentik gitea; do
+              for app in immich keycloak n8n terraform teslamate authentik gitea datadog; do
                 echo "Ensuring $app user and database exist..."
                 psql -c "DO \$\$ BEGIN CREATE USER $app WITH PASSWORD 'temp'; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$;"
                 
