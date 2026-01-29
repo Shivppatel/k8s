@@ -11,4 +11,4 @@ appVersion: "v3.0.6"
 dependencies:
   - name: kubecost
     repository: https://kubecost.github.io/kubecost
-    version: 3.1.2
+    version: 3.1.3
