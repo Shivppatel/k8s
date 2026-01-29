@@ -55,6 +55,8 @@ spec:
   # PostgreSQL configuration for Datadog Database Monitoring
   postgresql:
     parameters:
+      # Increase max connections to handle multiple applications
+      max_connections: "200"
       # Required for pg_stat_statements
       shared_preload_libraries: "pg_stat_statements"
       # Track all statements including those from nested function calls
