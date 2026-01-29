@@ -1,0 +1,14 @@
+apiVersion: v2
+name: localstack
+description: A Helm chart for LocalStack
+
+type: application
+
+version: 0.1.0
+
+appVersion: "latest"
+
+dependencies:
+  - name: localstack
+    repository: https://helm.localstack.cloud
+    version: 0.6.27
