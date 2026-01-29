@@ -11,4 +11,4 @@ appVersion: "v1.10.1"
 dependencies:
   - name: longhorn
     repository: https://charts.longhorn.io
-    version: 1.10.2
+    version: 1.11.0
