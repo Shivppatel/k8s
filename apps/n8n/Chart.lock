@@ -1,6 +1,6 @@
 dependencies:
 - name: n8n
   repository: https://community-charts.github.io/helm-charts
-  version: 1.16.27
-digest: sha256:fb91683fe407dd5303ce99f28c9940cd46b687c86ad96b60abe5971f9bec5aac
-generated: "2026-01-30T04:46:54.634658186Z"
+  version: 1.16.28
+digest: sha256:f1991d7db87aa0e5303f04c012dadf8ed19d8c4da31f6eb56930e6cb69f75b1e
+generated: "2026-02-03T05:24:23.863044055Z"
