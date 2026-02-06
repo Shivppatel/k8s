@@ -45,6 +45,7 @@ traefik:
       addServicesLabels: true
       serviceMonitor:
         enabled: true
+        honorLabels: true
     datadog:
       ## Address instructs exporter to send metrics to datadog-agent at this address.
       address: "127.0.0.1:8125"
