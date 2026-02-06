@@ -37,20 +37,14 @@ kafka-ui:
   existingConfigMap: ""
   ## @param yamlApplicationConfig Kafbat-UI config in Yaml format
   yamlApplicationConfig:
-    {}
-    # kafka:
-    #   clusters:
-    #     - name: yaml
-    #       bootstrapServers: kafka-service:9092
-    # spring:
-    #   security:
-    #     oauth2:
-    # auth:
-    #   type: disabled
-    # management:
-    #   health:
-    #     ldap:
-    #       enabled: false
+    kafka:
+      clusters:
+        - name: homelab
+          bootstrapServers: kafka.kafka.svc.cluster.local:9092
+          properties:
+            security.protocol: SASL_PLAINTEXT
+            sasl.mechanism: PLAIN
+            sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="user1" password="${KAFKA_CLIENT_PASSWORD}";
   ## @param yamlApplicationConfigConfigMap Map with name and keyName keys, name refers to the existing ConfigMap, keyName refers to the ConfigMap key with Kafbat-UI config in Yaml format
   yamlApplicationConfigConfigMap:
     {}
@@ -70,10 +64,10 @@ kafka-ui:
     ## @param envs.config Set of the environment variables to pass to Kafbat-UI
     config: {}
     ## @param envs.secretMappings The mapping of existing secret to env variable.
-    secretMappings: {}
-      #ENV_NAME:
-      #  name: kubernetes-secret-name
-      #  keyName: kubernetes-secret-key
+    secretMappings:
+      KAFKA_CLIENT_PASSWORD:
+        name: kafka-user-passwords
+        keyName: client-passwords
     ## @param envs.configMappings  The mapping of configmap and keyName to get env variable.
     configMappings: {}
       #ENV_NAME:
