@@ -7,7 +7,7 @@ kube-prometheus-stack:
   grafana:
     grafana.ini:
       server:
-        root_url: http://grafana.shivpatel.xyz
+        root_url: https://grafana.shivpatel.xyz
     persistence:
       enabled: true
       type: sts
