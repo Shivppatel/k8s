@@ -18,7 +18,8 @@ kube-prometheus-stack:
       enabled: true
       forceConflicts: true
       image:
-        tag: v1.34.1
+        kubectl:
+          tag: ""
   prometheus:
     prometheusSpec:
       enableRemoteWriteReceiver: true
