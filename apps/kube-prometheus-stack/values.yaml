@@ -8,6 +8,8 @@ kube-prometheus-stack:
     grafana.ini:
       server:
         root_url: https://grafana.shivpatel.xyz
+      auth.generic_oauth:
+        role_attribute_path: "contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'"
     persistence:
       enabled: true
       type: sts
