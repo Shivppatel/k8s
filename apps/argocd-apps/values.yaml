@@ -296,23 +296,6 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
-    external-dns:
-      name: external-dns
-      namespace: argocd
-      destination:
-        namespace: external-dns
-        server: "https://kubernetes.default.svc"
-      project: default
-      source:
-        path: apps/external-dns
-        repoURL: "git@github.com:shivppatel/k8s.git"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
 
     metallb:
       name: metallb
