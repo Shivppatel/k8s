@@ -1,5 +1,22 @@
 argocd-apps:
   applications:
+    # ArgoCD itself - manual sync only to avoid self-bricking
+    argocd:
+      name: argocd
+      namespace: argocd
+      destination:
+        namespace: argocd
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/argocd
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+
     # Root App - The App of Apps itself
     argocd-apps:
       name: argocd-apps
@@ -590,24 +607,6 @@ argocd-apps:
           - CreateNamespace=true
 
     # Tools & Services
-    argocd:
-      name: argocd
-      namespace: argocd
-      destination:
-        namespace: argocd
-        server: "https://kubernetes.default.svc"
-      project: default
-      source:
-        path: apps/argocd
-        repoURL: "git@github.com:shivppatel/k8s.git"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-
     argo-rollouts:
       name: argo-rollouts
       namespace: argocd
