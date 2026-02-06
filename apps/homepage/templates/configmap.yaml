@@ -135,10 +135,10 @@ data:
             #   slug: homelab
 
     - Services:
-        # - Authentik:
-        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authentik.png
-        #     href: https://authentik.shivpatel.xyz/
-        #     description: Identity provider
+        - Authentik:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authentik.png
+            href: https://authentik.shivpatel.xyz/
+            description: Identity provider
         - EMQX:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/emqx.png
             href: https://emqx.shivpatel.xyz/
@@ -151,10 +151,6 @@ data:
             #   type: gitea
             #   url: http://gitea.shivpatel.xyz
             #   key: {{`{{HOMEPAGE_VAR_GITEA_KEY}}`}}
-        - Keycloak:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/keycloak.png
-            href: https://keycloak.shivpatel.xyz/
-            description: Identity provider
         - MinIO:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/minio.png
             href: https://minio.shivpatel.xyz/

@@ -15,9 +15,6 @@ spec:
         - name: immich-db-secret
           secret:
             secretName: immich-db-secret
-        - name: keycloak-db-secret
-          secret:
-            secretName: keycloak-db-secret
         - name: n8n-db-secret
           secret:
             secretName: n8n-db-secret
@@ -56,8 +53,6 @@ spec:
           volumeMounts:
             - name: immich-db-secret
               mountPath: /run/secrets/immich-db-secret
-            - name: keycloak-db-secret
-              mountPath: /run/secrets/keycloak-db-secret
             - name: n8n-db-secret
               mountPath: /run/secrets/n8n-db-secret
             - name: terraform-db-secret
@@ -83,7 +78,7 @@ spec:
               done
 
               # Ensure all users and databases exist (non-destructive)
-              for app in immich keycloak n8n terraform teslamate authentik gitea datadog; do
+              for app in immich n8n terraform teslamate authentik gitea datadog; do
                 echo "Ensuring $app user and database exist..."
                 psql -c "DO \$\$ BEGIN CREATE USER $app WITH PASSWORD 'temp'; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$;"
                 
@@ -103,10 +98,6 @@ spec:
               psql -d immich -c "CREATE EXTENSION IF NOT EXISTS vector;"
               psql -d immich -c "ALTER SCHEMA public OWNER TO immich;"
               psql -d immich -c "GRANT ALL ON SCHEMA public TO immich;"
-
-              echo "Setting up keycloak database..."
-              psql -d keycloak -c "ALTER SCHEMA public OWNER TO keycloak;"
-              psql -d keycloak -c "GRANT ALL ON SCHEMA public TO keycloak;"
 
               echo "Setting up n8n database..."
               psql -d n8n -c "ALTER SCHEMA public OWNER TO n8n;"
@@ -151,7 +142,7 @@ spec:
               psql -d postgres -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
               
               # Setup datadog schema and functions in ALL databases for DBM
-              for db in postgres immich keycloak n8n terraform teslamate authentik gitea datadog; do
+              for db in postgres immich n8n terraform teslamate authentik gitea datadog; do
                 echo "Setting up Datadog monitoring in $db database..."
                 
                 # Create datadog schema
@@ -196,7 +187,7 @@ spec:
               # Sync passwords from ExternalSecrets to database users
               echo "Syncing passwords from ExternalSecrets..."
               # Read secrets directly from mounted files or environment variables
-              for app in immich keycloak n8n terraform teslamate authentik gitea datadog; do
+              for app in immich n8n terraform teslamate authentik gitea datadog; do
                 echo "Syncing password for $app..."
                 # Use environment variables or mount secrets as files
                 PASSWORD=$(cat /run/secrets/${app}-db-secret/password 2>/dev/null || echo "")

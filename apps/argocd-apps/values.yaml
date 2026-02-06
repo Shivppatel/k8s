@@ -196,27 +196,15 @@ argocd-apps:
           - ServerSideApply=true
           - SkipDryRunOnMissingResource=true
 
-    # authentik:
-    #   name: authentik
-    #   namespace: argocd
-    #   destination:
-    #     namespace: authentik
-    #     server: "https://kubernetes.default.svc"
-    #   project: default
-    #   source:
-    #     path: apps/authentik
-    #     repoURL: "git@github.com:shivppatel/k8s.git"
-    #     targetRevision: main
-
-    keycloak:
-      name: keycloak
+    authentik:
+      name: authentik
       namespace: argocd
       destination:
-        namespace: keycloak
+        namespace: authentik
         server: "https://kubernetes.default.svc"
       project: default
       source:
-        path: apps/keycloak
+        path: apps/authentik
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
       syncPolicy:
@@ -225,11 +213,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
-      ignoreDifferences:
-        - group: external-secrets.io
-          kind: ExternalSecret
-          jqPathExpressions:
-            - .spec.refreshInterval
+          - ServerSideApply=true
 
     kyverno:
       name: kyverno

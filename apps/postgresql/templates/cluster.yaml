@@ -33,7 +33,6 @@ spec:
         # Create users (managed roles will sync passwords later)
         - CREATE USER terraform WITH PASSWORD 'temp'        
         - CREATE USER immich WITH PASSWORD 'temp'
-        - CREATE USER keycloak WITH PASSWORD 'temp'
         - CREATE USER n8n WITH PASSWORD 'temp'
         - CREATE USER teslamate WITH PASSWORD 'temp'
         - CREATE USER authentik WITH PASSWORD 'temp'
@@ -42,7 +41,6 @@ spec:
         # Create databases with correct ownership
         - CREATE DATABASE terraform OWNER terraform
         - CREATE DATABASE immich OWNER immich
-        - CREATE DATABASE keycloak OWNER keycloak
         - CREATE DATABASE n8n OWNER n8n
         - CREATE DATABASE teslamate OWNER teslamate
         - CREATE DATABASE authentik OWNER authentik
