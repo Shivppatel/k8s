@@ -22,9 +22,10 @@ traefik:
         secretName: wildcard-cert-new
 
   persistence:
-    enabled: true
+    enabled: false
 
   deployment:
+    replicas: 3
     podAnnotations:
       ad.datadoghq.com/traefik.checks: |
         {
