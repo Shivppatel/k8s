@@ -225,6 +225,13 @@ argocd-apps:
         path: apps/kyverno
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+      ignoreDifferences:
+        - group: apiextensions.k8s.io
+          kind: CustomResourceDefinition
+          jsonPointers:
+            - /metadata/annotations
+            - /metadata/labels
+            - /metadata/generation
       syncPolicy:
         automated:
           prune: true
@@ -232,6 +239,7 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
+          - RespectIgnoreDifferences=true
 
     # Infrastructure & Networking
     cert-manager:
