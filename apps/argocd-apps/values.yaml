@@ -38,6 +38,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     # Monitoring & Observability
     kube-prometheus-stack:
@@ -76,6 +77,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     alloy:
       name: alloy
@@ -94,6 +96,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     datadog:
       name: datadog
@@ -131,6 +134,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     policy-reporter:
       name: policy-reporter
@@ -169,6 +173,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
       ignoreDifferences:
         - group: admissionregistration.k8s.io
           kind: MutatingWebhookConfiguration
@@ -225,6 +230,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
       ignoreDifferences:
         - group: external-secrets.io
           kind: ExternalSecret
@@ -276,6 +282,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     traefik:
       name: traefik
@@ -294,6 +301,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     cloudflared:
       name: cloudflared
@@ -312,6 +320,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     external-dns:
       name: external-dns
@@ -330,6 +339,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     metallb:
       name: metallb
@@ -348,6 +358,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     reloader:
       name: reloader
@@ -366,6 +377,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     metrics-server:
       name: metrics-server
@@ -384,6 +396,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     longhorn:
       name: longhorn
@@ -402,6 +415,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     minio:
       name: minio
@@ -420,6 +434,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     # Databases & Queues
     cloudnative-pg:
@@ -510,6 +525,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     redis:
       name: redis
@@ -528,6 +544,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     kafka:
       name: kafka
@@ -546,6 +563,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     kafka-ui:
       name: kafka-ui
@@ -564,6 +582,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     rabbitmq:
       name: rabbitmq
@@ -582,6 +601,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
       ignoreDifferences:
         - group: external-secrets.io
           kind: ExternalSecret
@@ -605,6 +625,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     # Tools & Services
     argo-rollouts:
@@ -624,6 +645,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
       ignoreDifferences:
         - group: apiextensions.k8s.io
           kind: CustomResourceDefinition
@@ -647,6 +669,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     canary-demo:
       name: canary-demo
@@ -665,6 +688,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     atlantis:
       name: atlantis
@@ -683,6 +707,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     gitea:
       name: gitea
@@ -701,6 +726,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     harbor:
       name: harbor
@@ -719,6 +745,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     headlamp:
       name: headlamp
@@ -737,6 +764,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     kubecost:
       name: kubecost
@@ -755,6 +783,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     it-tools:
       name: it-tools
@@ -773,6 +802,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     n8n:
       name: n8n
@@ -791,6 +821,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
       ignoreDifferences:
         - group: external-secrets.io
           kind: ExternalSecret
@@ -815,6 +846,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     homepage:
       name: homepage
@@ -833,6 +865,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
       ignoreDifferences:
         - group: external-secrets.io
           kind: ExternalSecret
@@ -856,6 +889,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
           - PrunePropagationPolicy=foreground
       ignoreDifferences:
         - group: ""
@@ -881,6 +915,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     open-webui:
       name: open-webui
@@ -899,6 +934,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     pgadmin4:
       name: pgadmin4
@@ -917,6 +953,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     teslamate:
       name: teslamate
@@ -935,6 +972,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     uptime-kuma:
       name: uptime-kuma
@@ -953,6 +991,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
     localstack:
       name: localstack
@@ -971,6 +1010,7 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
   projects:
     default:
