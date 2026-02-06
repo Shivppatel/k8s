@@ -41,6 +41,8 @@ traefik:
   metrics:
     addInternals: true
     prometheus:
+      addRoutersLabels: true
+      addServicesLabels: true
       serviceMonitor:
         enabled: true
     datadog:
