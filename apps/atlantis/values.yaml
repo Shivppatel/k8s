@@ -462,6 +462,7 @@ atlantis:
   # Check values.yaml for examples.
   loadEnvFromSecrets:
     - github-secret
+    - atlantis-tf-secrets
 
   # -- Optionally specify additional Kubernetes ConfigMaps to load environment variables from.
   # All key-value pairs within these ConfigMaps will be set as environment variables.
