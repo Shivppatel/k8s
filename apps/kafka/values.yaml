@@ -280,7 +280,7 @@ kafka:
     ## The client secrets are only required when using OAuthBearer as SASL mechanism.
     ## Client, inter-broker and controller passwords are only required if the SASL mechanism includes something other than OAuthBearer.
     ##
-    existingSecret: ""
+    existingSecret: "kafka-user-passwords"
   ## @section Kafka TLS parameters
   ## Kafka TLS settings, required if SSL or SASL_SSL listeners are configured
   ##
