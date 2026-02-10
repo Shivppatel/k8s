@@ -11,4 +11,4 @@ appVersion: "v0.38.0"
 dependencies:
   - name: atlantis
     repository: https://runatlantis.github.io/helm-charts
-    version: 5.27.0
+    version: 5.28.0
