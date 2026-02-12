@@ -1,11 +1,27 @@
 tempo-distributed:
   useExternalConfig: false
+  global:
+    extraEnvFrom:
+      - secretRef:
+          name: tempo-s3-secret
+    extraArgs:
+      - -config.expand-env=true
   traces:
     otlp:
       grpc:
         enabled: true
       http:
         enabled: true
+  storage:
+    trace:
+      backend: s3
+      s3:
+        bucket: grafana-tempo-data
+        endpoint: minio.minio.svc.cluster.local:9000
+        access_key: ${MINIO_ACCESS_KEY}
+        secret_key: ${MINIO_SECRET_KEY}
+        insecure: true
+        forcepathstyle: true
   metricsGenerator:
     enabled: true
     config:
