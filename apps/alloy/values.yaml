@@ -140,6 +140,18 @@ alloy:
           }
         }
 
+        // Jaeger receiver for dskit-based apps (Loki, Tempo)
+        otelcol.receiver.jaeger "default" {
+          protocols {
+            thrift_http {
+              endpoint = "0.0.0.0:14268"
+            }
+          }
+          output {
+            traces = [otelcol.processor.batch.default.input]
+          }
+        }
+
         otelcol.processor.batch "default" {
           timeout = "5s"
           send_batch_size = 1000
@@ -306,6 +318,10 @@ alloy:
         port: 4318
         targetPort: 4318
         protocol: TCP
+      - name: jaeger-http
+        port: 14268
+        targetPort: 14268
+        protocol: TCP
 
     # -- Host aliases to add to the Alloy container.
     hostAliases: []
@@ -446,7 +462,13 @@ alloy:
     priorityClassName: ""
 
     # -- Extra pod annotations to add.
-    podAnnotations: {}
+    podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "http-metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "http-metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "http-metrics"
 
     # -- Extra pod labels to add.
     podLabels: {}

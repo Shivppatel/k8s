@@ -16,31 +16,76 @@ tempo-distributed:
         secret_key: ${MINIO_SECRET_KEY}
         insecure: true
         forcepathstyle: true
+  global:
+    extraEnv:
+      - name: JAEGER_ENDPOINT
+        value: "http://alloy.observability.svc.cluster.local:14268/api/traces"
+      - name: JAEGER_SAMPLER_TYPE
+        value: "const"
+      - name: JAEGER_SAMPLER_PARAM
+        value: "0.1"
+      - name: JAEGER_TAGS
+        value: "cluster=homelab"
   distributor:
+    podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "http-metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "http-metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "http-metrics"
     extraEnvFrom:
       - secretRef:
           name: tempo-s3-secret
     extraArgs:
       - -config.expand-env=true
   ingester:
+    podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "http-metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "http-metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "http-metrics"
     extraEnvFrom:
       - secretRef:
           name: tempo-s3-secret
     extraArgs:
       - -config.expand-env=true
   compactor:
+    podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "http-metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "http-metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "http-metrics"
     extraEnvFrom:
       - secretRef:
           name: tempo-s3-secret
     extraArgs:
       - -config.expand-env=true
   querier:
+    podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "http-metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "http-metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "http-metrics"
     extraEnvFrom:
       - secretRef:
           name: tempo-s3-secret
     extraArgs:
       - -config.expand-env=true
   queryFrontend:
+    podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "http-metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "http-metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "http-metrics"
     extraEnvFrom:
       - secretRef:
           name: tempo-s3-secret
@@ -48,6 +93,13 @@ tempo-distributed:
       - -config.expand-env=true
   metricsGenerator:
     enabled: true
+    podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "http-metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "http-metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "http-metrics"
     extraEnvFrom:
       - secretRef:
           name: tempo-s3-secret

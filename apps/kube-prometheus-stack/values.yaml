@@ -43,6 +43,14 @@ kube-prometheus-stack:
           tag: v1.34.1
   prometheus:
     prometheusSpec:
+      podMetadata:
+        annotations:
+          profiles.grafana.com/cpu.scrape: "true"
+          profiles.grafana.com/cpu.port_name: "http-web"
+          profiles.grafana.com/memory.scrape: "true"
+          profiles.grafana.com/memory.port_name: "http-web"
+          profiles.grafana.com/goroutine.scrape: "true"
+          profiles.grafana.com/goroutine.port_name: "http-web"
       enableRemoteWriteReceiver: true
       # Allow Prometheus to discover ServiceMonitors from all namespaces
       serviceMonitorSelectorNilUsesHelmValues: false

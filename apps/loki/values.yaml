@@ -3,6 +3,13 @@ loki:
     extraEnvFrom:
       - secretRef:
           name: loki-s3-secret
+    extraEnv:
+      - name: JAEGER_ENDPOINT
+        value: "http://alloy.observability.svc.cluster.local:14268/api/traces"
+      - name: JAEGER_SAMPLER_TYPE
+        value: "const"
+      - name: JAEGER_SAMPLER_PARAM
+        value: "1"
     extraArgs:
       - -config.expand-env=true
   loki:
@@ -58,10 +65,31 @@ loki:
   # Zero out replica counts of other deployment modes
   backend:
     replicas: 2
+    podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "http-metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "http-metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "http-metrics"
   read:
     replicas: 1
+    podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "http-metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "http-metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "http-metrics"
   write:
     replicas: 1
+    podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "http-metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "http-metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "http-metrics"
 
   ingester:
     replicas: 0
