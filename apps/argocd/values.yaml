@@ -2,6 +2,11 @@ argo-cd:
   configs:
     params:
       server.insecure: "true"
+      otlp.address: "alloy.observability.svc.cluster.local:4317"
+      otlp.insecure: "true"
+      controller.profile.enabled: "true"
+      server.profile.enabled: "true"
+      applicationsetcontroller.profile.enabled: "true"
     cm:
       accounts.readonly: apiKey
     rbac:
@@ -10,6 +15,12 @@ argo-cd:
     enabled: true
   controller:
     podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "metrics"
       ad.datadoghq.com/application-controller.checks: |
         {
           "argocd": {
@@ -38,6 +49,12 @@ argo-cd:
         enabled: true
   server:
     podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "metrics"
       ad.datadoghq.com/server.checks: |
         {
           "argocd": {
@@ -58,6 +75,12 @@ argo-cd:
         enabled: true
   repoServer:
     podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "metrics"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "metrics"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "metrics"
       ad.datadoghq.com/repo-server.checks: |
         {
           "argocd": {
