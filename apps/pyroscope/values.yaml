@@ -179,11 +179,7 @@ pyroscope:
     components: {}
 
     # -- Allows to override Pyroscope's configuration using structured format.
-    structuredConfig: {}
-
-    # -- Contains Pyroscope's configuration as a string.
-    # @default -- The config depends on other values been set, details can be found in [`values.yaml`](./values.yaml)
-    config:
+    structuredConfig:
       storage:
         backend: s3
         s3:
@@ -193,6 +189,10 @@ pyroscope:
           secretAccessKey: "${MINIO_SECRET_KEY}"
           s3ForcePathStyle: true
           insecure: true
+
+    # -- Contains Pyroscope's configuration as a string.
+    # @default -- The config depends on other values been set, details can be found in [`values.yaml`](./values.yaml)
+    config: {}
 
     # -- Allows to add tenant specific overrides to the default limit configuration.
     tenantOverrides:
