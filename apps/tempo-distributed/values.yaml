@@ -6,6 +6,12 @@ tempo-distributed:
         enabled: true
       http:
         enabled: true
+  metricsGenerator:
+    enabled: true
+    config:
+      storage:
+        remote_write:
+          - url: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090/api/v1/write
   metaMonitoring:
     serviceMonitor:
       enabled: true
