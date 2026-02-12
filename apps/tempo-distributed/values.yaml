@@ -22,6 +22,10 @@ tempo-distributed:
         secret_key: ${MINIO_SECRET_KEY}
         insecure: true
         forcepathstyle: true
+  # Override memcached to exclude global extraArgs/extraEnvFrom it doesn't understand
+  memcached:
+    extraArgs: []
+    extraEnvFrom: []
   metricsGenerator:
     enabled: true
     config:
