@@ -1,0 +1,14 @@
+apiVersion: v2
+name: pyroscope
+description: A Helm chart for Pyroscope
+
+type: application
+
+version: 0.1.0
+
+appVersion: "1.18.0"
+
+dependencies:
+  - name: pyroscope
+    repository: https://grafana.github.io/helm-charts
+    version: 1.18.0
