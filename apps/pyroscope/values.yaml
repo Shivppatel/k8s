@@ -36,7 +36,9 @@ pyroscope:
     #       fieldPath: spec.nodeName
 
   # -- Environment variables from secrets or configmaps to add to the pods
-  extraEnvFrom: []
+  extraEnvFrom:
+    - secretRef:
+        name: pyroscope-s3-secret
 
   imagePullSecrets: []
   dnsPolicy: ClusterFirst
@@ -135,7 +137,7 @@ pyroscope:
   ## - create a pv which above 10Gi and has same namespace with pyroscope
   ## - keep storageClassName same with below setting
   persistence:
-    enabled: false
+    enabled: true
     accessModes:
       - ReadWriteOnce
     size: 10Gi
@@ -185,17 +187,16 @@ pyroscope:
 
   # -- Contains Pyroscope's configuration as a string.
   # @default -- The config depends on other values been set, details can be found in [`values.yaml`](./values.yaml)
-  config: |
-    {{- if .Values.minio.enabled }}
+  config:
     storage:
       backend: s3
       s3:
-        endpoint: "{{ include "pyroscope.fullname" . }}-minio:9000"
-        bucket_name: {{(index .Values.minio.buckets 0).name | quote }}
-        access_key_id: {{ .Values.minio.rootUser | quote }}
-        secret_access_key: {{ .Values.minio.rootPassword | quote }}
+        bucket_name: grafana-pyroscope-data
+        endpoint: http://minio.minio.svc.cluster.local:9000
+        accessKeyId: "${MINIO_ACCESS_KEY}"
+        secretAccessKey: "${MINIO_SECRET_KEY}"
+        s3ForcePathStyle: true
         insecure: true
-    {{- end }}
 
   # -- Allows to add tenant specific overrides to the default limit configuration.
   tenantOverrides:
@@ -449,7 +450,7 @@ architecture:
 # Configuration for `alloy` child chart
 # -------------------------------------
 alloy:
-  enabled: true
+  enabled: false
   controller:
     type: "statefulset"
     replicas: 1
@@ -533,7 +534,7 @@ ingress:
 # ServiceMonitor configuration
 serviceMonitor:
   # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
-  enabled: false
+  enabled: true
   # -- Namespace selector for ServiceMonitor resources
   namespaceSelector: {}
   # -- Optional expressions to match on
