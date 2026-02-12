@@ -8,6 +8,24 @@ kube-prometheus-stack:
     grafana.ini:
       server:
         root_url: https://grafana.shivpatel.xyz
+      tracing.opentelemetry.otlp:
+        address: "alloy.observability.svc.cluster.local:4317"
+        insecure: true
+      diagnostics.profiling:
+        enabled: true
+        addr: "0.0.0.0"
+        port: 6060
+    env:
+      GF_DIAGNOSTICS_PROFILING_ENABLED: "true"
+      GF_DIAGNOSTICS_PROFILING_ADDR: "0.0.0.0"
+      GF_DIAGNOSTICS_PROFILING_PORT: "6060"
+    podAnnotations:
+      profiles.grafana.com/cpu.scrape: "true"
+      profiles.grafana.com/cpu.port_name: "profiling"
+      profiles.grafana.com/memory.scrape: "true"
+      profiles.grafana.com/memory.port_name: "profiling"
+      profiles.grafana.com/goroutine.scrape: "true"
+      profiles.grafana.com/goroutine.port_name: "profiling"
     persistence:
       enabled: true
       type: sts
