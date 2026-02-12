@@ -95,6 +95,24 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
+    pyroscope:
+      name: pyroscope
+      namespace: argocd
+      destination:
+        namespace: observability
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/pyroscope
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
     datadog:
       name: datadog
       namespace: argocd
