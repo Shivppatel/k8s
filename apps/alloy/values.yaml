@@ -176,11 +176,11 @@ alloy:
             regex = "true"
           }
 
-          // Only keep targets where container port name matches the annotation port_name
+          // Keep only targets where the container port name matches the annotation port_name
           rule {
-            source_labels = ["__meta_kubernetes_pod_annotation_profiles_grafana_com_cpu_port_name", "__meta_kubernetes_pod_container_port_name"]
-            action = "keep"
-            regex = "(.+);\\1"
+            source_labels = ["__meta_kubernetes_pod_annotation_profiles_grafana_com_cpu_port_name"]
+            action = "keepequal"
+            target_label = "__meta_kubernetes_pod_container_port_name"
           }
 
           // Rewrite __address__ to use pod IP and the matched port number
