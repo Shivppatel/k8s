@@ -27,6 +27,11 @@ loki:
       volume_enabled: true
       max_streams_per_user: 0
       max_global_streams_per_user: 0
+      retention_period: 30d
+      query_timeout: 5m
+    compactor:
+      retention_enabled: true
+      delete_request_store: s3
     ruler:
       enable_api: true
     storage:
@@ -52,7 +57,7 @@ loki:
 
   # Zero out replica counts of other deployment modes
   backend:
-    replicas: 1
+    replicas: 2
   read:
     replicas: 1
   write:
