@@ -11,23 +11,17 @@ traefik:
     type: LoadBalancer
     loadBalancerIP: "192.168.20.20" # Choose an available IP from your MetalLB range
 
-  tracing:
-    addInternals: true
-    otlp:
-      enabled: true
-      grpc:
-        enabled: true
-        endpoint: alloy.observability.svc.cluster.local:4317
-        insecure: true
-        tls:
-          insecureSkipVerify: false
-
   additionalArguments:
     - --entryPoints.web.http.redirections.entryPoint.to=websecure
     - --entryPoints.web.http.redirections.entryPoint.scheme=https
     - --entryPoints.web.http.redirections.entryPoint.permanent=true
     - --entryPoints.websecure.http.middlewares=traefik-security-headers@kubernetescrd
     - --api.debug=true
+    - --tracing.addinternals=true
+    - --tracing.otlp=true
+    - --tracing.otlp.grpc=true
+    - --tracing.otlp.grpc.endpoint=alloy.observability.svc.cluster.local:4317
+    - --tracing.otlp.grpc.insecure=true
 
   tlsStore:
     default:
