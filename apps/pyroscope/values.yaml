@@ -16,6 +16,7 @@ pyroscope:
 
     extraArgs:
       log.level: debug
+      config.expand-env: "true"
 
     extraLabels: {}
 
