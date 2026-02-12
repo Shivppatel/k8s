@@ -1,11 +1,5 @@
 tempo-distributed:
   useExternalConfig: false
-  global:
-    extraEnvFrom:
-      - secretRef:
-          name: tempo-s3-secret
-    extraArgs:
-      - -config.expand-env=true
   traces:
     otlp:
       grpc:
@@ -22,12 +16,43 @@ tempo-distributed:
         secret_key: ${MINIO_SECRET_KEY}
         insecure: true
         forcepathstyle: true
-  # Override memcached to exclude global extraArgs/extraEnvFrom it doesn't understand
-  memcached:
-    extraArgs: []
-    extraEnvFrom: []
+  distributor:
+    extraEnvFrom:
+      - secretRef:
+          name: tempo-s3-secret
+    extraArgs:
+      - -config.expand-env=true
+  ingester:
+    extraEnvFrom:
+      - secretRef:
+          name: tempo-s3-secret
+    extraArgs:
+      - -config.expand-env=true
+  compactor:
+    extraEnvFrom:
+      - secretRef:
+          name: tempo-s3-secret
+    extraArgs:
+      - -config.expand-env=true
+  querier:
+    extraEnvFrom:
+      - secretRef:
+          name: tempo-s3-secret
+    extraArgs:
+      - -config.expand-env=true
+  queryFrontend:
+    extraEnvFrom:
+      - secretRef:
+          name: tempo-s3-secret
+    extraArgs:
+      - -config.expand-env=true
   metricsGenerator:
     enabled: true
+    extraEnvFrom:
+      - secretRef:
+          name: tempo-s3-secret
+    extraArgs:
+      - -config.expand-env=true
     config:
       storage:
         remote_write:
