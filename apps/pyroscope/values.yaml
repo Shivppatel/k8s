@@ -184,7 +184,7 @@ pyroscope:
         backend: s3
         s3:
           bucket_name: grafana-pyroscope-data
-          endpoint: http://minio.minio.svc.cluster.local:9000
+          endpoint: minio.minio.svc.cluster.local:9000
           access_key_id: "${MINIO_ACCESS_KEY}"
           secret_access_key: "${MINIO_SECRET_KEY}"
           insecure: true
