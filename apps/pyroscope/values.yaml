@@ -187,7 +187,6 @@ pyroscope:
           endpoint: http://minio.minio.svc.cluster.local:9000
           access_key_id: "${MINIO_ACCESS_KEY}"
           secret_access_key: "${MINIO_SECRET_KEY}"
-          s3_force_path_style: true
           insecure: true
 
     # -- Contains Pyroscope's configuration as a string.
