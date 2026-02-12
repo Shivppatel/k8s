@@ -1,5 +1,11 @@
 tempo-distributed:
   useExternalConfig: false
+  traces:
+    otlp:
+      grpc:
+        enabled: true
+      http:
+        enabled: true
   metaMonitoring:
     serviceMonitor:
       enabled: true

@@ -125,6 +125,105 @@ alloy:
           forward_to = [loki.write.default.receiver]
         }
 
+        // =====================
+        // Traces: OTLP -> Tempo
+        // =====================
+        otelcol.receiver.otlp "default" {
+          grpc {
+            endpoint = "0.0.0.0:4317"
+          }
+          http {
+            endpoint = "0.0.0.0:4318"
+          }
+          output {
+            traces = [otelcol.processor.batch.default.input]
+          }
+        }
+
+        otelcol.processor.batch "default" {
+          timeout = "5s"
+          send_batch_size = 1000
+          output {
+            traces = [otelcol.exporter.otlp.tempo.input]
+          }
+        }
+
+        otelcol.exporter.otlp "tempo" {
+          client {
+            endpoint = "tempo-distributed-distributor.tempo-distributed.svc.cluster.local:4317"
+            tls {
+              insecure = true
+            }
+          }
+        }
+
+        // ==============================
+        // Profiling: Scrape -> Pyroscope
+        // ==============================
+        pyroscope.write "default" {
+          endpoint {
+            url = "http://pyroscope.observability.svc.cluster.local:4040"
+          }
+        }
+
+        discovery.relabel "pod_profiles" {
+          targets = discovery.kubernetes.pod.targets
+
+          rule {
+            source_labels = ["__meta_kubernetes_namespace"]
+            action = "replace"
+            target_label = "namespace"
+          }
+
+          rule {
+            source_labels = ["__meta_kubernetes_pod_name"]
+            action = "replace"
+            target_label = "pod"
+          }
+
+          rule {
+            source_labels = ["__meta_kubernetes_pod_container_name"]
+            action = "replace"
+            target_label = "container"
+          }
+
+          rule {
+            source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+            action = "replace"
+            target_label = "app"
+          }
+
+          // Only scrape pods with profiling annotations
+          rule {
+            source_labels = ["__meta_kubernetes_pod_annotation_profiles_grafana_com_cpu_scrape"]
+            action = "keep"
+            regex = "true"
+          }
+
+          rule {
+            source_labels = ["__meta_kubernetes_pod_annotation_profiles_grafana_com_cpu_port_name"]
+            action = "replace"
+            target_label = "__meta_kubernetes_pod_annotation_profiles_grafana_com_port_name"
+          }
+        }
+
+        pyroscope.scrape "pods" {
+          targets    = discovery.relabel.pod_profiles.output
+          forward_to = [pyroscope.write.default.receiver]
+
+          profiling_config {
+            profile.process_cpu {
+              enabled = true
+            }
+            profile.memory {
+              enabled = true
+            }
+            profile.goroutine {
+              enabled = true
+            }
+          }
+        }
+
     clustering:
       # -- Deploy Alloy in a cluster to allow for load distribution.
       enabled: false
@@ -179,12 +278,15 @@ alloy:
     extraArgs: []
 
     # -- Extra ports to expose on the Alloy container.
-    extraPorts: []
-    # - name: "faro"
-    #   port: 12347
-    #   targetPort: 12347
-    #   protocol: "TCP"
-    #   appProtocol: "h2c"
+    extraPorts:
+      - name: otlp-grpc
+        port: 4317
+        targetPort: 4317
+        protocol: TCP
+      - name: otlp-http
+        port: 4318
+        targetPort: 4318
+        protocol: TCP
 
     # -- Host aliases to add to the Alloy container.
     hostAliases: []
