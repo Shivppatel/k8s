@@ -185,14 +185,14 @@ pyroscope:
         s3:
           bucket_name: grafana-pyroscope-data
           endpoint: http://minio.minio.svc.cluster.local:9000
-          accessKeyId: "${MINIO_ACCESS_KEY}"
-          secretAccessKey: "${MINIO_SECRET_KEY}"
-          s3ForcePathStyle: true
+          access_key_id: "${MINIO_ACCESS_KEY}"
+          secret_access_key: "${MINIO_SECRET_KEY}"
+          s3_force_path_style: true
           insecure: true
 
     # -- Contains Pyroscope's configuration as a string.
     # @default -- The config depends on other values been set, details can be found in [`values.yaml`](./values.yaml)
-    config: {}
+    config: ""
 
     # -- Allows to add tenant specific overrides to the default limit configuration.
     tenantOverrides:
