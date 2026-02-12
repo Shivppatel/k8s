@@ -19,6 +19,8 @@ traefik:
         enabled: true
         endpoint: alloy.observability.svc.cluster.local:4317
         insecure: true
+        tls:
+          insecureSkipVerify: false
 
   additionalArguments:
     - --entryPoints.web.http.redirections.entryPoint.to=websecure
