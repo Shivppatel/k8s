@@ -37,36 +37,36 @@ spec:
           hostPort: 4318
           name: "otel-http"
           protocol: TCP
-  override:
-    clusterAgent:
-      extraConfd:
-        configDataMap:
-          # postgres.yaml: |-
-          #   cluster_check: true
-          #   init_config:
-          #   instances:
-          #     - dbm: true
-          #       host: postgresql-rw.postgresql.svc.cluster.local
-          #       port: 5432
-          #       username: datadog
-          #       password: ENC[k8s_secret@postgresql/datadog-db-secret/password]
-          #       dbname: postgres
-          #       tags:
-          #         - "env:homelab"
-          #         - "service:postgresql"
-          #         - "cluster:postgresql"
-          #       # Enable database autodiscovery to monitor all databases
-          #       database_autodiscovery:
-          #         enabled: true
-          #         include:
-          #           - ".*"
-          #       collect_schemas:
-          #         enabled: true
-          #       # Collect query metrics
-          #       collect_activity_metrics: true
-          #       collect_database_size_metrics: true
-          #       # Query samples settings
-          #       query_samples:
-          #         enabled: true
-          #       query_metrics:
-          #         enabled: true
+  # override:
+  #   clusterAgent:
+  #     extraConfd:
+  #       configDataMap:
+  #         postgres.yaml: |-
+  #           cluster_check: true
+  #           init_config:
+  #           instances:
+  #             - dbm: true
+  #               host: postgresql-rw.postgresql.svc.cluster.local
+  #               port: 5432
+  #               username: datadog
+  #               password: ENC[k8s_secret@postgresql/datadog-db-secret/password]
+  #               dbname: postgres
+  #               tags:
+  #                 - "env:homelab"
+  #                 - "service:postgresql"
+  #                 - "cluster:postgresql"
+  #               # Enable database autodiscovery to monitor all databases
+  #               database_autodiscovery:
+  #                 enabled: true
+  #                 include:
+  #                   - ".*"
+  #               collect_schemas:
+  #                 enabled: true
+  #               # Collect query metrics
+  #               collect_activity_metrics: true
+  #               collect_database_size_metrics: true
+  #               # Query samples settings
+  #               query_samples:
+  #                 enabled: true
+  #               query_metrics:
+  #                 enabled: true
