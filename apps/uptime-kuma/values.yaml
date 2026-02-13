@@ -2,6 +2,6 @@ uptime-kuma:
   image:
     repository: louislam/uptime-kuma
     pullPolicy: IfNotPresent
-    tag: "2.1.0"
+    tag: "2.1.1"
   serviceMonitor:
     enabled: true
