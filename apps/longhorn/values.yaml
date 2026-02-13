@@ -22,7 +22,7 @@ longhorn:
     allowVolumeCreationWithDegradedAvailability: true
   persistence:
     defaultClass: true
-    defaultClassReplicaCount: 3
+    defaultClassReplicaCount: 2
   preUpgradeChecker:
     jobEnabled: true
   metrics:
