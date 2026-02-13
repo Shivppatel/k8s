@@ -387,7 +387,7 @@ persistence:
     - ReadWriteOnce
   # -- Storage class of the Open WebUI PVC
   # @section -- Persistence configuration
-  storageClass: ""
+  storageClass: "longhorn"
   # -- Selector to match to get the volume bound to the claim
   # @section -- Persistence configuration
   selector: {}
