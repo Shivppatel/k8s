@@ -1,6 +1,0 @@
-dependencies:
-- name: kubecost
-  repository: https://kubecost.github.io/kubecost
-  version: 3.1.3
-digest: sha256:f6bae73081d9a6fe1e5bddd3c516463b5fd75ac2256c9e508459c91377f3ef6b
-generated: "2026-01-28T22:28:03.38730802Z"

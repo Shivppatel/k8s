@@ -722,24 +722,6 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
-    kubecost:
-      name: kubecost
-      namespace: argocd
-      destination:
-        namespace: kubecost
-        server: "https://kubernetes.default.svc"
-      project: default
-      source:
-        path: apps/kubecost
-        repoURL: "git@github.com:shivppatel/k8s.git"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-
     it-tools:
       name: it-tools
       namespace: argocd
