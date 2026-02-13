@@ -17,7 +17,7 @@ open-webui:
     persistentVolume:
       enabled: true
       storageClass: "longhorn"
-      size: 100Gi
+      size: 50Gi
 
   # OpenWebUI app persistence (separate from Ollama models)
   persistence:
