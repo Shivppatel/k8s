@@ -1,11 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: immich-library
+  name: immich-library-v2
   namespace: immich
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: longhorn
   resources:
     requests:
-      storage: 100Gi
+      storage: 50Gi

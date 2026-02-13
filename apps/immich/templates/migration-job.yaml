@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: immich-data-migration
+  namespace: immich
+spec:
+  template:
+    spec:
+      containers:
+      - name: rsync
+        image: instrumentisto/rsync-ssh
+        command: ["rsync", "-avp", "/mnt/old/", "/mnt/new/"]
+        volumeMounts:
+        - name: old-vol
+          mountPath: /mnt/old
+        - name: new-vol
+          mountPath: /mnt/new
+      restartPolicy: Never
+      volumes:
+      - name: old-vol
+        persistentVolumeClaim:
+          claimName: immich-library
+      - name: new-vol
+        persistentVolumeClaim:
+          claimName: immich-library-v2
+  backoffLimit: 1
