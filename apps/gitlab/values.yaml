@@ -1332,93 +1332,11 @@ gitlab:
   ## https://docs.gitlab.com/charts/installation/deployment.html#redis
   redis:
     install: false
-    image:
-      repository: bitnamilegacy/redis
-    auth:
-      existingSecret: gitlab-redis-secret
-      existingSecretKey: REDIS_PASSWORD
-      usePasswordFiles: true
-    architecture: standalone
-    cluster:
-      enabled: false
-    metrics:
-      enabled: true
-      image:
-        repository: bitnamilegacy/redis-exporter
-    sentinel:
-      enabled: false
-      image:
-        repository: bitnamilegacy/redis-sentinel
-    kubectl:
-      enabled: false
-      image:
-        repository: bitnamilegacy/kubectl
-    sysctl:
-      enabled: false
-      image:
-        repository: bitnamilegacy/os-shell
-    volumePermissions:
-      enabled: false
-      image:
-        repository: bitnamilegacy/os-shell
 
   ## Installation & configuration of stable/postgresql
   ## See dependencies in Chart.yaml for current version
   postgresql:
     install: false
-    auth:
-      ## These need to be set, for the sake of bitnami/postgresql upgrade patterns.
-      ## They are overridden by use of `existingSecret`
-      password: bogus-satisfy-upgrade
-      postgresPassword: bogus-satisfy-upgrade
-      ##
-      usePasswordFiles: false
-      existingSecret: '{{ include "gitlab.psql.password.secret" . }}'
-      secretKeys:
-        adminPasswordKey: postgresql-postgres-password
-        userPasswordKey: '{{ include "gitlab.psql.password.key" $ }}'
-    image:
-      repository: bitnamilegacy/postgresql
-      tag: 16.6.0
-    volumePermissions:
-      enabled: false
-      image:
-        repository: bitnamilegacy/os-shell
-    primary:
-      initdb:
-        scriptsConfigMap: '{{ include "gitlab.psql.initdbscripts" $}}'
-      extraVolumeMounts:
-        - name: custom-init-scripts
-          mountPath: /docker-entrypoint-preinitdb.d/init_revision.sh
-          subPath: init_revision.sh
-        - name: registry-database-password
-          mountPath: /etc/gitlab/postgres/registry_database_password
-          subPath: database_password
-          readOnly: true
-      extraVolumes:
-        - name: registry-database-password
-          projected:
-            sources:
-              - secret:
-                  name: '{{ include "gitlab.registry.database.password.secret" . }}'
-                  items:
-                    - key: '{{ include "gitlab.registry.database.password.key" . }}'
-                      path: database_password
-      podAnnotations:
-        postgresql.gitlab/init-revision: "1"
-    metrics:
-      enabled: true
-      image:
-        repository: bitnamilegacy/postgres-exporter
-      service:
-        annotations:
-          prometheus.io/scrape: "true"
-          prometheus.io/port: "9187"
-          gitlab.com/prometheus_scrape: "true"
-          gitlab.com/prometheus_port: "9187"
-
-      ## Optionally define additional custom metrics
-      ## ref: https://github.com/wrouesnel/postgres_exporter#adding-new-metrics-via-a-config-file
 
   ## Installation & configuration charts/registry
   ## https://docs.gitlab.com/charts/architecture/decisions#registry
