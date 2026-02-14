@@ -31,12 +31,13 @@ spec:
       owner: postgres
       postInitSQL:
         # Create users (managed roles will sync passwords later)
-        - CREATE USER terraform WITH PASSWORD 'temp'        
+        - CREATE USER terraform WITH PASSWORD 'temp'
         - CREATE USER immich WITH PASSWORD 'temp'
         - CREATE USER n8n WITH PASSWORD 'temp'
         - CREATE USER teslamate WITH PASSWORD 'temp'
         - CREATE USER authentik WITH PASSWORD 'temp'
         - CREATE USER gitea WITH PASSWORD 'temp'
+        - CREATE USER gitlab WITH PASSWORD 'temp'
         - CREATE USER datadog WITH PASSWORD 'temp'
         # Create databases with correct ownership
         - CREATE DATABASE terraform OWNER terraform
@@ -45,6 +46,7 @@ spec:
         - CREATE DATABASE teslamate OWNER teslamate
         - CREATE DATABASE authentik OWNER authentik
         - CREATE DATABASE gitea OWNER gitea
+        - CREATE DATABASE gitlab OWNER gitea
         - CREATE DATABASE datadog OWNER datadog
 
   storage:
@@ -52,11 +54,11 @@ spec:
 
   # PostgreSQL configuration for Datadog Database Monitoring
   postgresql:
+    # CNPG auto-manages shared_preload_libraries when it sees pg_stat_statements.* params
+    # Do NOT set shared_preload_libraries in parameters - it's a fixed param managed by CNPG
     parameters:
       # Increase max connections to handle multiple applications
       max_connections: "200"
-      # Required for pg_stat_statements
-      shared_preload_libraries: "pg_stat_statements"
       # Track all statements including those from nested function calls
       pg_stat_statements.track: "all"
       # Maximum number of statements tracked

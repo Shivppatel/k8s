@@ -686,6 +686,24 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
+    gitlab:
+      name: gitlab
+      namespace: argocd
+      destination:
+        namespace: gitlab
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/gitlab
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
     harbor:
       name: harbor
       namespace: argocd
