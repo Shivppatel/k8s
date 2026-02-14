@@ -553,7 +553,7 @@ gitlab:
       workspaces: {}
 
       ## Configure Database Traffic Capture. This is a Gitlab internal-use experiment.
-      #databaseTrafficCapture:
+      # databaseTrafficCapture:
       #  config:
       #    storage:
       #      connector:
