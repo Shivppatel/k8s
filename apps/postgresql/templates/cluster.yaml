@@ -54,11 +54,11 @@ spec:
 
   # PostgreSQL configuration for Datadog Database Monitoring
   postgresql:
+    # CNPG auto-manages shared_preload_libraries when it sees pg_stat_statements.* params
+    # Do NOT set shared_preload_libraries in parameters - it's a fixed param managed by CNPG
     parameters:
       # Increase max connections to handle multiple applications
       max_connections: "200"
-      # Required for pg_stat_statements
-      shared_preload_libraries: "pg_stat_statements"
       # Track all statements including those from nested function calls
       pg_stat_statements.track: "all"
       # Maximum number of statements tracked

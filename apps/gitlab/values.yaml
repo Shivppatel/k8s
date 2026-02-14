@@ -217,7 +217,7 @@ gitlab:
       # connectTimeout: 1
       # readTimeout: 1
       # writeTimeout: 1
-      host: redis.redis.svc.cluster.local
+      host: redis-master.redis.svc.cluster.local
       port: 6379
       # database: 0
       # user: webservice
