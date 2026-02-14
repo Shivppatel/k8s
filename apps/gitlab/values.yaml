@@ -1051,7 +1051,7 @@ gitlab:
   ## https://docs.gitlab.com/charts/architecture/decisions#nginx-ingress
   ## Installation & configuration of charts/ingress-nginx:
   nginx-ingress: &nginx-ingress
-    enabled: true
+    enabled: fakse
     tcpExternalConfig: "true"
     controller: &nginx-ingress-controller
       podSecurityContext:
