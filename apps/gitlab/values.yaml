@@ -1391,6 +1391,7 @@ gitlab:
   ## See dependencies in Chart.yaml for current version
   gitlab-runner:
     install: true
+    gitlabUrl: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/
     rbac:
       create: true
     runners:
