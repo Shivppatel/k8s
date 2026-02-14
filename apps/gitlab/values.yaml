@@ -400,14 +400,14 @@ gitlab:
 
       ## https://docs.gitlab.com/charts/charts/globals#lfs-artifacts-uploads-packages-external-mr-diffs-and-dependency-proxy
       object_store:
-        enabled: false
+        enabled: true
         proxy_download: true
         storage_options: {}
           # server_side_encryption:
           # server_side_encryption_kms_key_id
-        connection: {}
-          # secret:
-          # key:
+        connection:
+          secret: gitlab-object-storage-secret
+          key: connection
       lfs:
         enabled: true
         proxy_download: true
@@ -1435,6 +1435,12 @@ gitlab:
       antiAffinityLabels:
         matchLabels:
           app: gitaly
+      backups:
+        objectStorage:
+          backend: s3
+          config:
+            secret: gitlab-object-storage-secret
+            key: config
     ## https://docs.gitlab.com/charts/charts/gitlab/migrations
     #   migrations:
     #     enabled: false
