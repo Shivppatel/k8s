@@ -187,7 +187,7 @@ gitlab:
       host: postgresql-rw.postgresql.svc.cluster.local
       port: 5432
       username: gitlab
-      database: gitlabhq_production
+      database: gitlab
       # applicationName:
       # preparedStatements: false
       # databaseTasks: true
@@ -308,7 +308,7 @@ gitlab:
       webhookTimeout:
       maxRequestDurationSeconds:
       ciIdTokens:
-        issuerUrl: ''
+        issuerUrl: ""
 
       ## https://docs.gitlab.com/charts/charts/globals#cron-jobs-related-settings
       cron_jobs: {}
@@ -858,7 +858,6 @@ gitlab:
     deployment:
       annotations: {}
 
-
     # Setting a global nodeAffinity only applies to the registry chart for now.
     # See issue https://gitlab.com/gitlab-com/gl-infra/production-engineering/-/issues/25403 for more information
 
@@ -1021,7 +1020,7 @@ gitlab:
       allowPrivilegeEscalation: false
       runAsNonRoot: true
       capabilities:
-        drop: [ "ALL" ]
+        drop: ["ALL"]
     tolerations: []
     annotations: {}
     configMapAnnotations: {}
@@ -1035,7 +1034,6 @@ gitlab:
   #   # The email address to register certificates requested from Let's Encrypt.
   #   # Required if using Let's Encrypt.
   #   email: email@example.com
-
 
   ## Installation of certmananger.
   ## This value replaces `certmanager.install` to allow certmanager schema validation to pass.
@@ -1065,7 +1063,7 @@ gitlab:
       addHeaders:
         Referrer-Policy: strict-origin-when-cross-origin
       config: &nginx-ingress-controller-config
-        annotation-value-word-blocklist: "load_module,lua_package,_by_lua,location,root,proxy_pass,serviceaccount,{,},',\""
+        annotation-value-word-blocklist: 'load_module,lua_package,_by_lua,location,root,proxy_pass,serviceaccount,{,},'',"'
         hsts: "true"
         hsts-include-subdomains: "false"
         hsts-max-age: "63072000"
@@ -1076,9 +1074,9 @@ gitlab:
         server-tokens: "false"
         # Configure smaller defaults for upstream-keepalive-*, see https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration
         upstream-keepalive-connections: 100 # Limit of 100 held-open connections
-        upstream-keepalive-time:        30s # 30 second limit for connection reuse
-        upstream-keepalive-timeout:       5 # 5 second timeout to hold open idle connections
-        upstream-keepalive-requests:   1000 # 1000 requests per connection, before recycling
+        upstream-keepalive-time: 30s # 30 second limit for connection reuse
+        upstream-keepalive-timeout: 5 # 5 second timeout to hold open idle connections
+        upstream-keepalive-requests: 1000 # 1000 requests per connection, before recycling
       electionID: ingress-controller-leader
       service:
         externalTrafficPolicy: "Local"
@@ -1146,9 +1144,9 @@ gitlab:
       electionID: ingress-controller-leader-geo
       ingressClassResource:
         name: '{{ include "gitlab.geo.ingress.class.name" $ | quote }}'
-        controllerValue: 'k8s.io/nginx-ingress-geo'
+        controllerValue: "k8s.io/nginx-ingress-geo"
     # A pre-defined/static external IP can be configured with global.hosts.externalGeoIP.
-    externalIpTpl: '{{ .Values.global.hosts.externalGeoIP }}'
+    externalIpTpl: "{{ .Values.global.hosts.externalGeoIP }}"
 
   haproxy:
     install: false
@@ -1188,7 +1186,7 @@ gitlab:
         allowPrivilegeEscalation: false
         runAsNonRoot: true
         capabilities:
-          drop: [ "ALL" ]
+          drop: ["ALL"]
         seccompProfile:
           type: "RuntimeDefault"
     podSecurityPolicy:
@@ -1200,7 +1198,7 @@ gitlab:
           allowPrivilegeEscalation: false
           runAsNonRoot: true
           capabilities:
-            drop: [ "ALL" ]
+            drop: ["ALL"]
           seccompProfile:
             type: "RuntimeDefault"
     serverFiles:
@@ -1232,11 +1230,15 @@ gitlab:
               - role: pod
             relabel_configs:
               - source_labels:
-                  [__meta_kubernetes_pod_annotation_gitlab_com_prometheus_scrape]
+                  [
+                    __meta_kubernetes_pod_annotation_gitlab_com_prometheus_scrape,
+                  ]
                 action: keep
                 regex: true
               - source_labels:
-                  [__meta_kubernetes_pod_annotation_gitlab_com_prometheus_scheme]
+                  [
+                    __meta_kubernetes_pod_annotation_gitlab_com_prometheus_scheme,
+                  ]
                 action: replace
                 regex: (https?)
                 target_label: __scheme__
@@ -1380,7 +1382,7 @@ gitlab:
       allowPrivilegeEscalation: false
       runAsNonRoot: true
       capabilities:
-        drop: [ "ALL" ]
+        drop: ["ALL"]
     tolerations: []
     podLabels: {}
     annotations: {}
@@ -1521,10 +1523,10 @@ gitlab:
           # Set predefined keys to empty values to enable us merging these keys
           # with the main DB settings.
           connection:
-            host: ''
-            database: ''
-            username: ''
-            sslMode: ''
+            host: ""
+            database: ""
+            username: ""
+            sslMode: ""
 
   envoy-gateway:
     config:

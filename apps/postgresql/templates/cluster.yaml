@@ -31,7 +31,7 @@ spec:
       owner: postgres
       postInitSQL:
         # Create users (managed roles will sync passwords later)
-        - CREATE USER terraform WITH PASSWORD 'temp'        
+        - CREATE USER terraform WITH PASSWORD 'temp'
         - CREATE USER immich WITH PASSWORD 'temp'
         - CREATE USER n8n WITH PASSWORD 'temp'
         - CREATE USER teslamate WITH PASSWORD 'temp'

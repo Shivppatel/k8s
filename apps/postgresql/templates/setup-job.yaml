@@ -146,10 +146,10 @@ spec:
               # Grant pg_monitor role to datadog user (cluster-wide)
               psql -c "ALTER ROLE datadog INHERIT;"
               psql -c "GRANT pg_monitor TO datadog;"
-              
+
               # NOTE: pg_stat_statements extension is auto-managed by CNPG when pg_stat_statements.* params are set
               # Do NOT create/drop it here - CNPG handles CREATE/DROP EXTENSION in all databases
-              
+
               # Setup datadog schema and functions in ALL databases for DBM
               for db in postgres immich n8n terraform teslamate authentik gitea gitlab datadog; do
                 echo "Setting up Datadog monitoring in $db database..."
