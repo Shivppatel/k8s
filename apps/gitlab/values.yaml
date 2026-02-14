@@ -24,7 +24,7 @@ gitlab:
       labels: {}
 
     ## https://docs.gitlab.com/charts/installation/deployment#deploy-the-community-edition
-    edition: ee
+    edition: ce
 
     ## https://docs.gitlab.com/charts/charts/globals#gitlab-version
     gitlabVersion: "18.8.4"
@@ -36,7 +36,7 @@ gitlab:
       allowClusterRoles: true
     ## https://docs.gitlab.com/charts/charts/globals#configure-host-settings
     hosts:
-      domain: example.com
+      domain: gitlab.shivpatel.xyz
       hostSuffix:
       https: true
       externalIP:
@@ -179,15 +179,15 @@ gitlab:
       keepalivesInterval:
       keepalivesCount:
       tcpUserTimeout:
-      password: {}
-        # useSecret:
-        # secret:
-        # key:
+      password:
+        useSecret: true
+        secret: gitlab-db-secret
+        key: password
         # file:
-      # host: postgresql.hostedsomewhere.else
-      # port: 123
-      # username: gitlab
-      # database: gitlabhq_production
+      host: postgresql-rw.postgresql.svc.cluster.local
+      port: 5432
+      username: gitlab
+      database: gitlabhq_production
       # applicationName:
       # preparedStatements: false
       # databaseTasks: true
@@ -212,13 +212,13 @@ gitlab:
     redis:
       auth:
         enabled: true
-        # secret:
-        # key:
+        secret: gitlab-redis-secret
+        key: REDIS_PASSWORD
       # connectTimeout: 1
       # readTimeout: 1
       # writeTimeout: 1
-      # host: redis.hostedsomewhere.else
-      # port: 6379
+      host: redis.redis.svc.cluster.local
+      port: 6379
       # database: 0
       # user: webservice
       # sentinels:
@@ -1331,12 +1331,12 @@ gitlab:
   ## https://docs.gitlab.com/charts/architecture/decisions#redis
   ## https://docs.gitlab.com/charts/installation/deployment.html#redis
   redis:
-    install: true
+    install: false
     image:
       repository: bitnamilegacy/redis
     auth:
       existingSecret: gitlab-redis-secret
-      existingSecretKey: redis-password
+      existingSecretKey: REDIS_PASSWORD
       usePasswordFiles: true
     architecture: standalone
     cluster:
@@ -1365,7 +1365,7 @@ gitlab:
   ## Installation & configuration of stable/postgresql
   ## See dependencies in Chart.yaml for current version
   postgresql:
-    install: true
+    install: false
     auth:
       ## These need to be set, for the sake of bitnami/postgresql upgrade patterns.
       ## They are overridden by use of `existingSecret`
