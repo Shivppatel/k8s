@@ -30,6 +30,9 @@ spec:
         - name: gitea-db-secret
           secret:
             secretName: gitea-db-secret
+        - name: gitlab-db-secret
+          secret:
+            secretName: gitlab-db-secret
         - name: datadog-db-secret
           secret:
             secretName: datadog-db-secret
@@ -63,6 +66,8 @@ spec:
               mountPath: /run/secrets/authentik-db-secret
             - name: gitea-db-secret
               mountPath: /run/secrets/gitea-db-secret
+            - name: gitlab-db-secret
+              mountPath: /run/secrets/gitlab-db-secret
             - name: datadog-db-secret
               mountPath: /run/secrets/datadog-db-secret
           command:
@@ -78,7 +83,7 @@ spec:
               done
 
               # Ensure all users and databases exist (non-destructive)
-              for app in immich n8n terraform teslamate authentik gitea datadog; do
+              for app in immich n8n terraform teslamate authentik gitea gitlab datadog; do
                 echo "Ensuring $app user and database exist..."
                 psql -c "DO \$\$ BEGIN CREATE USER $app WITH PASSWORD 'temp'; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$;"
                 
@@ -133,6 +138,10 @@ spec:
               psql -d gitea -c "ALTER SCHEMA public OWNER TO gitea;"
               psql -d gitea -c "GRANT ALL ON SCHEMA public TO gitea;"
 
+              echo "Setting up gitlab database..."
+              psql -d gitlab -c "ALTER SCHEMA public OWNER TO gitlab;"
+              psql -d gitlab -c "GRANT ALL ON SCHEMA public TO gitlab;"
+
               echo "Setting up Datadog Database Monitoring..."
               # Grant pg_monitor role to datadog user (cluster-wide)
               psql -c "ALTER ROLE datadog INHERIT;"
@@ -142,7 +151,7 @@ spec:
               psql -d postgres -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
               
               # Setup datadog schema and functions in ALL databases for DBM
-              for db in postgres immich n8n terraform teslamate authentik gitea datadog; do
+              for db in postgres immich n8n terraform teslamate authentik gitea gitlab datadog; do
                 echo "Setting up Datadog monitoring in $db database..."
                 
                 # Create datadog schema
@@ -187,7 +196,7 @@ spec:
               # Sync passwords from ExternalSecrets to database users
               echo "Syncing passwords from ExternalSecrets..."
               # Read secrets directly from mounted files or environment variables
-              for app in immich n8n terraform teslamate authentik gitea datadog; do
+              for app in immich n8n terraform teslamate authentik gitea gitlab datadog; do
                 echo "Syncing password for $app..."
                 # Use environment variables or mount secrets as files
                 PASSWORD=$(cat /run/secrets/${app}-db-secret/password 2>/dev/null || echo "")
