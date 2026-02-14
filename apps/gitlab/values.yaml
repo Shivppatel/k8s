@@ -279,7 +279,7 @@ gitlab:
 
     ## https://docs.gitlab.com/charts/charts/globals#configure-minio-settings
     minio:
-      enabled: true
+      enabled: false
       credentials: {}
         # secret:
 
@@ -1003,7 +1003,7 @@ gitlab:
   ## End of global
 
   upgradeCheck:
-    enabled: true
+    enabled: false
     image: {}
       # repository:
       # tag:
@@ -1168,7 +1168,7 @@ gitlab:
   ## Installation & configuration of stable/prometheus
   ## See dependencies in Chart.yaml for current version
   prometheus:
-    install: true
+    install: false
     rbac:
       create: true
     alertmanager:
