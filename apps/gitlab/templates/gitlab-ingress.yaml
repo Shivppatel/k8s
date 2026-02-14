@@ -10,6 +10,6 @@ spec:
     - match: Host(`gitlab.shivpatel.xyz`)
       kind: Rule
       services:
-        - name: gitlab
-          port: 3000
+        - name: gitlab-webservice-default
+          port: 8181
   tls: {}
