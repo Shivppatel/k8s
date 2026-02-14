@@ -117,9 +117,9 @@ gitlab:
     ## https://docs.gitlab.com/charts/charts/globals#configure-ingress-settings
     ingress:
       apiVersion: ""
-      configureCertmanager: true
+      configureCertmanager: false
       useNewIngressForCerts: false
-      provider: nginx
+      provider: traefik
       # class:
       annotations: {}
       enabled: true
@@ -1040,7 +1040,7 @@ gitlab:
   ## Installation of certmananger.
   ## This value replaces `certmanager.install` to allow certmanager schema validation to pass.
   ## See dependencies in Chart.yaml for current version
-  installCertmanager: true
+  installCertmanager: false
 
   ## Configuration of jetstack/cert-manager
   certmanager:
@@ -1051,7 +1051,7 @@ gitlab:
   ## https://docs.gitlab.com/charts/architecture/decisions#nginx-ingress
   ## Installation & configuration of charts/ingress-nginx:
   nginx-ingress: &nginx-ingress
-    enabled: fakse
+    enabled: false
     tcpExternalConfig: "true"
     controller: &nginx-ingress-controller
       podSecurityContext:
