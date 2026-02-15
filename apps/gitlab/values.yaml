@@ -1349,9 +1349,12 @@ gitlab:
   ## https://docs.gitlab.com/charts/architecture/decisions#registry
   ## https://docs.gitlab.com/charts/charts/registry/
   registry:
+    storage:
+      secret: gitlab-registry-storage
+      key: config
     hpa:
-      minReplicas: 1
-      maxReplicas: 1
+      minReplicas: 2
+      maxReplicas: 10
 
   ## Automatic shared secret generation
   ## https://docs.gitlab.com/charts/installation/secrets
