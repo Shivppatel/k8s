@@ -4,7 +4,9 @@ metadata:
   name: postgresql
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-    argocd.argoproj.io/sync-options: PrunePropagationPolicy=foreground, Prune=false
+    argocd.argoproj.io/sync-options: >-
+      PrunePropagationPolicy=foreground,
+      Prune=false
     argocd.argoproj.io/compare-options: IgnoreExtraneous
     argocd.argoproj.io/hook-delete-policy: HookFailed
 spec:
@@ -14,7 +16,8 @@ spec:
   maxSyncReplicas: 2
 
   # Note: For pgvector support, you may need a custom image
-  # Options: ghcr.io/tensorchord/cloudnative-pgvecto.rs:17-v0.4.0 (uses 'vectors' extension)
+  # Options: ghcr.io/tensorchord/cloudnative-pgvecto.rs:17-v0.4.0
+  # (uses 'vectors' extension)
   # Or build custom image with pgvector
   imageName: ghcr.io/cloudnative-pg/postgresql:17
 
@@ -54,8 +57,10 @@ spec:
 
   # PostgreSQL configuration for Datadog Database Monitoring
   postgresql:
-    # CNPG auto-manages shared_preload_libraries when it sees pg_stat_statements.* params
-    # Do NOT set shared_preload_libraries in parameters - it's a fixed param managed by CNPG
+    # CNPG auto-manages shared_preload_libraries when it sees
+    # pg_stat_statements.* params
+    # Do NOT set shared_preload_libraries in parameters; it's a fixed
+    # param managed by CNPG
     parameters:
       # Increase max connections to handle multiple applications
       max_connections: "200"
