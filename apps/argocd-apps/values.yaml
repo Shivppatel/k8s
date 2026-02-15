@@ -150,6 +150,24 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
+    trivy:
+      name: trivy
+      namespace: argocd
+      destination:
+        namespace: trivy-system
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/trivy
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
     policy-reporter:
       name: policy-reporter
       namespace: argocd

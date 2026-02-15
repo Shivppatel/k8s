@@ -1,0 +1,14 @@
+apiVersion: v2
+name: trivy
+description: A Helm chart for Trivy
+
+type: application
+
+version: 0.1.0
+
+appVersion: "0.32.0"
+
+dependencies:
+  - name: trivy-operator
+    repository: https://aquasecurity.github.io/helm-charts/
+    version: 0.32.0
