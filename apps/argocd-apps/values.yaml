@@ -668,24 +668,6 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
-    gitea:
-      name: gitea
-      namespace: argocd
-      destination:
-        namespace: gitea
-        server: "https://kubernetes.default.svc"
-      project: default
-      source:
-        path: apps/gitea
-        repoURL: "git@github.com:shivppatel/k8s.git"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-
     gitlab:
       name: gitlab
       namespace: argocd

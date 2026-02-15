@@ -27,9 +27,6 @@ spec:
         - name: authentik-db-secret
           secret:
             secretName: authentik-db-secret
-        - name: gitea-db-secret
-          secret:
-            secretName: gitea-db-secret
         - name: gitlab-db-secret
           secret:
             secretName: gitlab-db-secret
@@ -64,8 +61,6 @@ spec:
               mountPath: /run/secrets/teslamate-db-secret
             - name: authentik-db-secret
               mountPath: /run/secrets/authentik-db-secret
-            - name: gitea-db-secret
-              mountPath: /run/secrets/gitea-db-secret
             - name: gitlab-db-secret
               mountPath: /run/secrets/gitlab-db-secret
             - name: datadog-db-secret
@@ -83,7 +78,7 @@ spec:
               done
 
               # Ensure all users and databases exist (non-destructive)
-              for app in immich n8n terraform teslamate authentik gitea gitlab datadog; do
+              for app in immich n8n terraform teslamate authentik gitlab datadog; do
                 echo "Ensuring $app user and database exist..."
                 psql -c "DO \$\$ BEGIN CREATE USER $app WITH PASSWORD 'temp'; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$;"                
                 # Check if database exists, but don't recreate it if it has data
@@ -132,10 +127,6 @@ spec:
               echo "Setting up authentik database..."
               psql -d authentik -c "ALTER SCHEMA public OWNER TO authentik;"
               psql -d authentik -c "GRANT ALL ON SCHEMA public TO authentik;"
-
-              echo "Setting up gitea database..."
-              psql -d gitea -c "ALTER SCHEMA public OWNER TO gitea;"
-              psql -d gitea -c "GRANT ALL ON SCHEMA public TO gitea;"
 
               echo "Setting up gitlab database..."
               psql -d gitlab -c "ALTER SCHEMA public OWNER TO gitlab;"
@@ -192,7 +183,7 @@ spec:
               # Sync passwords from ExternalSecrets to database users
               echo "Syncing passwords from ExternalSecrets..."
               # Read secrets directly from mounted files or environment variables
-              for app in immich n8n terraform teslamate authentik gitea gitlab datadog; do
+              for app in immich n8n terraform teslamate authentik gitlab datadog; do
                 echo "Syncing password for $app..."
                 # Use environment variables or mount secrets as files
                 PASSWORD=$(cat /run/secrets/${app}-db-secret/password 2>/dev/null || echo "")

@@ -39,7 +39,6 @@ spec:
         - CREATE USER n8n WITH PASSWORD 'temp'
         - CREATE USER teslamate WITH PASSWORD 'temp'
         - CREATE USER authentik WITH PASSWORD 'temp'
-        - CREATE USER gitea WITH PASSWORD 'temp'
         - CREATE USER gitlab WITH PASSWORD 'temp'
         - CREATE USER datadog WITH PASSWORD 'temp'
         # Create databases with correct ownership
@@ -48,7 +47,6 @@ spec:
         - CREATE DATABASE n8n OWNER n8n
         - CREATE DATABASE teslamate OWNER teslamate
         - CREATE DATABASE authentik OWNER authentik
-        - CREATE DATABASE gitea OWNER gitea
         - CREATE DATABASE gitlab OWNER gitea
         - CREATE DATABASE datadog OWNER datadog
 
