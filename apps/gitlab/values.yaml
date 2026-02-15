@@ -41,13 +41,13 @@ gitlab:
       https: true
       externalIP:
       ssh:
-      gitlab: {}
+      gitlab: gitlab.shivpatel.xyz
       minio: {}
-      registry: {}
+      registry: registry.shivpatel.xyz
       tls: {}
       smartcard: {}
-      kas: {}
-      pages: {}
+      kas: kas.shivpatel.xyz
+      pages: pages.shivpatel.xyz
       openbao: {}
       workspaces: {}
 
