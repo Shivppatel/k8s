@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: gitlab-registry-ingress
+  namespace: gitlab
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`registry.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: gitlab-registry
+          port: 5000
+  tls: {}
