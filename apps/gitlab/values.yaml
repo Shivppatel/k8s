@@ -1348,8 +1348,10 @@ gitlab:
   ## Installation & configuration charts/registry
   ## https://docs.gitlab.com/charts/architecture/decisions#registry
   ## https://docs.gitlab.com/charts/charts/registry/
-  # registry:
-  #   enabled: false
+  registry:
+    hpa:
+      minReplicas: 1
+      maxReplicas: 1
 
   ## Automatic shared secret generation
   ## https://docs.gitlab.com/charts/installation/secrets
