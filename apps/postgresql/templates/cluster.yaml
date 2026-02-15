@@ -47,7 +47,7 @@ spec:
         - CREATE DATABASE n8n OWNER n8n
         - CREATE DATABASE teslamate OWNER teslamate
         - CREATE DATABASE authentik OWNER authentik
-        - CREATE DATABASE gitlab OWNER gitea
+        - CREATE DATABASE gitlab OWNER gitlab
         - CREATE DATABASE datadog OWNER datadog
 
   storage:

@@ -141,7 +141,7 @@ spec:
               # Do NOT create/drop it here - CNPG handles CREATE/DROP EXTENSION in all databases
 
               # Setup datadog schema and functions in ALL databases for DBM
-              for db in postgres immich n8n terraform teslamate authentik gitea gitlab datadog; do
+              for db in postgres immich n8n terraform teslamate authentik gitlab datadog; do
                 echo "Setting up Datadog monitoring in $db database..."
                 
                 # Create datadog schema
