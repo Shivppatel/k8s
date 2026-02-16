@@ -4,25 +4,32 @@
     "config:recommended",
     ":dependencyDashboard"
   ],
+  "enabledManagers": [
+    "helmv3"
+  ],
   "labels": [
     "dependencies",
     "renovate"
   ],
   "packageRules": [
     {
-      "description": "Group and automerge non-major updates",
+      "description": "Group and automerge non-major Helm chart dependency updates",
+      "matchManagers": [
+        "helmv3"
+      ],
       "matchUpdateTypes": [
         "minor",
-        "patch",
-        "digest",
-        "pin"
+        "patch"
       ],
-      "groupName": "all non-major dependencies",
-      "groupSlug": "all-non-major-dependencies",
+      "groupName": "all non-major Helm chart dependencies",
+      "groupSlug": "all-non-major-helm-chart-dependencies",
       "automerge": true
     },
     {
-      "description": "Never automerge major updates",
+      "description": "Never automerge major Helm chart dependency updates",
+      "matchManagers": [
+        "helmv3"
+      ],
       "matchUpdateTypes": [
         "major"
       ],
