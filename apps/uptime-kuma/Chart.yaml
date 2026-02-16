@@ -11,4 +11,4 @@ appVersion: "2.0.2"
 dependencies:
   - name: uptime-kuma
     repository: https://dirsigler.github.io/uptime-kuma-helm
-    version: 2.24.0
+    version: 4.0.0
