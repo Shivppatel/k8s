@@ -95,7 +95,7 @@ websocket:
       repository: redis
       # -- Redis image tag
       # @section -- Websocket configuration
-      tag: 7.4.2-alpine3.21
+      tag: 7.4.7-alpine3.21
       # -- Redis image pull policy
       # @section -- Websocket configuration
       pullPolicy: IfNotPresent
