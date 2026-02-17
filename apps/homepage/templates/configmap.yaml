@@ -70,10 +70,6 @@ data:
             #   tunnelid: e4f290c8-f16d-49ad-a2de-d009b45e7df5
             #   key: {{`{{HOMEPAGE_VAR_CLOUDFLARE_KEY}}`}}
             #   fields: ["status"]
-        - Headlamp:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/headlamp.png
-            href: https://headlamp.shivpatel.xyz
-            description: Kubernetes dashboard
         - Longhorn:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/longhorn.png
             href: https://longhorn.shivpatel.xyz
