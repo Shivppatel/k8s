@@ -11,4 +11,4 @@ appVersion: "v18.8.4"
 dependencies:
   - name: gitlab
     repository: http://charts.gitlab.io/
-    version: 9.8.4
+    version: 9.9.0
