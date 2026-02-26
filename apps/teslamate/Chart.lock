@@ -1,6 +1,6 @@
 dependencies:
 - name: teslamate
   repository: https://charts.egeback.se
-  version: 2.0.14
-digest: sha256:b0a245c2e52632ef6d00262c5a1010e7353c60c32f9612a137c7532c95b3c31c
-generated: "2026-02-10T12:45:54.901034905Z"
+  version: 2.0.15
+digest: sha256:d5e4248fc74f3552c01f396c598d65c8bcebdb51078c92609a7c6a48fc38473b
+generated: "2026-02-26T06:09:05.744322093Z"
