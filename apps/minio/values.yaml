@@ -8,6 +8,8 @@ minio:
   extraEnvVars:
     - name: MINIO_BROWSER
       value: "on"
+    - name: MINIO_CONSOLE_PORT_NUMBER
+      value: "9001"
   auth:
     existingSecret: "minio-root-credentials"
     rootUserSecretKey: "root-user"
