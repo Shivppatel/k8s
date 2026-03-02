@@ -4,7 +4,7 @@ minio:
     replicaCount: 3
     drivesPerNode: 2
     updateStrategy:
-      type: OnDelete
+      type: RollingUpdate
   extraEnvVars:
     - name: MINIO_BROWSER
       value: "on"
@@ -23,7 +23,10 @@ minio:
   service:
     ports:
       api: 9000
-      console: 9001
+    extraPorts:
+      - name: console
+        port: 9001
+        targetPort: 9001
   console:
     enabled: false
   metrics:
