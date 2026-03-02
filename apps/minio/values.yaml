@@ -15,6 +15,9 @@ minio:
   image:
     registry: docker.io
     repository: bitnamilegacy/minio
+  extraArgs:
+    - --console-address
+    - :9001
   persistence:
     enabled: true
     storageClass: longhorn
