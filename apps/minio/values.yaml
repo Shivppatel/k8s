@@ -10,6 +10,8 @@ minio:
       value: "on"
     - name: MINIO_CONSOLE_PORT_NUMBER
       value: "9001"
+    - name: MINIO_SCHEME
+      value: "https"
     - name: MINIO_SERVER_URL
       value: "https://minio.shivpatel.xyz"
     - name: MINIO_BROWSER_REDIRECT_URL
