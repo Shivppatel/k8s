@@ -5,6 +5,9 @@ minio:
     drivesPerNode: 2
     updateStrategy:
       type: OnDelete
+  extraEnvVars:
+    - name: MINIO_BROWSER
+      value: "on"
   auth:
     existingSecret: "minio-root-credentials"
     rootUserSecretKey: "root-user"
@@ -17,10 +20,12 @@ minio:
     storageClass: longhorn
     accessModes:
       - ReadWriteOnce
+  service:
+    ports:
+      api: 9000
+      console: 9001
   console:
-    image:
-      registry: docker.io
-      repository: bitnamilegacy/minio-object-browser
+    enabled: false
   metrics:
     enabled: true
     serviceMonitor:

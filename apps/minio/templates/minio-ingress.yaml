@@ -10,6 +10,6 @@ spec:
     - match: Host(`minio.shivpatel.xyz`)
       kind: Rule
       services:
-        - name: minio-console
-          port: 9090
+        - name: minio
+          port: 9001
   tls: {}
