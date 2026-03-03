@@ -20,7 +20,7 @@ spec:
     clusterChecks:
       enabled: true
     orchestratorExplorer:
-      enabled: false
+      enabled: true
     helmCheck:
       enabled: false
     logCollection:
