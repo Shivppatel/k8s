@@ -13,7 +13,7 @@ datadog-operator:
   # clusterName -- Set a unique cluster name reporting from the Datadog Operator.
   clusterName: homelab
 
-  site: datadoghq.com
+  site: us5.datadoghq.com
 
   # env -- Define any environment variables to be passed to the operator.
   env: []

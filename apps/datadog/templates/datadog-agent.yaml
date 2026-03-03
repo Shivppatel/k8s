@@ -5,7 +5,7 @@ metadata:
 spec:
   global:
     clusterName: "homelab"
-    site: "datadoghq.com"
+    site: "us5.datadoghq.com"
     kubelet:
       tlsVerify: false
     credentials:
