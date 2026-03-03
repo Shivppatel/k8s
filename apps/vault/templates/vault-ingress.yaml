@@ -10,6 +10,6 @@ spec:
     - match: Host(`vault.shivpatel.xyz`)
       kind: Rule
       services:
-        - name: vault
+        - name: vault-active
           port: 8200
   tls: {}
