@@ -179,6 +179,7 @@ jellyfin:
   # This probe is disabled during startup (startup probe handles initial checks).
   # Uses httpGet for compatibility with both IPv4 and IPv6.
   livenessProbe:
+    tcpSocket: null
     httpGet:
       path: /health
       port: http
@@ -192,6 +193,7 @@ jellyfin:
   # This probe is disabled during startup (startup probe handles initial checks).
   # Uses httpGet for compatibility with both IPv4 and IPv6.
   readinessProbe:
+    tcpSocket: null
     httpGet:
       path: /health
       port: http
