@@ -1,3 +1,11 @@
+smbShares:
+  shows:
+    source: "//192.168.20.8/Terminal's Umbrel/Downloads/shows"
+    mountPath: /media/shows
+  movies:
+    source: "//192.168.20.8/Terminal's Umbrel/Downloads/movies"
+    mountPath: /media/movies
+
 jellyfin:
   replicaCount: 1
   # -- Number of old ReplicaSets to retain for rollback history.
@@ -204,17 +212,22 @@ jellyfin:
     # periodSeconds: 10
 
   # -- Additional volumes to mount in the Jellyfin pod.
-  volumes: []
-  # - name: foo
-  #   secret:
-  #     secretName: mysecret
-  #     optional: false
+  volumes:
+    - name: smb-shows
+      persistentVolumeClaim:
+        claimName: jellyfin-smb-shows
+    - name: smb-movies
+      persistentVolumeClaim:
+        claimName: jellyfin-smb-movies
 
   # -- Additional volume mounts for the Jellyfin container.
-  volumeMounts: []
-  # - name: foo
-  #   mountPath: "/etc/foo"
-  #   readOnly: true
+  volumeMounts:
+    - name: smb-shows
+      mountPath: /media/shows
+      readOnly: true
+    - name: smb-movies
+      mountPath: /media/movies
+      readOnly: true
 
   # -- Node selector for pod scheduling.
   nodeSelector: {}
