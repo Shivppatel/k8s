@@ -1,9 +1,9 @@
 smbShares:
   shows:
-    source: "//192.168.20.8/Terminal's Umbrel/Downloads/shows"
+    source: "//192.168.20.8/shows (Umbrel)"
     mountPath: /media/shows
   movies:
-    source: "//192.168.20.8/Terminal's Umbrel/Downloads/movies"
+    source: "//192.168.20.8/movies (Umbrel)"
     mountPath: /media/movies
 
 jellyfin:
