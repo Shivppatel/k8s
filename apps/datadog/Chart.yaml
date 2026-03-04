@@ -11,4 +11,4 @@ appVersion: "1.24.0-rc.2"
 dependencies:
   - name: datadog-operator
     repository: https://helm.datadoghq.com
-    version: 2.19.0-dev.5
+    version: 2.19.0-dev.6
