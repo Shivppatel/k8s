@@ -1,6 +1,6 @@
 dependencies:
 - name: open-webui
   repository: https://helm.openwebui.com
-  version: 12.5.0
-digest: sha256:3224593cf30ee8c8e5ab1e6234a97ad87f6a373cbabd687e4d692a84d01567e6
-generated: "2026-02-24T01:57:51.661893515Z"
+  version: 12.8.1
+digest: sha256:82ac5589abcce52e5c276c54ab1b465285416cec218fc390489fafabed1e4fa5
+generated: "2026-03-04T03:12:52.15663977Z"
