@@ -1,0 +1,14 @@
+apiVersion: v2
+name: jellyfin
+description: A Helm chart for Jellyfin
+
+type: application
+
+version: 0.1.0
+
+appVersion: "10.11.5"
+
+dependencies:
+  - name: jellyfin
+    repository: https://jellyfin.github.io/jellyfin-helm
+    version: 2.7.0

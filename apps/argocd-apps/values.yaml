@@ -722,6 +722,24 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
+    jellyfin:
+      name: jellyfin
+      namespace: argocd
+      destination:
+        namespace: jellyfin
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/jellyfin
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
     n8n:
       name: n8n
       namespace: argocd
