@@ -16,7 +16,7 @@ minio:
     enabled: true
     existingClaim: minio-nfs
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
   console:
     image:
       registry: docker.io
