@@ -11,7 +11,7 @@ spec:
   storageClassName: ""
   mountOptions:
     - hard
-    - nfsvers=4.1
+    - nfsvers=3
   nfs:
-    path: /Photos
+    path: /var/nfs/shared/Photos
     server: 192.168.10.245

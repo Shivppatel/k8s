@@ -13,7 +13,7 @@ spec:
   storageClassName: ""
   mountOptions:
     - hard
-    - nfsvers=4.1
+    - nfsvers=3
   nfs:
     path: {{ $share.path }}
     server: {{ $share.server }}

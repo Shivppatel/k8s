@@ -1,11 +1,11 @@
 nfsShares:
   shows:
     server: "192.168.10.245"
-    path: "/Media/Shows"
+    path: "/var/nfs/shared/Media/Shows"
     mountPath: /media/shows
   movies:
     server: "192.168.10.245"
-    path: "/Media/Movies"
+    path: "/var/nfs/shared/Media/Movies"
     mountPath: /media/movies
 
 jellyfin:
