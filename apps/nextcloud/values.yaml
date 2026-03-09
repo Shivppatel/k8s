@@ -10,3 +10,6 @@ nextcloud:
       enabled: true
       serviceMonitor:
         enabled: true
+  persistence:
+    enabled: true
+    existingClaim: nextcloud-nfs

@@ -1,15 +1,15 @@
-{{- range $name, $share := .Values.smbShares }}
+{{- range $name, $share := .Values.nfsShares }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jellyfin-smb-{{ $name }}
+  name: jellyfin-nfs-{{ $name }}
 spec:
   accessModes:
-    - ReadOnlyMany
+    - ReadWriteMany
   storageClassName: ""
   resources:
     requests:
       storage: {{ $share.capacity | default "1Ti" }}
-  volumeName: jellyfin-smb-{{ $name }}
+  volumeName: jellyfin-nfs-{{ $name }}
 {{- end }}

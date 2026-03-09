@@ -14,9 +14,9 @@ minio:
     repository: bitnamilegacy/minio
   persistence:
     enabled: true
-    storageClass: longhorn
+    existingClaim: minio-nfs
     accessModes:
-      - ReadWriteOnce
+      - ReadWriteMany
   console:
     image:
       registry: docker.io

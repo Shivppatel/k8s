@@ -1,8 +1,8 @@
 # apiVersion: batch/v1
 # kind: Job
 # metadata:
-#   name: immich-data-migration
-#   namespace: immich
+#   name: nextcloud-data-migration
+#   namespace: nextcloud
 # spec:
 #   template:
 #     spec:
@@ -19,8 +19,8 @@
 #       volumes:
 #       - name: old-vol
 #         persistentVolumeClaim:
-#           claimName: immich-library-v2
+#           claimName: nextcloud-nextcloud
 #       - name: new-vol
 #         persistentVolumeClaim:
-#           claimName: immich-nfs
+#           claimName: nextcloud-nfs
 #   backoffLimit: 1
