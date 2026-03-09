@@ -1,0 +1,20 @@
+{{- range $name, $share := .Values.nfsShares }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jellyfin-nfs-{{ $name }}
+spec:
+  capacity:
+    storage: {{ $share.capacity | default "1Ti" }}
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: {{ $share.path }}
+    server: {{ $share.server }}
+{{- end }}

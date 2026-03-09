@@ -1,9 +1,11 @@
-smbShares:
+nfsShares:
   shows:
-    source: "//192.168.20.8/shows (Umbrel)"
+    server: "192.168.10.245"
+    path: "/Media/Shows"
     mountPath: /media/shows
   movies:
-    source: "//192.168.20.8/movies (Umbrel)"
+    server: "192.168.10.245"
+    path: "/Media/Movies"
     mountPath: /media/movies
 
 jellyfin:
@@ -61,7 +63,7 @@ jellyfin:
     # runAsUser: 1000
 
   # -- Define a custom runtimeClassName for the pod.
-  runtimeClassName: ''
+  runtimeClassName: ""
 
   # -- Define a priorityClassName for the pod.
   priorityClassName: ""
@@ -124,7 +126,7 @@ jellyfin:
     # -- External traffic policy (Cluster or Local).
     # externalTrafficPolicy: Cluster
     # -- NodePort for the service (if applicable).
-    # nodePort: 
+    # nodePort:
 
   # -- Ingress configuration. See: https://kubernetes.io/docs/concepts/services-networking/ingress/
   ingress:
@@ -213,21 +215,19 @@ jellyfin:
 
   # -- Additional volumes to mount in the Jellyfin pod.
   volumes:
-    - name: smb-shows
+    - name: nfs-shows
       persistentVolumeClaim:
-        claimName: jellyfin-smb-shows
-    - name: smb-movies
+        claimName: jellyfin-nfs-shows
+    - name: nfs-movies
       persistentVolumeClaim:
-        claimName: jellyfin-smb-movies
+        claimName: jellyfin-nfs-movies
 
   # -- Additional volume mounts for the Jellyfin container.
   volumeMounts:
-    - name: smb-shows
+    - name: nfs-shows
       mountPath: /media/shows
-      readOnly: true
-    - name: smb-movies
+    - name: nfs-movies
       mountPath: /media/movies
-      readOnly: true
 
   # -- Node selector for pod scheduling.
   nodeSelector: {}
@@ -282,7 +282,7 @@ jellyfin:
       # -- Custom annotations to be added to the PVC
       annotations: {}
       # -- If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner.
-      storageClass: ''
+      storageClass: ""
       ## -- Use an existing PVC for this mount
       # existingClaim: ''
     media:
@@ -298,7 +298,7 @@ jellyfin:
       # -- Custom annotations to be added to the PVC
       annotations: {}
       # -- If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner.
-      storageClass: ''
+      storageClass: ""
       ## -- Use an existing PVC for this mount
       # existingClaim: ''
     cache:
@@ -314,7 +314,7 @@ jellyfin:
       # -- Custom annotations to be added to the PVC
       annotations: {}
       # -- If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner.
-      storageClass: ''
+      storageClass: ""
       ## -- Use an existing PVC for this mount
       # existingClaim: ''
 
@@ -327,7 +327,7 @@ jellyfin:
       # -- Enable or disable the creation of a ServiceMonitor resource
       enabled: true
       # -- Namespace where the ServiceMonitor resource should be created. Defaults to Release.Namespace
-      namespace: ''
+      namespace: ""
       # -- Labels to add to the ServiceMonitor resource
       labels: {}
       # -- Interval at which metrics should be scraped
