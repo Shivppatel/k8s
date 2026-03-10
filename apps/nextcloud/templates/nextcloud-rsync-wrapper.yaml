@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-rsync-wrapper
+  namespace: nextcloud
+data:
+  rsync: |
+    #!/bin/sh
+    # Strip --chown from args
+    new_args=""
+    skip_next=0
+    for arg in "$@"; do
+      if [ "$skip_next" -eq 1 ]; then
+        skip_next=0
+        continue
+      fi
+      if [ "$arg" = "--chown" ]; then
+        skip_next=1
+        continue
+      fi
+      if echo "$arg" | grep -q "^--chown="; then
+        continue
+      fi
+      new_args="$new_args \"$arg\""
+    done
+    eval "/usr/bin/rsync $new_args"
