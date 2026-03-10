@@ -23,4 +23,4 @@ data:
       fi
       new_args="$new_args \"$arg\""
     done
-    eval "/usr/bin/rsync $new_args"
+    eval "/usr/bin/rsync $new_args --no-o --no-g"
