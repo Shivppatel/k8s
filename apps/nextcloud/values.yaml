@@ -10,16 +10,10 @@ nextcloud:
       enabled: true
       serviceMonitor:
         enabled: true
-    extraVolumes:
-      - name: rsync-wrapper
-        configMap:
-          name: nextcloud-rsync-wrapper
-          defaultMode: 0755
-    extraVolumeMounts:
-      - name: rsync-wrapper
-        mountPath: /usr/local/bin/rsync
-        subPath: rsync
   persistence:
+    enabled: true
+    # using default storageclass (longhorn) for core files
+  nextcloudData:
     enabled: true
     existingClaim: nextcloud-nfs
   startupProbe:
