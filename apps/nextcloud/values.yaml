@@ -16,10 +16,3 @@ nextcloud:
   nextcloudData:
     enabled: true
     existingClaim: nextcloud-nfs
-  startupProbe:
-    enabled: true
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 120
-    successThreshold: 1
