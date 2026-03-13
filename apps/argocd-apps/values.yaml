@@ -39,6 +39,27 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
+    argocd-private-apps:
+      name: argocd-private-apps
+      namespace: argocd
+      destination:
+        namespace: argocd
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/argocd-private-apps
+        repoURL: "git@github.com:shivppatel/k8s-private.git"
+        targetRevision: main
+        helm:
+          valueFiles:
+            - values.yaml
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
     # Monitoring & Observability
     kube-prometheus-stack:
       name: kube-prometheus-stack
@@ -331,7 +352,6 @@ argocd-apps:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
-
 
     metallb:
       name: metallb
