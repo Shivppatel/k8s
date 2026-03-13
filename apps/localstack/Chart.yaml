@@ -11,4 +11,4 @@ appVersion: "latest"
 dependencies:
   - name: localstack
     repository: https://helm.localstack.cloud
-    version: 0.6.27
+    version: 0.7.0
