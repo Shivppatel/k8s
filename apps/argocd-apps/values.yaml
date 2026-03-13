@@ -45,7 +45,7 @@ argocd-apps:
       destination:
         namespace: argocd
         server: "https://kubernetes.default.svc"
-      project: default
+      project: private
       source:
         path: apps/argocd-private-apps
         repoURL: "git@github.com:shivppatel/k8s-private.git"
@@ -104,7 +104,7 @@ argocd-apps:
       destination:
         namespace: observability
         server: "https://kubernetes.default.svc"
-      project: private
+      project: default
       source:
         path: apps/alloy
         repoURL: "git@github.com:shivppatel/k8s.git"
