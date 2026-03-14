@@ -1,10 +1,10 @@
 nfsShares:
   shows:
-    server: "192.168.10.245"
+    server: "192.168.10.195"
     path: "/var/nfs/shared/Media/Shows"
     mountPath: /media/shows
   movies:
-    server: "192.168.10.245"
+    server: "192.168.10.195"
     path: "/var/nfs/shared/Media/Movies"
     mountPath: /media/movies
 

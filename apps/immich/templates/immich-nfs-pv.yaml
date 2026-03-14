@@ -14,4 +14,4 @@ spec:
     - nfsvers=3
   nfs:
     path: /var/nfs/shared/Photos
-    server: 192.168.10.245
+    server: 192.168.10.195
