@@ -287,7 +287,7 @@ jellyfin:
       # -- set to false to use emptyDir
       enabled: true
       accessMode: ReadWriteOnce
-      size: 5Gi
+      size: 20Gi
       # -- Custom annotations to be added to the PVC
       annotations: {}
       # -- If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner.
@@ -323,7 +323,7 @@ jellyfin:
       # -- Custom annotations to be added to the PVC
       annotations: {}
       # -- If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner.
-      storageClass: ""
+      storageClass: "longhorn"
       ## -- Use an existing PVC for this mount
       existingClaim: ""
 
