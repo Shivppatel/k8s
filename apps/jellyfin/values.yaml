@@ -50,11 +50,15 @@ jellyfin:
   podLabels: {}
 
   # -- Security context for the pod.
-  podSecurityContext: {}
+  podSecurityContext:
+    supplementalGroups:
+      - 44 # video
+      - 993 # render
     # fsGroup: 2000
 
   # -- Security context for the container.
-  securityContext: {}
+  securityContext:
+    privileged: false
     # capabilities:
     #   drop:
     #   - ALL
@@ -221,6 +225,9 @@ jellyfin:
     - name: nfs-movies
       persistentVolumeClaim:
         claimName: jellyfin-nfs-movies
+    - name: dri
+      hostPath:
+        path: /dev/dri
 
   # -- Additional volume mounts for the Jellyfin container.
   volumeMounts:
@@ -228,6 +235,8 @@ jellyfin:
       mountPath: /media/shows
     - name: nfs-movies
       mountPath: /media/movies
+    - name: dri
+      mountPath: /dev/dri
 
   # -- Node selector for pod scheduling.
   nodeSelector: {}
