@@ -319,13 +319,13 @@ jellyfin:
       hostPath: ""
       # -- PVC specific settings, only used if type is 'pvc'.
       accessMode: ReadWriteOnce
-      size: 30Gi
+      size: 100Gi
       # -- Custom annotations to be added to the PVC
       annotations: {}
       # -- If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner.
       storageClass: "longhorn"
       ## -- Use an existing PVC for this mount
-      existingClaim: ""
+      # existingClaim: ""
 
   # -- Configuration for metrics collection and monitoring
   metrics:
