@@ -45,7 +45,7 @@ descheduler:
   commonLabels: {}
 
   cronJobApiVersion: "batch/v1"
-  schedule: "*/10 * * * *"
+  schedule: "*/30 * * * *"
   suspend: false
   # startingDeadlineSeconds: 200
   # successfulJobsHistoryLimit: 3
