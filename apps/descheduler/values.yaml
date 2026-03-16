@@ -87,8 +87,8 @@ descheduler:
   # deschedulerPolicy contains the policies the descheduler will execute.
   deschedulerPolicy:
     # nodeSelector: "key1=value1,key2=value2"
-    # maxNoOfPodsToEvictPerNode: 10
-    # maxNoOfPodsToEvictPerNamespace: 10
+    maxNoOfPodsToEvictPerNode: 10
+    maxNoOfPodsToEvictPerNamespace: 10
     # metricsProviders:
     # - source: KubernetesMetrics
     # tracing:
