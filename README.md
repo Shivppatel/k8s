@@ -47,7 +47,7 @@ All three compute nodes connect at 10Gbps to the aggregation switch. The NAS is 
 │            ArgoCD App-of-Apps · Kyverno Policies            │
 └──────────┬──────────────┬───────────────┬───────────────────┘
            │              │               │
-  ┌────────▼──────┐ ┌─────▼──────┐ ┌─────▼──────────────────┐
+  ┌────────▼──────┐ ┌─────▼──────┐ ┌─────▼───────────────────┐
   │  Networking   │ │  Secrets   │ │     Observability       │
   │  Traefik      │ │  Vault HA  │ │  Prometheus · Grafana   │
   │  cert-manager │ │  ESO       │ │  Loki · Tempo           │
@@ -57,18 +57,18 @@ All three compute nodes connect at 10Gbps to the aggregation switch. The NAS is 
            │
   ┌────────▼──────────────────────────────────────────────────┐
   │                      Data Layer                           │
-  │   CloudNativePG · Redis · MinIO · Kafka · RabbitMQ       │
+  │   CloudNativePG · Redis · MinIO · Kafka · RabbitMQ        │
   └────────┬──────────────────────────────────────────────────┘
            │
   ┌────────▼──────────────────────────────────────────────────┐
   │                    Workload Layer                         │
-  │  Jellyfin · Immich · Nextcloud · Vaultwarden · Gitea     │
-  │  Paperless-NGX · Ollama · AdGuard Home · Homepage · ...  │
+  │  Jellyfin · Immich · Nextcloud · Vaultwarden · Gitea      │
+  │  Paperless-NGX · Ollama · AdGuard Home · Homepage · ...   │
   └────────┬──────────────────────────────────────────────────┘
            │
   ┌────────▼──────────────────────────────────────────────────┐
   │                    Storage Layer                          │
-  │      Longhorn (replicated block) · UNAS NFS (bulk)       │
+  │      Longhorn (replicated block) · UNAS NFS (bulk)        │
   └───────────────────────────────────────────────────────────┘
 ```
 
