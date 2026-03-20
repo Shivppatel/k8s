@@ -95,6 +95,9 @@ spec:
               psql -d immich -c "CREATE EXTENSION IF NOT EXISTS cube;"
               psql -d immich -c "CREATE EXTENSION IF NOT EXISTS earthdistance;"
               psql -d immich -c "CREATE EXTENSION IF NOT EXISTS vector;"
+              psql -d immich -c "ALTER EXTENSION cube UPDATE;"
+              psql -d immich -c "ALTER EXTENSION earthdistance UPDATE;"
+              psql -d immich -c "ALTER EXTENSION vector UPDATE;"
               psql -d immich -c "ALTER SCHEMA public OWNER TO immich;"
               psql -d immich -c "GRANT ALL ON SCHEMA public TO immich;"
 
