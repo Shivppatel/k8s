@@ -34,7 +34,7 @@ it-tools:
   image:
     repository: ghcr.io/corentinth/it-tools
     pullPolicy: IfNotPresent
-    tag: ""
+    tag: "2024.10.22-7ca5933"
 
   ## @section Metrics parameters
   ## @param metrics.enabled Enables metrics
