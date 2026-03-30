@@ -245,10 +245,14 @@ jellyfin:
 
   # -- Additional volume mounts for the Jellyfin container.
   volumeMounts:
+    - name: nfs-books
+      mountPath: /media/books
     - name: nfs-shows
       mountPath: /media/shows
     - name: nfs-movies
       mountPath: /media/movies
+    - name: nfs-music
+      mountPath: /media/music
     - name: dri
       mountPath: /dev/dri
 
