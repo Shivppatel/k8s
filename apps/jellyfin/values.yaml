@@ -227,12 +227,18 @@ jellyfin:
 
   # -- Additional volumes to mount in the Jellyfin pod.
   volumes:
+    - name: nfs-books
+      persistentVolumeClaim:
+        claimName: jellyfin-nfs-books
     - name: nfs-shows
       persistentVolumeClaim:
         claimName: jellyfin-nfs-shows
     - name: nfs-movies
       persistentVolumeClaim:
         claimName: jellyfin-nfs-movies
+    - name: nfs-music
+      persistentVolumeClaim:
+        claimName: jellyfin-nfs-music
     - name: dri
       hostPath:
         path: /dev/dri
