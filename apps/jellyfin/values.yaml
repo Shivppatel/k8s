@@ -1,4 +1,8 @@
 nfsShares:
+  books:
+    server: "192.168.10.195"
+    path: "/var/nfs/shared/Media/Books"
+    mountPath: /media/books
   shows:
     server: "192.168.10.195"
     path: "/var/nfs/shared/Media/Shows"
@@ -7,6 +11,10 @@ nfsShares:
     server: "192.168.10.195"
     path: "/var/nfs/shared/Media/Movies"
     mountPath: /media/movies
+  music:
+    server: "192.168.10.195"
+    path: "/var/nfs/shared/Media/Music"
+    mountPath: /media/music
 
 jellyfin:
   replicaCount: 1
