@@ -780,7 +780,7 @@ argocd-apps:
       name: jellyfin
       namespace: argocd
       destination:
-        namespace: jellyfin
+        namespace: media
         server: "https://kubernetes.default.svc"
       project: default
       source:
