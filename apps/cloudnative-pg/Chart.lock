@@ -1,6 +1,6 @@
 dependencies:
 - name: cloudnative-pg
   repository: https://cloudnative-pg.io/charts/
-  version: 0.27.1
-digest: sha256:26efd6381ebff24055114843477b535a01ce44d3e2e6cefd68e8d5591e70d60b
-generated: "2026-02-05T18:44:13.564680776Z"
+  version: 0.28.0
+digest: sha256:ec9caac9b895d4436ca9fdaea8abb29cf94812abebf70b86b945ee0b38df25d1
+generated: "2026-04-04T04:42:37.939248487Z"
