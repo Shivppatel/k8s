@@ -19,7 +19,7 @@ spec:
   # Options: ghcr.io/tensorchord/cloudnative-pgvecto.rs:17-v0.4.0
   # (uses 'vectors' extension)
   # Or build custom image with pgvector
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.7@sha256:662c95d66c6decca46856da1750866e51829dc206d9a40998186baf2f98454df
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.3@sha256:d7fc326bcf58b361a6df4338f4d7775ce533716aabf3fd2ee27a1776c688bb8f
 
   # Superuser credentials managed by ExternalSecret from Vault
   # This prevents password desync between secret and database
