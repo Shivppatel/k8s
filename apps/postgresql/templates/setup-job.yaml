@@ -35,7 +35,7 @@ spec:
             secretName: datadog-db-secret
       containers:
         - name: setup
-          image: ghcr.io/cloudnative-pg/postgresql:17
+          image: ghcr.io/cloudnative-pg/postgresql:18.3@sha256:d7fc326bcf58b361a6df4338f4d7775ce533716aabf3fd2ee27a1776c688bb8f
           env:
             - name: PGHOST
               value: postgresql-rw.postgresql.svc.cluster.local
