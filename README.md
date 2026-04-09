@@ -62,7 +62,7 @@ All three compute nodes connect at 10Gbps to the aggregation switch. The NAS is 
            │
   ┌────────▼──────────────────────────────────────────────────┐
   │                    Workload Layer                         │
-  │  Jellyfin · Immich · Nextcloud · Vaultwarden · Gitea      │
+  │  Jellyfin · Immich · Nextcloud · Vaultwarden · GitLab     │
   │  Paperless-NGX · Ollama · AdGuard Home · Homepage · ...   │
   └────────┬──────────────────────────────────────────────────┘
            │
