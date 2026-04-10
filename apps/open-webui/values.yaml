@@ -12,6 +12,9 @@ fullnameOverride: ""
 namespaceOverride: ""
 
 ollama:
+  image:
+    repository: ollama/ollama
+    tag: latest
   # -- Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure
   # @section -- External Tools configuration
   enabled: true
@@ -152,7 +155,6 @@ websocket:
     podSecurityContext: {}
       # runAsUser: 999
       # runAsGroup: 1000
-
 
 workload:
   # -- Workload kind to use. Options are "Deployment", "StatefulSet".
