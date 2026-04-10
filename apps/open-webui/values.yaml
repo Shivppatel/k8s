@@ -12,9 +12,6 @@ fullnameOverride: ""
 namespaceOverride: ""
 
 ollama:
-  image:
-    repository: ollama/ollama
-    tag: latest
   # -- Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure
   # @section -- External Tools configuration
   enabled: true
@@ -33,6 +30,8 @@ ollama:
   #     run:
   #       - llama3
   # runtimeClassName: nvidia
+  image:
+    tag: latest
   persistentVolume:
     enabled: true
     storageClass: "longhorn"
