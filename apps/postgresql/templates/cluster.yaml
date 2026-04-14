@@ -21,13 +21,12 @@ spec:
   # Or build custom image with pgvector
   imageName: ghcr.io/cloudnative-pg/postgresql:18.3@sha256:d7fc326bcf58b361a6df4338f4d7775ce533716aabf3fd2ee27a1776c688bb8f
 
-  # Superuser credentials managed by ExternalSecret from Vault
-  # This prevents password desync between secret and database
+  # Let CNPG manage the reserved postgres user locally and mirror the
+  # generated secret back to Vault via ESO PushSecret.
   enableSuperuserAccess: true
-  superuserSecret:
-    name: postgresql-superuser
 
-  # Bootstrap - create users, databases, and set permissions
+  # Bootstrap runs only when the cluster is first initialized.
+  # Managed roles below handle ongoing password reconciliation.
   bootstrap:
     initdb:
       database: postgres
@@ -49,6 +48,53 @@ spec:
         - CREATE DATABASE authentik OWNER authentik
         - CREATE DATABASE gitlab OWNER gitlab
         - CREATE DATABASE datadog OWNER datadog
+
+  managed:
+    roles:
+      - name: immich
+        ensure: present
+        login: true
+        superuser: false
+        passwordSecret:
+          name: immich-db-secret
+      - name: n8n
+        ensure: present
+        login: true
+        superuser: false
+        passwordSecret:
+          name: n8n-db-secret
+      - name: terraform
+        ensure: present
+        login: true
+        superuser: false
+        passwordSecret:
+          name: terraform-db-secret
+      - name: teslamate
+        ensure: present
+        login: true
+        superuser: false
+        passwordSecret:
+          name: teslamate-db-secret
+      - name: authentik
+        ensure: present
+        login: true
+        superuser: false
+        passwordSecret:
+          name: authentik-db-secret
+      - name: gitlab
+        ensure: present
+        login: true
+        superuser: false
+        passwordSecret:
+          name: gitlab-db-secret
+      - name: datadog
+        ensure: present
+        login: true
+        superuser: false
+        inRoles:
+          - pg_monitor
+        passwordSecret:
+          name: datadog-db-secret
 
   storage:
     size: 50Gi
