@@ -902,24 +902,6 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
-    open-webui:
-      name: open-webui
-      namespace: argocd
-      destination:
-        namespace: ai
-        server: "https://kubernetes.default.svc"
-      project: default
-      source:
-        path: apps/open-webui
-        repoURL: "git@github.com:shivppatel/k8s.git"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-
     pgadmin4:
       name: pgadmin4
       namespace: argocd
