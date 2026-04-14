@@ -18,6 +18,11 @@ data:
       - release
     instrumentedApps:
       - homepage
+    viewing:
+      endpointRootBehavior: "https://rum.shivpatel.xyz returns 404 on / because it is an ingest endpoint."
+      logs: "Use Grafana Explore or Logs Drilldown with {job=\"frontend-rum\"} | json."
+      traces: "Use Grafana Explore or Traces Drilldown with the Tempo datasource."
+      ui: "There is no separate Faro UI in this OSS setup; browser telemetry is viewed via Loki and Tempo."
     unsupportedApps:
       - argocd
       - grafana

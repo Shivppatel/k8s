@@ -48,7 +48,7 @@ data:
               "showLineNumbers": false,
               "showMiniMap": false
             },
-            "content": "# Homelab Observability\n\nUse Grafana for signal correlation and the specialist UIs only when you need them.\n\n- [Kubernetes dashboards](https://grafana.shivpatel.xyz/dashboards)\n- [Explore logs in Loki](https://grafana.shivpatel.xyz/explore)\n- [Explore traces in Tempo](https://grafana.shivpatel.xyz/explore)\n- [Profiles in Pyroscope](https://pyroscope.shivpatel.xyz)\n- [Prometheus targets and alerts](https://prometheus.shivpatel.xyz)\n\nDatasource UIDs:\n\n- `prometheus`\n- `alertmanager`\n- `loki`\n- `tempo`\n- `pyroscope`",
+            "content": "# Homelab Observability\n\nUse Grafana for signal correlation and the specialist UIs only when you need them.\n\n- [Kubernetes dashboards](https://grafana.shivpatel.xyz/dashboards)\n- [Explore logs in Loki](https://grafana.shivpatel.xyz/explore)\n- [Explore traces in Tempo](https://grafana.shivpatel.xyz/explore)\n- [Profiles in Pyroscope](https://pyroscope.shivpatel.xyz)\n- [Prometheus targets and alerts](https://prometheus.shivpatel.xyz)\n\nFrontend observability notes:\n\n- `https://rum.shivpatel.xyz` is an ingest endpoint, not a UI. A `404` on `/` is expected.\n- Browser logs and errors land in Loki. Start with `{job=\"frontend-rum\"} | json` in Explore or Logs Drilldown.\n- Browser traces land in Tempo and are visible through Explore or Traces Drilldown.\n- Faro does not add a separate OSS Grafana page in this setup; the data is viewed through Loki and Tempo.\n\nDatasource UIDs:\n\n- `prometheus`\n- `alertmanager`\n- `loki`\n- `tempo`\n- `pyroscope`",
             "mode": "markdown"
           },
           "pluginVersion": "12.0.0",
