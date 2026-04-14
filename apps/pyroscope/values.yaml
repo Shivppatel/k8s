@@ -103,7 +103,12 @@ pyroscope:
       port_name: raft
 
     resources:
-      {}
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 2Gi
       # We usually recommend not to specify default resources and to leave this as a conscious
       # choice for the user. This also increases chances charts run on environments with little
       # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -196,10 +201,8 @@ pyroscope:
 
     # -- Allows to add tenant specific overrides to the default limit configuration.
     tenantOverrides:
-      {}
-      # "foo":
-      #   ingestion_rate_mb: 1
-      #   ingestion_burst_size_mb: 2
+      anonymous:
+        compactor_blocks_retention_period: 336h
     # -- Grafana Agent Configuration.
 
 

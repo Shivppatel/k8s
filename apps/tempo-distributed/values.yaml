@@ -65,6 +65,9 @@ tempo-distributed:
           name: tempo-s3-secret
     extraArgs:
       - -config.expand-env=true
+    config:
+      compaction:
+        block_retention: 336h
   querier:
     podAnnotations:
       profiles.grafana.com/cpu.scrape: "true"
@@ -109,6 +112,12 @@ tempo-distributed:
       storage:
         remote_write:
           - url: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090/api/v1/write
+  overrides:
+    defaults:
+      metrics_generator:
+        processors:
+          - service-graphs
+          - span-metrics
   metaMonitoring:
     serviceMonitor:
       enabled: true

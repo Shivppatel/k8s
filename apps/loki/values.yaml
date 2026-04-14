@@ -109,3 +109,11 @@ loki:
     replicas: 0
   bloomGateway:
     replicas: 0
+
+  monitoring:
+    dashboards:
+      enabled: true
+    rules:
+      enabled: true
+    serviceMonitor:
+      enabled: true

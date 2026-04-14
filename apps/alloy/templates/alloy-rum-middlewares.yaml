@@ -1,0 +1,41 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: alloy-rum-cors
+  namespace: observability
+spec:
+  headers:
+    accessControlAllowHeaders:
+      - Content-Type
+      - Traceparent
+      - X-API-Key
+      - X-Faro-Session-Id
+      - X-Scope-OrgID
+    accessControlAllowMethods:
+      - OPTIONS
+      - POST
+    accessControlAllowOriginList:
+      - https://homepage.shivpatel.xyz
+      - https://shivpatel.xyz
+    accessControlMaxAge: 600
+    addVaryHeader: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: alloy-rum-body-limit
+  namespace: observability
+spec:
+  buffering:
+    maxRequestBodyBytes: 1048576
+    memRequestBodyBytes: 262144
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: alloy-rum-rate-limit
+  namespace: observability
+spec:
+  rateLimit:
+    average: 50
+    burst: 100

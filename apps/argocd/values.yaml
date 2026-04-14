@@ -21,17 +21,6 @@ argo-cd:
       profiles.grafana.com/memory.port_name: "metrics"
       profiles.grafana.com/goroutine.scrape: "true"
       profiles.grafana.com/goroutine.port_name: "metrics"
-      ad.datadoghq.com/application-controller.checks: |
-        {
-          "argocd": {
-            "init_config": {},
-            "instances": [
-              {
-                "app_controller_endpoint": "http://%%host%%:8082/metrics"
-              }
-            ]
-          }
-        }
     replicas: 1
     metrics:
       enabled: true
@@ -39,9 +28,9 @@ argo-cd:
         enabled: true
   dex:
     metrics:
-      enabled: true
+      enabled: false
       serviceMonitor:
-        enabled: true
+        enabled: false
   redis:
     metrics:
       enabled: true
@@ -55,17 +44,6 @@ argo-cd:
       profiles.grafana.com/memory.port_name: "metrics"
       profiles.grafana.com/goroutine.scrape: "true"
       profiles.grafana.com/goroutine.port_name: "metrics"
-      ad.datadoghq.com/server.checks: |
-        {
-          "argocd": {
-            "init_config": {},
-            "instances": [
-              {
-                "api_server_endpoint": "http://%%host%%:8083/metrics"
-              }
-            ]
-          }
-        }
     autoscaling:
       enabled: true
       minReplicas: 2
@@ -81,17 +59,6 @@ argo-cd:
       profiles.grafana.com/memory.port_name: "metrics"
       profiles.grafana.com/goroutine.scrape: "true"
       profiles.grafana.com/goroutine.port_name: "metrics"
-      ad.datadoghq.com/repo-server.checks: |
-        {
-          "argocd": {
-            "init_config": {},
-            "instances": [
-              {
-                "repo_server_endpoint": "http://%%host%%:8084/metrics"
-              }
-            ]
-          }
-        }
     autoscaling:
       enabled: true
       minReplicas: 2

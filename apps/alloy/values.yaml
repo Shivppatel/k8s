@@ -86,6 +86,28 @@ alloy:
           }
 
           rule {
+            source_labels = ["app", "__meta_kubernetes_pod_label_app"]
+            action = "replace"
+            target_label = "app"
+            regex = ";(.+)"
+            replacement = "$1"
+          }
+
+          rule {
+            source_labels = ["app", "__meta_kubernetes_pod_label_app_kubernetes_io_instance"]
+            action = "replace"
+            target_label = "app"
+            regex = ";(.+)"
+            replacement = "$1"
+          }
+
+          rule {
+            source_labels = ["__meta_kubernetes_pod_node_name"]
+            action = "replace"
+            target_label = "node"
+          }
+
+          rule {
             source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_container_name"]
             action = "replace"
             target_label = "job"
@@ -117,12 +139,85 @@ alloy:
 
         loki.process "pod_logs" {
           stage.static_labels {
-              values = {
-                cluster = "homelab",
-              }
+            values = {
+              cluster     = "homelab",
+              environment = "homelab",
+            }
           }
 
           forward_to = [loki.write.default.receiver]
+        }
+
+        loki.source.kubernetes_events "cluster_events" {
+          forward_to = [loki.process.kubernetes_events.receiver]
+        }
+
+        loki.process "kubernetes_events" {
+          stage.static_labels {
+            values = {
+              app         = "kubernetes-events",
+              cluster     = "homelab",
+              environment = "homelab",
+            }
+          }
+
+          forward_to = [loki.write.default.receiver]
+        }
+
+        loki.relabel "journal" {
+          rule {
+            source_labels = ["__journal__hostname"]
+            action = "replace"
+            target_label = "node"
+          }
+
+          rule {
+            source_labels = ["__journal__systemd_unit"]
+            action = "replace"
+            target_label = "unit"
+          }
+        }
+
+        loki.source.journal "kubelet" {
+          path           = "/var/log/journal"
+          max_age        = "12h"
+          format_as_json = true
+          matches        = "_SYSTEMD_UNIT=kubelet.service"
+          labels = {
+            app         = "kubelet",
+            cluster     = "homelab",
+            environment = "homelab",
+          }
+          relabel_rules = loki.relabel.journal.rules
+          forward_to    = [loki.write.default.receiver]
+        }
+
+        loki.source.journal "containerd" {
+          path           = "/var/log/journal"
+          max_age        = "12h"
+          format_as_json = true
+          matches        = "_SYSTEMD_UNIT=containerd.service"
+          labels = {
+            app         = "containerd",
+            cluster     = "homelab",
+            environment = "homelab",
+          }
+          relabel_rules = loki.relabel.journal.rules
+          forward_to    = [loki.write.default.receiver]
+        }
+
+        loki.source.journal "k3s" {
+          path           = "/var/log/journal"
+          max_age        = "12h"
+          format_as_json = true
+          matches        = "_SYSTEMD_UNIT=k3s.service"
+          labels = {
+            app         = "k3s",
+            cluster     = "homelab",
+            environment = "homelab",
+          }
+          relabel_rules = loki.relabel.journal.rules
+          forward_to    = [loki.write.default.receiver]
         }
 
         // =====================
@@ -136,7 +231,7 @@ alloy:
             endpoint = "0.0.0.0:4318"
           }
           output {
-            traces = [otelcol.processor.batch.default.input]
+            traces = [otelcol.processor.attributes.trace_enrichment.input]
           }
         }
 
@@ -147,6 +242,83 @@ alloy:
               endpoint = "0.0.0.0:14268"
             }
           }
+          output {
+            traces = [otelcol.processor.attributes.trace_enrichment.input]
+          }
+        }
+
+        faro.receiver "browser" {
+          extra_log_labels = {
+            cluster     = "homelab",
+            environment = "homelab",
+            job         = "frontend-rum",
+          }
+          log_format = "json"
+
+          server {
+            listen_address           = "0.0.0.0"
+            listen_port              = 12347
+            cors_allowed_origins     = ["https://homepage.shivpatel.xyz", "https://shivpatel.xyz"]
+            include_metadata         = true
+            max_allowed_payload_size = "1MiB"
+
+            rate_limiting {
+              enabled    = true
+              strategy   = "per_app"
+              rate       = 25
+              burst_size = 50
+            }
+          }
+
+          output {
+            logs   = [loki.write.default.receiver]
+            traces = [otelcol.processor.attributes.trace_enrichment.input]
+          }
+        }
+
+        otelcol.processor.attributes "trace_enrichment" {
+          action {
+            key    = "cluster"
+            value  = "homelab"
+            action = "upsert"
+          }
+
+          action {
+            key    = "deployment.environment"
+            value  = "homelab"
+            action = "upsert"
+          }
+
+          action {
+            key    = "environment"
+            value  = "homelab"
+            action = "upsert"
+          }
+
+          action {
+            key            = "app"
+            from_attribute = "service.name"
+            action         = "upsert"
+          }
+
+          action {
+            key            = "namespace"
+            from_attribute = "k8s.namespace.name"
+            action         = "upsert"
+          }
+
+          action {
+            key            = "container"
+            from_attribute = "k8s.container.name"
+            action         = "upsert"
+          }
+
+          action {
+            key            = "node"
+            from_attribute = "k8s.node.name"
+            action         = "upsert"
+          }
+
           output {
             traces = [otelcol.processor.batch.default.input]
           }
@@ -226,6 +398,28 @@ alloy:
             source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
             action = "replace"
             target_label = "app"
+          }
+
+          rule {
+            source_labels = ["app", "__meta_kubernetes_pod_label_app"]
+            action = "replace"
+            target_label = "app"
+            regex = ";(.+)"
+            replacement = "$1"
+          }
+
+          rule {
+            source_labels = ["app", "__meta_kubernetes_pod_label_app_kubernetes_io_instance"]
+            action = "replace"
+            target_label = "app"
+            regex = ";(.+)"
+            replacement = "$1"
+          }
+
+          rule {
+            source_labels = ["__meta_kubernetes_pod_node_name"]
+            action = "replace"
+            target_label = "node"
           }
 
           // Set service_name from namespace/app
@@ -322,6 +516,10 @@ alloy:
         port: 14268
         targetPort: 14268
         protocol: TCP
+      - name: faro
+        port: 12347
+        targetPort: 12347
+        protocol: TCP
 
     # -- Host aliases to add to the Alloy container.
     hostAliases: []
@@ -344,7 +542,13 @@ alloy:
     securityContext: {}
 
     # -- Resource requests and limits to apply to the Grafana Alloy container.
-    resources: {}
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
 
     # -- Set lifecycle hooks for the Grafana Alloy container.
     lifecycle: {}

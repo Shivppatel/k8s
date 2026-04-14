@@ -1,15 +1,19 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: alloy-ingress
+  name: alloy-rum-ingress
   namespace: observability
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`alloy.shivpatel.xyz`)
+    - match: Host(`rum.shivpatel.xyz`)
       kind: Rule
+      middlewares:
+        - name: alloy-rum-cors
+        - name: alloy-rum-body-limit
+        - name: alloy-rum-rate-limit
       services:
         - name: alloy
-          port: 12345
+          port: 12347
   tls: {}

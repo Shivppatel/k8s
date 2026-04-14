@@ -6,6 +6,14 @@ traefik:
   logs:
     general:
       level: "INFO" # DEBUG if needed
+      format: json
+    access:
+      enabled: true
+      format: json
+      addInternals: false
+      fields:
+        headers:
+          defaultmode: drop
 
   service:
     type: LoadBalancer
@@ -41,17 +49,6 @@ traefik:
       profiles.grafana.com/memory.port_name: "traefik"
       profiles.grafana.com/goroutine.scrape: "true"
       profiles.grafana.com/goroutine.port_name: "traefik"
-      ad.datadoghq.com/traefik.checks: |
-        {
-          "traefik_mesh": {
-            "init_config": {},
-            "instances": [
-              {
-                "openmetrics_endpoint": "http://%%host%%:9100/metrics"
-              }
-            ]
-          }
-        }
 
   metrics:
     addInternals: true
@@ -61,16 +58,3 @@ traefik:
       serviceMonitor:
         enabled: true
         honorLabels: true
-    datadog:
-      ## Address instructs exporter to send metrics to datadog-agent at this address.
-      address: "127.0.0.1:8125"
-      ## The interval used by the exporter to push metrics to datadog-agent. Default=10s
-      # pushInterval: 30s
-      ## The prefix to use for metrics collection. Default="traefik"
-      # prefix: traefik
-      ## Enable metrics on entry points. Default=true
-      # addEntryPointsLabels: false
-      ## Enable metrics on routers. Default=false
-      addRoutersLabels: true
-      ## Enable metrics on services. Default=true
-      # addServicesLabels: false
