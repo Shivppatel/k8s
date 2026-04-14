@@ -59,15 +59,15 @@ jobs:
             echo "=========================================="
             echo "Linting $dir"
             echo "=========================================="
-            
+
             # Build dependencies first
             helm dependency build "$dir" 2>/dev/null || true
-            
+
             # Run lint
             if ! helm lint "$dir"; then
               FAILED=1
             fi
-            
+
             # Template validation (catch render errors)
             echo "Validating template rendering for $dir"
             if ! helm template "$dir" "${HELM_TEMPLATE_ARGS[@]}" > /dev/null; then
@@ -76,7 +76,7 @@ jobs:
             else
               echo "✅ Template renders successfully"
             fi
-            
+
             echo ""
           done
 
