@@ -23,7 +23,12 @@ jobs:
       - name: Get changed YAML files
         id: changed-files
         run: |
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- '*.yaml' '*.yml' | tr '\n' ' ')
+          CHANGED_FILES=$(
+            git diff --diff-filter=d --name-only origin/${{ github.base_ref }}...HEAD -- '*.yaml' '*.yml' \
+              | grep -vE '(^|/)templates/' \
+              | tr '\n' ' ' \
+              || true
+          )
           echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
           echo "Found changed YAML files: $CHANGED_FILES"
 

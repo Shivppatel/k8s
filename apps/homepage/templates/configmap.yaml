@@ -30,7 +30,85 @@ data:
     hideErrors: true
     statusStyle: "dot"
   custom.css: ""
-  custom.js: ""
+  custom.js: |
+    (() => {
+      const config = {
+        collectorUrl: "https://rum.shivpatel.xyz/collect",
+        appName: "homepage",
+        appVersion: '{{ .Chart.AppVersion | default "gitops" }}',
+        environment: "homelab",
+        unsupportedApps: [
+          "argocd",
+          "grafana",
+          "longhorn",
+          "prometheus",
+          "pyroscope",
+          "traefik-dashboard",
+          "uptime-kuma"
+        ]
+      };
+
+      window.HOMELAB_OBSERVABILITY = config;
+
+      const loadScript = (src) =>
+        new Promise((resolve, reject) => {
+          const existing = document.querySelector(`script[src="${src}"]`);
+          if (existing) {
+            existing.addEventListener("load", resolve, { once: true });
+            existing.addEventListener("error", reject, { once: true });
+            return;
+          }
+
+          const script = document.createElement("script");
+          script.async = true;
+          script.src = src;
+          script.addEventListener("load", resolve, { once: true });
+          script.addEventListener("error", reject, { once: true });
+          document.head.appendChild(script);
+        });
+
+      const initFrontendObservability = async () => {
+        try {
+          await loadScript("https://cdn.jsdelivr.net/npm/@grafana/faro-web-sdk@1.19.0/dist/bundle/faro-web-sdk.iife.js");
+          await loadScript("https://cdn.jsdelivr.net/npm/@grafana/faro-web-tracing@1.19.0/dist/bundle/faro-web-tracing.iife.js");
+
+          const sdk = window.GrafanaFaroWebSdk;
+          if (!sdk?.initializeFaro) {
+            return;
+          }
+
+          const instrumentations = sdk.getWebInstrumentations({
+            captureConsole: true
+          });
+
+          if (window.GrafanaFaroWebTracing?.TracingInstrumentation) {
+            instrumentations.push(
+              new window.GrafanaFaroWebTracing.TracingInstrumentation({
+                propagateTraceHeaderCorsUrls: [/^https:\/\/([a-z0-9-]+\.)?shivpatel\.xyz/i]
+              })
+            );
+          }
+
+          sdk.initializeFaro({
+            app: {
+              name: config.appName,
+              version: config.appVersion,
+              environment: config.environment
+            },
+            instrumentations,
+            url: config.collectorUrl
+          });
+        } catch (error) {
+          console.warn("Frontend observability failed to initialize", error);
+        }
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initFrontendObservability, { once: true });
+      } else {
+        initFrontendObservability();
+      }
+    })();
   bookmarks.yaml: |
     - Developer:
         - k8s Repo:
@@ -83,14 +161,6 @@ data:
             #   url: https://traefik.shivpatel.xyz/
 
     - Monitoring:
-        - Alloy:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/alloy.png
-            href: https://alloy.shivpatel.xyz
-            description: Telemetry collector
-        - Datadog:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/datadog.png
-            href: https://app.datadoghq.com/dashboard/lists?p=1
-            description: Cloud monitoring
         - Grafana:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
             href: https://grafana.shivpatel.xyz
@@ -106,6 +176,10 @@ data:
             icon: https://kyverno.github.io/policy-reporter-docs/logo.png
             href: https://policy-reporter.shivpatel.xyz
             description: Policy compliance
+        - Loki:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/loki.png
+            href: https://grafana.shivpatel.xyz/explore
+            description: Logs drilldown
         - Prometheus:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png
             href: https://prometheus.shivpatel.xyz
@@ -113,6 +187,10 @@ data:
             # widget:
             #   type: prometheus
             #   url: https://prometheus.shivpatel.xyz
+        - Tempo:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
+            href: https://grafana.shivpatel.xyz/explore
+            description: Trace drilldown
         - Pyroscope:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
             href: https://pyroscope.shivpatel.xyz

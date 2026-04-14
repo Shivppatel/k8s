@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homelab-observability-dashboard
+  namespace: observability
+  labels:
+    grafana_dashboard: "1"
+data:
+  homelab-observability.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": false,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": null,
+      "links": [],
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "gridPos": {
+            "h": 11,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 1,
+          "options": {
+            "code": {
+              "language": "markdown",
+              "showLineNumbers": false,
+              "showMiniMap": false
+            },
+            "content": "# Homelab Observability\n\nUse Grafana for signal correlation and the specialist UIs only when you need them.\n\n- [Kubernetes dashboards](https://grafana.shivpatel.xyz/dashboards)\n- [Explore logs in Loki](https://grafana.shivpatel.xyz/explore)\n- [Explore traces in Tempo](https://grafana.shivpatel.xyz/explore)\n- [Profiles in Pyroscope](https://pyroscope.shivpatel.xyz)\n- [Prometheus targets and alerts](https://prometheus.shivpatel.xyz)\n\nDatasource UIDs:\n\n- `prometheus`\n- `alertmanager`\n- `loki`\n- `tempo`\n- `pyroscope`",
+            "mode": "markdown"
+          },
+          "pluginVersion": "12.0.0",
+          "title": "Drilldowns",
+          "type": "text"
+        }
+      ],
+      "refresh": "30s",
+      "schemaVersion": 41,
+      "tags": [
+        "homelab",
+        "observability"
+      ],
+      "templating": {
+        "list": []
+      },
+      "time": {
+        "from": "now-6h",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "browser",
+      "title": "Homelab Observability",
+      "uid": "homelab-observability",
+      "version": 1
+    }

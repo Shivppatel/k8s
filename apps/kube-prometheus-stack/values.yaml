@@ -4,7 +4,15 @@ kube-prometheus-stack:
     enabled: false
   kubeProxy:
     enabled: false
+
   grafana:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
     grafana.ini:
       server:
         root_url: https://grafana.shivpatel.xyz
@@ -34,6 +42,164 @@ kube-prometheus-stack:
       size: 20Gi
       finalizers:
         - kubernetes.io/pvc-protection
+    sidecar:
+      datasources:
+        name: Prometheus
+        uid: prometheus
+        exemplarTraceIdDestinations:
+          tempo:
+            datasourceUid: tempo
+            traceIdLabelName: trace_id
+            urlDisplayLabel: View trace
+        alertmanager:
+          enabled: true
+          name: Alertmanager
+          uid: alertmanager
+          handleGrafanaManagedAlerts: false
+          implementation: prometheus
+    additionalDataSources:
+      - name: Loki
+        uid: loki
+        type: loki
+        access: proxy
+        url: http://loki-gateway.observability.svc.cluster.local
+        editable: false
+        jsonData:
+          derivedFields:
+            - datasourceUid: tempo
+              matcherRegex: "(?:trace[_-]?id|traceID|traceId)[\"=: ]+([0-9a-fA-F]{16,32})"
+              name: TraceID
+              url: "$${__value.raw}"
+      - name: Tempo
+        uid: tempo
+        type: tempo
+        access: proxy
+        url: http://tempo-distributed-query-frontend.tempo-distributed.svc.cluster.local:3200
+        editable: false
+        jsonData:
+          httpMethod: GET
+          serviceMap:
+            datasourceUid: prometheus
+          tracesToLogsV2:
+            datasourceUid: loki
+            spanStartTimeShift: "-15m"
+            spanEndTimeShift: "15m"
+            tags:
+              - service.name
+              - k8s.namespace.name
+              - k8s.pod.name
+              - deployment.environment
+            filterByTraceID: false
+            filterBySpanID: false
+            customQuery: true
+            query: '{cluster="homelab"} |= "$${__trace.traceId}"'
+          tracesToMetrics:
+            datasourceUid: prometheus
+            spanStartTimeShift: "-15m"
+            spanEndTimeShift: "15m"
+            tags:
+              - key: service.name
+                value: service
+              - key: deployment.environment
+                value: environment
+            queries:
+              - name: Span rate
+                query: sum(rate(traces_spanmetrics_calls_total{$$__tags}[5m]))
+          tracesToProfiles:
+            datasourceUid: pyroscope
+            tags:
+              - service.name
+            profileTypeId: process_cpu:cpu:nanoseconds:cpu:nanoseconds
+      - name: Pyroscope
+        uid: pyroscope
+        type: grafana-pyroscope-datasource
+        access: proxy
+        url: http://pyroscope.observability.svc.cluster.local:4040
+        editable: false
+        jsonData:
+          minStep: 15s
+
+  alertmanager:
+    config:
+      global:
+        resolve_timeout: 5m
+      inhibit_rules:
+        - source_matchers:
+            - 'severity = critical'
+          target_matchers:
+            - 'severity =~ warning|info'
+          equal:
+            - namespace
+            - alertname
+        - source_matchers:
+            - 'severity = warning'
+          target_matchers:
+            - 'severity = info'
+          equal:
+            - namespace
+            - alertname
+        - source_matchers:
+            - 'alertname = InfoInhibitor'
+          target_matchers:
+            - 'severity = info'
+          equal:
+            - namespace
+        - target_matchers:
+            - 'alertname = InfoInhibitor'
+      route:
+        group_by:
+          - alertname
+          - namespace
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 12h
+        receiver: slack-default
+        routes:
+          - receiver: "null"
+            matchers:
+              - alertname = "Watchdog"
+      receivers:
+        - name: "null"
+        - name: slack-default
+          slack_configs:
+            - api_url_file: /etc/alertmanager/secrets/alertmanager-slack-webhook/SLACK_WEBHOOK_URL
+              send_resolved: true
+              title: >-
+                [{{ .Status | toUpper }}] {{ .CommonLabels.alertname }}
+              text: >-
+                {{ range .Alerts }}
+                *Namespace:* {{ .Labels.namespace | default "n/a" }}
+                *Severity:* {{ .Labels.severity | default "unknown" }}
+                *Summary:* {{ .Annotations.summary | default .Annotations.description | default .Labels.alertname }}
+                *Description:* {{ .Annotations.description | default "n/a" }}
+
+                {{ end }}
+      templates:
+        - /etc/alertmanager/config/*.tmpl
+    alertmanagerSpec:
+      retention: 120h
+      secrets:
+        - alertmanager-slack-webhook
+      persistentVolumeClaimRetentionPolicy:
+        whenDeleted: Retain
+        whenScaled: Retain
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: longhorn
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 5Gi
+
   crds:
     upgradeJob:
       enabled: true
@@ -41,6 +207,7 @@ kube-prometheus-stack:
       image:
         kubectl:
           tag: v1.34.1
+
   prometheus:
     prometheusSpec:
       podMetadata:
@@ -51,7 +218,32 @@ kube-prometheus-stack:
           profiles.grafana.com/memory.port_name: "http-web"
           profiles.grafana.com/goroutine.scrape: "true"
           profiles.grafana.com/goroutine.port_name: "http-web"
+      enableFeatures:
+        - exemplar-storage
       enableRemoteWriteReceiver: true
+      externalLabels:
+        cluster: homelab
+        environment: homelab
+      persistentVolumeClaimRetentionPolicy:
+        whenDeleted: Retain
+        whenScaled: Retain
+      resources:
+        requests:
+          cpu: "1"
+          memory: 4Gi
+        limits:
+          cpu: "2"
+          memory: 8Gi
+      retention: 15d
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: longhorn
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 50Gi
       # Allow Prometheus to discover ServiceMonitors from all namespaces
       serviceMonitorSelectorNilUsesHelmValues: false
       podMonitorSelectorNilUsesHelmValues: false

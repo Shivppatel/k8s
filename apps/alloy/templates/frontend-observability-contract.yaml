@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-observability-contract
+  namespace: observability
+data:
+  contract.yaml: |
+    collectorUrl: https://rum.shivpatel.xyz/collect
+    environment: homelab
+    requiredFields:
+      - collectorUrl
+      - appName
+      - appVersion
+      - environment
+    optionalFields:
+      - user
+      - session
+      - release
+    instrumentedApps:
+      - homepage
+    unsupportedApps:
+      - argocd
+      - grafana
+      - longhorn
+      - prometheus
+      - pyroscope
+      - traefik-dashboard
+      - uptime-kuma

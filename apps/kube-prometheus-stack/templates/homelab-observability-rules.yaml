@@ -1,0 +1,116 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: kube-prometheus-stack-homelab-observability
+  namespace: observability
+  labels:
+    app: kube-prometheus-stack
+    app.kubernetes.io/instance: kube-prometheus-stack
+    app.kubernetes.io/part-of: kube-prometheus-stack
+    release: "kube-prometheus-stack"
+spec:
+  groups:
+    - name: homelab.argocd
+      rules:
+        - alert: ArgoAppOutOfSync
+          expr: max by (name, project, dest_namespace, sync_status) (argocd_app_info{sync_status!="Synced"}) > 0
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: Argo CD application is out of sync
+            description: Argo CD application {{ "{{" }} $labels.name {{ "}}" }} in project {{ "{{" }} $labels.project {{ "}}" }} is {{ "{{" }} $labels.sync_status {{ "}}" }} for more than 10 minutes.
+        - alert: ArgoAppDegraded
+          expr: max by (name, project, dest_namespace, health_status) (argocd_app_info{health_status!="Healthy"}) > 0
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: Argo CD application is degraded
+            description: Argo CD application {{ "{{" }} $labels.name {{ "}}" }} in project {{ "{{" }} $labels.project {{ "}}" }} is reporting {{ "{{" }} $labels.health_status {{ "}}" }}.
+    - name: homelab.observability
+      rules:
+        - alert: AlloyDown
+          expr: min by (job) (up{job="alloy"}) < 1
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: Alloy is down
+            description: The Alloy collector has been unreachable for more than 10 minutes.
+        - alert: PyroscopeDown
+          expr: min by (job) (up{job="pyroscope"}) < 1
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: Pyroscope is down
+            description: The Pyroscope API has been unreachable for more than 10 minutes.
+        - alert: TempoComponentDown
+          expr: min by (job) (up{job=~"tempo-distributed/(compactor|distributor|ingester|metrics-generator|querier|query-frontend)"}) < 1
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: Tempo component is down
+            description: Tempo job {{ "{{" }} $labels.job {{ "}}" }} has been unreachable for more than 10 minutes.
+        - alert: LokiIngestErrors
+          expr: sum(increase(loki_write_dropped_entries_total[5m])) > 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: Loki ingestion is dropping log lines
+            description: Alloy has dropped log entries while sending data to Loki during the last 5 minutes.
+        - alert: TempoIngestErrors
+          expr: sum(increase(tempo_distributor_ingester_append_failures_total[5m])) > 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: Tempo is failing to append traces
+            description: Tempo distributor append failures have been observed during the last 5 minutes.
+    - name: homelab.storage
+      rules:
+        - alert: PersistentVolumeRunningOutOfSpace
+          expr: 100 * (1 - (kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes)) > 85
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: PersistentVolumeClaim is running out of space
+            description: PVC {{ "{{" }} $labels.persistentvolumeclaim {{ "}}" }} in namespace {{ "{{" }} $labels.namespace {{ "}}" }} is above 85% utilization.
+        - alert: NodeDiskPressure
+          expr: max by (node) (kube_node_status_condition{condition="DiskPressure",status="true"}) > 0
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: Kubernetes node is under disk pressure
+            description: Node {{ "{{" }} $labels.node {{ "}}" }} has reported DiskPressure for more than 10 minutes.
+        - alert: LonghornVolumeDegraded
+          expr: max by (volume, pvc, pvc_namespace, node, state) (longhorn_volume_robustness{state!="healthy"}) > 0
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: Longhorn volume is degraded
+            description: Longhorn volume {{ "{{" }} $labels.volume {{ "}}" }} for PVC {{ "{{" }} $labels.pvc_namespace {{ "}}" }}/{{ "{{" }} $labels.pvc {{ "}}" }} is {{ "{{" }} $labels.state {{ "}}" }} on node {{ "{{" }} $labels.node {{ "}}" }}.
+    - name: homelab.workloads
+      rules:
+        - alert: CrashLoopBackOffCriticalNamespace
+          expr: sum by (namespace, pod, container) (max_over_time(kube_pod_container_status_waiting_reason{reason="CrashLoopBackOff",namespace=~"argocd|observability|longhorn-system|traefik|vault"}[10m])) > 0
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: Pod is CrashLoopBackOff in a critical namespace
+            description: Container {{ "{{" }} $labels.container {{ "}}" }} in pod {{ "{{" }} $labels.namespace {{ "}}" }}/{{ "{{" }} $labels.pod {{ "}}" }} has been crash-looping for more than 10 minutes.
+        - alert: PendingPodCriticalNamespace
+          expr: sum by (namespace, pod) (max_over_time(kube_pod_status_phase{phase="Pending",namespace=~"argocd|observability|longhorn-system|traefik|vault"}[15m])) > 0
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: Pod is pending in a critical namespace
+            description: Pod {{ "{{" }} $labels.namespace {{ "}}" }}/{{ "{{" }} $labels.pod {{ "}}" }} has remained pending for more than 15 minutes.

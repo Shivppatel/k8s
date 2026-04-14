@@ -26,7 +26,7 @@ jobs:
         id: changed-apps
         run: |
           # Get list of changed files
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD 2>/dev/null || git diff --name-only HEAD~1)
+          CHANGED_FILES=$(git diff --diff-filter=d --name-only origin/${{ github.base_ref }}...HEAD 2>/dev/null || git diff --diff-filter=d --name-only HEAD~1)
 
           # Find unique app directories with changes
           APP_DIRS=""
@@ -46,28 +46,37 @@ jobs:
         if: steps.changed-apps.outputs.app_dirs != ''
         run: |
           FAILED=0
+          HELM_TEMPLATE_ARGS=(
+            --api-versions monitoring.coreos.com/v1
+            --api-versions external-secrets.io/v1
+            --api-versions traefik.io/v1alpha1
+            --api-versions argoproj.io/v1alpha1
+            --api-versions kyverno.io/v1
+            --api-versions kyverno.io/v2
+          )
+
           for dir in ${{ steps.changed-apps.outputs.app_dirs }}; do
             echo "=========================================="
             echo "Linting $dir"
             echo "=========================================="
-            
+
             # Build dependencies first
             helm dependency build "$dir" 2>/dev/null || true
-            
+
             # Run lint
             if ! helm lint "$dir"; then
               FAILED=1
             fi
-            
+
             # Template validation (catch render errors)
             echo "Validating template rendering for $dir"
-            if ! helm template "$dir" > /dev/null; then
+            if ! helm template "$dir" "${HELM_TEMPLATE_ARGS[@]}" > /dev/null; then
               echo "❌ Template rendering failed for $dir"
               FAILED=1
             else
               echo "✅ Template renders successfully"
             fi
-            
+
             echo ""
           done
 
