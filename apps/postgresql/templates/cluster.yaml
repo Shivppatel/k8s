@@ -97,6 +97,12 @@ spec:
           - pg_monitor
         passwordSecret:
           name: datadog-db-secret
+      - name: lnd
+        ensure: present
+        login: true
+        superuser: false
+        passwordSecret:
+          name: lnd-db-secret
 
   storage:
     size: 50Gi
