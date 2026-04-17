@@ -40,6 +40,7 @@ spec:
         - CREATE USER authentik WITH PASSWORD 'temp'
         - CREATE USER gitlab WITH PASSWORD 'temp'
         - CREATE USER datadog WITH PASSWORD 'temp'
+        - CREATE USER lnd WITH PASSWORD 'temp'
         # Create databases with correct ownership
         - CREATE DATABASE terraform OWNER terraform
         - CREATE DATABASE immich OWNER immich
@@ -48,6 +49,7 @@ spec:
         - CREATE DATABASE authentik OWNER authentik
         - CREATE DATABASE gitlab OWNER gitlab
         - CREATE DATABASE datadog OWNER datadog
+        - CREATE DATABASE lnd OWNER lnd
 
   managed:
     roles:
