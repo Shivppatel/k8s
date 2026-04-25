@@ -47,10 +47,9 @@ kube-prometheus-stack:
         name: Prometheus
         uid: prometheus
         exemplarTraceIdDestinations:
-          tempo:
-            datasourceUid: tempo
-            traceIdLabelName: trace_id
-            urlDisplayLabel: View trace
+          datasourceUid: tempo
+          traceIdLabelName: trace_id
+          urlDisplayLabel: View trace
         alertmanager:
           enabled: true
           name: Alertmanager
