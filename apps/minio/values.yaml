@@ -1,10 +1,7 @@
 minio:
-  mode: distributed
+  mode: standalone
   statefulset:
-    replicaCount: 3
-    drivesPerNode: 2
-    updateStrategy:
-      type: OnDelete
+    replicaCount: 1
   auth:
     existingSecret: "minio-root-credentials"
     rootUserSecretKey: "root-user"
