@@ -14,6 +14,15 @@ minio:
     existingClaim: minio-nfs
     accessModes:
       - ReadWriteOnce
+  # The NAS NFS export maps MinIO data to 977:988; matching it keeps S3
+  # listings consistent with objects written on disk.
+  podSecurityContext:
+    fsGroup: 988
+    supplementalGroups:
+      - 988
+  containerSecurityContext:
+    runAsUser: 977
+    runAsGroup: 988
   console:
     image:
       registry: docker.io
