@@ -65,11 +65,6 @@ kube-prometheus-stack:
         editable: false
         jsonData:
           httpHeaderName1: X-Scope-OrgID
-          derivedFields:
-            - datasourceUid: tempo
-              matcherRegex: "(?:trace[_-]?id|traceID|traceId)[\"=: ]+([0-9a-fA-F]{16,32})"
-              name: TraceID
-              url: "$${__value.raw}"
         secureJsonData:
           httpHeaderValue1: "1"
       - name: Tempo
