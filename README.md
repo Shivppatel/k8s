@@ -25,8 +25,8 @@ The goal was never "get something running." It was to build infrastructure the s
 
 | Node | Device | Specs |
 |------|--------|-------|
-| node0 / node1 / node2 | Minisforum MS-A2 (×3) | AMD Ryzen 9 9955HX · 64GB DDR5-5600 · 1TB NVMe · Dual 10G SFP+ |
-| NAS | UniFi UNAS Pro 8 | 48TB usable (4× WD Gold 24TB, RAID 6) · 2TB NVMe cache · Dual 10G SFP+ |
+| node0 / node1 / node2 | Minisforum MS-A2 (×3) | AMD Ryzen 9 9955HX · 64GB DDR5-5600 · 1TB NVMe · 10G SFP+ |
+| NAS | UniFi UNAS Pro 8 | 56TB usable (4× Ironwolf Pro 28TB, RAID 6) · 2TB NVMe cache · 10G SFP+ |
 | Core Switch | UniFi USW Aggregation | 8× 10G SFP+ — all nodes and NAS at line rate |
 | Router / Firewall | UniFi Cloud Gateway Fiber | IDS/IPS · Zone-based firewall · Encrypted DNS · Region blocking |
 
@@ -143,7 +143,7 @@ Running Pyroscope completes the four pillars of observability: metrics, logs, tr
 | Tool | Purpose |
 |------|---------|
 | **Longhorn** | Distributed block storage. PVCs are replicated across all three nodes — a node loss doesn't lose volume data. Used for all databases and stateful apps requiring high IOPS. |
-| **UNAS NFS** | 48TB RAID 6. NFS exports for Jellyfin media, Immich photos, and large shared volumes. No replication needed — RAID 6 provides local redundancy. |
+| **UNAS NFS** | 56TB RAID 6. NFS exports for Jellyfin media, Immich photos, and large shared volumes. No replication needed — RAID 6 provides local redundancy. |
 
 ---
 
