@@ -12,8 +12,11 @@ metadata:
 spec:
   instances: 3
   enablePDB: true
-  minSyncReplicas: 1
-  maxSyncReplicas: 2
+  # Keep writes available when replicas are restarting, rebuilding, or lagging.
+  # Synchronous replication caused cluster-wide write stalls when no standby was
+  # actively streaming, even though CNPG still reported the replicas as healthy.
+  minSyncReplicas: 0
+  maxSyncReplicas: 0
 
   # Note: For pgvector support, you may need a custom image
   # Options: ghcr.io/tensorchord/cloudnative-pgvecto.rs:17-v0.4.0
