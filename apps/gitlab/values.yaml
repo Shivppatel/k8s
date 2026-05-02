@@ -58,66 +58,8 @@ gitlab:
 
     gatewayApi:
       enabled: false
-      envoyProxySpec:
-        provider:
-          type: Kubernetes
-          kubernetes:
-            envoyService:
-              type: LoadBalancer
-      class:
-        name: "gitlab-gw"
-        controllerName: "gateway.envoyproxy.io/gitlab-gatewayclass-controller"
       installEnvoy: false
       configureCertmanager: false
-      protocol: "HTTPS"
-      addresses: []
-      listeners:
-        certmanager-http:
-          protocol: HTTP
-        gitlab-web:
-          protocol: ""
-          tls:
-            mode: Terminate
-            certificateRefs:
-              - name: gitlab-tls
-        gitlab-ssh:
-          protocol: "TCP"
-        registry-web:
-          protocol: ""
-          tls:
-            mode: Terminate
-            certificateRefs:
-              - name: registry-tls
-        pages-web:
-          protocol: ""
-          tls:
-            mode: Terminate
-            certificateRefs:
-              - name: pages-tls
-        kas-web:
-          protocol: ""
-          tls:
-            mode: Terminate
-            certificateRefs:
-              - name: kas-tls
-        kas-workspaces-web:
-          protocol: ""
-          tls:
-            mode: Terminate
-            certificateRefs:
-              - name: kas-workspaces-tls
-        kas-registry-web:
-          protocol: ""
-          tls:
-            mode: Terminate
-            certificateRefs:
-              - name: kas-workspaces-tls
-        minio-web:
-          protocol: ""
-          tls:
-            mode: Terminate
-            certificateRefs:
-              - name: minio-tls
 
     ## https://docs.gitlab.com/charts/charts/globals#configure-ingress-settings
     ingress:
@@ -136,7 +78,7 @@ gitlab:
 
     # Override the API version to use for HorizontalPodAutoscaler
     hpa:
-      apiVersion: ""
+      apiVersion: autoscaling/v2
 
     # Enable KEDA globally (https://keda.sh/)
     keda:
@@ -144,7 +86,7 @@ gitlab:
 
     # Override the API version to use for PodDisruptionBudget
     pdb:
-      apiVersion: ""
+      apiVersion: policy/v1
 
     # Override the API version to use for CronJob
     batch:
@@ -1002,7 +944,7 @@ gitlab:
       nameSuffixOverride:
 
     traefik:
-      apiVersion: "" # newer apiVersion: "traefik.io/v1alpha1"
+      apiVersion: "traefik.io/v1alpha1"
 
   ## End of global
 
@@ -1538,6 +1480,62 @@ gitlab:
             database: ""
             username: ""
             sslMode: ""
+
+  gatewayApiResources:
+    class:
+      name: "gitlab-gw"
+      controllerName: "gateway.envoyproxy.io/gitlab-gatewayclass-controller"
+    gateway:
+      addresses: []
+      protocol: "HTTPS"
+      listeners:
+        http-default:
+          protocol: HTTP
+        gitlab-web:
+          protocol: ""
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - name: gitlab-tls
+        gitlab-ssh:
+          protocol: "TCP"
+        registry-web:
+          protocol: ""
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - name: registry-tls
+        pages-web:
+          protocol: ""
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - name: pages-tls
+        kas-web:
+          protocol: ""
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - name: kas-tls
+        kas-workspaces-web:
+          protocol: ""
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - name: kas-workspaces-tls
+        minio-web:
+          protocol: ""
+          tls:
+            mode: Terminate
+            certificateRefs:
+              - name: minio-tls
+    envoy:
+      proxySpec:
+        provider:
+          type: Kubernetes
+          kubernetes:
+            envoyService:
+              type: LoadBalancer
 
   envoy-gateway:
     config:
