@@ -17,12 +17,12 @@ spec:
           env:
             - name: PGHOST
               value: postgresql-rw.postgresql.svc.cluster.local
-            # CNPG owns this secret locally and ESO mirrors it to Vault.
+            - name: PGDATABASE
+              value: postgres
             - name: PGUSER
-              valueFrom:
-                secretKeyRef:
-                  name: postgresql-superuser
-                  key: username
+              value: postgresql_setup
+            # CNPG owns this secret locally, reconciles it onto postgresql_setup,
+            # and ESO mirrors it to Vault.
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
@@ -34,9 +34,9 @@ spec:
             - |
               set -euo pipefail
 
-              # Wait for PostgreSQL to be ready
-              until pg_isready -h $PGHOST -p 5432 -U $PGUSER; do
-                echo "Waiting for PostgreSQL..."
+              # Wait for PostgreSQL and the CNPG-managed setup role to be ready
+              until psql -tAc "SELECT 1" >/dev/null 2>&1; do
+                echo "Waiting for PostgreSQL setup role..."
                 sleep 2
               done
 
