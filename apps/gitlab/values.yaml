@@ -1384,6 +1384,9 @@ gitlab:
   ## Settings for individual sub-charts under GitLab
   ## Note: Many of these settings are configurable via globals
   gitlab:
+    gitlab-exporter:
+      image:
+        tag: "16.7.0"
     ## https://docs.gitlab.com/charts/charts/gitlab/toolbox
     toolbox:
       replicas: 1
