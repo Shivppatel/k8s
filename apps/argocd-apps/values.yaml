@@ -751,6 +751,8 @@ argocd-apps:
         path: apps/gitlab
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
+        helm:
+          skipCrds: true
       syncPolicy:
         automated:
           prune: true
