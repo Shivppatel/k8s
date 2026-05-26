@@ -10,3 +10,7 @@ metallb:
     namespace: "observability"
     serviceMonitor:
       enabled: true
+  frr-k8s:
+    prometheus:
+      serviceMonitor:
+        enabled: true
