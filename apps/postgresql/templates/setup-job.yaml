@@ -20,15 +20,12 @@ spec:
             - name: PGDATABASE
               value: postgres
             - name: PGUSER
-              valueFrom:
-                secretKeyRef:
-                  name: postgresql-superuser
-                  key: username
-            # CNPG owns this secret locally and ESO mirrors it to Vault.
+              value: postgresql_setup
+            # Reconciled from Vault into postgresql-setup-secret by ESO and CNPG
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: postgresql-superuser
+                  name: postgresql-setup-secret
                   key: password
           command:
             - /bin/bash
