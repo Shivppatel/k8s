@@ -53,7 +53,7 @@ teslamate:
           name: teslamateapi
           image:
             repository: tobiasehlert/teslamateapi
-            tag: 1.24.1
+            tag: 1.24.2
           env:
             ENCRYPTION_KEY: "{{ .Values.controllers.main.containers.main.env.ENCRYPTION_KEY }}"
             DATABASE_USER: "teslamate"
@@ -74,7 +74,7 @@ teslamate:
           enabled: false
           image:
             repository: mattjeanes/teslamateagile
-            tag: v1.21.0
+            tag: v1.22.0
           env:
             DATABASE_USER: "teslamate"
             DATABASE_PASS:
@@ -94,7 +94,7 @@ teslamate:
           enabled: false
           image:
             repository: fetzu/teslamate-abrp
-            tag: 3.4.0
+            tag: 3.4.3
           env:
             MQTT_SERVER: "{{ .Values.controllers.main.containers.main.env.MQTT_HOST }}"
             MQTT_PORT: "{{ .Values.controllers.main.containers.main.env.MQTT_PORT }}"
