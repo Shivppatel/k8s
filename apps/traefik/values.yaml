@@ -3,17 +3,17 @@ traefik:
     dashboard:
       enabled: true
 
-  logs:
-    general:
-      level: "INFO" # DEBUG if needed
-      format: json
-    access:
-      enabled: true
-      format: json
-      addInternals: false
-      fields:
-        headers:
-          defaultmode: drop
+  log:
+    level: "INFO" # DEBUG if needed
+    format: json
+
+  accessLog:
+    enabled: true
+    format: json
+    addInternals: false
+    fields:
+      headers:
+        defaultMode: drop
 
   service:
     type: LoadBalancer
