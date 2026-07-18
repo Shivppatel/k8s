@@ -9,7 +9,9 @@ localstack:
 
   image:
     repository: localstack/localstack
-    tag: "latest"
+    # Pin the image: `latest` moved to a release that requires a license for
+    # Pro activation, which caused the pod to crash-loop without credentials.
+    tag: "2026.6.3"
     pullPolicy: IfNotPresent
 
   imagePullSecrets: []
@@ -95,7 +97,11 @@ localstack:
   ##     value: "us-east-1"
   ##   - name: SERVICES
   ##     value: "serverless,sqs,es"
-  extraEnvVars: []
+  # Start the community feature set when no LocalStack auth token is supplied.
+  # Keep persistence enabled below; the existing PVC is intentionally retained.
+  extraEnvVars:
+    - name: ACTIVATE_PRO
+      value: "0"
 
   ## envFrom Allows you to set additional environment variables from a ConfigMap or Secret
   ## - configMapRef:
@@ -281,4 +287,3 @@ localstack:
   ## @param priorityClassName Allows you to set the priorityClassName for the pod
   ## The default is not to set any priorityClassName
   # priorityClassName: ""
-
