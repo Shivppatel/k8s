@@ -753,6 +753,13 @@ argocd-apps:
         targetRevision: main
         helm:
           skipCrds: true
+          values: |
+            gitlab:
+              gitlab:
+                sidekiq:
+                  health_checks:
+                    # Kubelet probes the Pod IP, so the health server must not be loopback-only.
+                    listenAddr: "0.0.0.0"
       syncPolicy:
         automated:
           prune: true
