@@ -12,6 +12,7 @@ metadata:
 spec:
   instances: 3
   enablePDB: true
+  failoverDelay: 60
   # Keep writes available when replicas are restarting, rebuilding, or lagging.
   # Synchronous replication caused cluster-wide write stalls when no standby was
   # actively streaming, even though CNPG still reported the replicas as healthy.
