@@ -156,7 +156,8 @@ apps/
 ├── vault/                   # Vault HA Raft cluster
 ├── external-secrets/        # ESO operator + ClusterSecretStore
 ├── actions-runner-controller/# ARC controller for GitHub Actions runners
-├── github-actions-runners/  # Ephemeral, organization-scoped ARC runner scale set
+├── github-actions-runners/  # Hardened organization-scoped ARC runner scale set
+├── github-actions-docker-runners/ # Isolated on-demand ARC runners with Docker
 ├── traefik/                 # Ingress controller + middlewares
 ├── cert-manager/            # Certificate issuers + TLS automation
 ├── kube-prometheus-stack/   # Prometheus + Grafana + Alertmanager
