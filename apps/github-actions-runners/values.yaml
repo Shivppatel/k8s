@@ -53,6 +53,9 @@ gha-runner-scale-set:
               memory: 4Gi
           securityContext:
             allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
             capabilities:
               drop:
                 - ALL
