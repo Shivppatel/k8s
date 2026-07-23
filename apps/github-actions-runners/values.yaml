@@ -1,0 +1,66 @@
+gha-runner-scale-set:
+  githubConfigUrl: "https://github.com/ShivWS"
+  githubConfigSecret: github-actions-runner-auth
+
+  runnerScaleSetName: shivws-runners
+  runnerGroup: Default
+  scaleSetLabels:
+    - homelab
+    - linux
+
+  # Keep one warm runner available and limit concurrent CI to a modest share
+  # of the three-node homelab cluster.
+  minRunners: 1
+  maxRunners: 5
+
+  controllerServiceAccount:
+    namespace: actions-runner-system
+    name: actions-runner-controller
+
+  listenerTemplate:
+    spec:
+      containers:
+        - name: listener
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+  # Deliberately omit containerMode. The repository workflows use JavaScript
+  # actions and shell steps, so Docker-in-Docker (and its privileged container)
+  # is not needed.
+  template:
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: runner
+          image: ghcr.io/actions/actions-runner:latest
+          command: ["/home/runner/run.sh"]
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+
+network:
+  kubernetesServiceAddress: "10.96.0.1/32"
+  controlPlaneApiEndpoints:
+    - "192.168.20.9/32"
+    - "192.168.20.10/32"
+    - "192.168.20.11/32"
+    - "192.168.20.12/32"
