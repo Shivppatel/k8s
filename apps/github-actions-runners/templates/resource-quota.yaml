@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: github-actions-runners
+  namespace: {{ .Release.Namespace }}
+spec:
+  hard:
+    # One listener, up to five runners, and one pod of rollout headroom.
+    pods: "7"
+    requests.cpu: "2600m"
+    requests.memory: 5248Mi
+    limits.cpu: "10500m"
+    limits.memory: 20992Mi

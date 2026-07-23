@@ -155,6 +155,8 @@ apps/
 ├── argocd-apps/             # Root Application + all grouped Application definitions
 ├── vault/                   # Vault HA Raft cluster
 ├── external-secrets/        # ESO operator + ClusterSecretStore
+├── actions-runner-controller/# ARC controller for GitHub Actions runners
+├── github-actions-runners/  # Ephemeral, organization-scoped ARC runner scale set
 ├── traefik/                 # Ingress controller + middlewares
 ├── cert-manager/            # Certificate issuers + TLS automation
 ├── kube-prometheus-stack/   # Prometheus + Grafana + Alertmanager

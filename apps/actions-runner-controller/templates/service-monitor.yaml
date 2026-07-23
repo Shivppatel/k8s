@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: actions-runner-controller
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: actions-runner-controller
+      app.kubernetes.io/name: gha-rs-controller
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics

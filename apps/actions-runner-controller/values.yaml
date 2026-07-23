@@ -1,0 +1,53 @@
+gha-runner-scale-set-controller:
+  fullnameOverride: actions-runner-controller
+
+  # A second replica enables leader election and lets the controller survive one
+  # node or pod disruption without interrupting future job provisioning.
+  replicaCount: 2
+
+  metrics:
+    controllerManagerAddr: ":8080"
+    listenerAddr: ":8080"
+    listenerEndpoint: "/metrics"
+
+  flags:
+    healthProbeBindAddress: ":8081"
+    logLevel: info
+    logFormat: json
+    updateStrategy: eventual
+
+  podSecurityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/instance: actions-runner-controller
+          app.kubernetes.io/name: gha-rs-controller
+
+network:
+  kubernetesServiceAddress: "10.96.0.1/32"
+  controlPlaneApiEndpoints:
+    - "192.168.20.9/32"
+    - "192.168.20.10/32"
+    - "192.168.20.11/32"
+    - "192.168.20.12/32"
