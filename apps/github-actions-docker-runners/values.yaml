@@ -1,0 +1,148 @@
+gha-runner-scale-set:
+  githubConfigUrl: "https://github.com/ShivWS"
+  githubConfigSecret: github-actions-runner-auth
+
+  runnerScaleSetName: shivws-docker-runners
+  runnerGroup: Default
+  scaleSetLabels:
+    - homelab
+    - linux
+    - docker
+
+  # Docker runners are privileged and heavier than the default runner pool, so
+  # create them only on demand and cap concurrency at two.
+  minRunners: 0
+  maxRunners: 2
+
+  controllerServiceAccount:
+    namespace: actions-runner-system
+    name: actions-runner-controller
+
+  listenerTemplate:
+    spec:
+      containers:
+        - name: listener
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+  # This is the chart's documented custom DinD template. Defining the complete
+  # pod lets every container have resource bounds while keeping privilege
+  # limited to the Docker daemon.
+  template:
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      securityContext:
+        supplementalGroups:
+          - 123
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: init-dind-externals
+          image: ghcr.io/actions/actions-runner:latest
+          command: ["cp", "-r", "/home/runner/externals/.", "/home/runner/tmpDir/"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: dind-externals
+              mountPath: /home/runner/tmpDir
+        - name: dind
+          image: docker:dind
+          args:
+            - dockerd
+            - --host=unix:///var/run/docker.sock
+            - --group=$(DOCKER_GROUP_GID)
+          env:
+            - name: DOCKER_GROUP_GID
+              value: "123"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          securityContext:
+            privileged: true
+            runAsNonRoot: false
+            runAsUser: 0
+          restartPolicy: Always
+          startupProbe:
+            exec:
+              command:
+                - docker
+                - info
+            initialDelaySeconds: 0
+            failureThreshold: 24
+            periodSeconds: 5
+          volumeMounts:
+            - name: work
+              mountPath: /home/runner/_work
+            - name: dind-sock
+              mountPath: /var/run
+            - name: dind-externals
+              mountPath: /home/runner/externals
+            - name: docker-data
+              mountPath: /var/lib/docker
+      containers:
+        - name: runner
+          image: ghcr.io/actions/actions-runner:latest
+          command: ["/home/runner/run.sh"]
+          env:
+            - name: DOCKER_HOST
+              value: unix:///var/run/docker.sock
+            - name: RUNNER_WAIT_FOR_DOCKER_IN_SECONDS
+              value: "120"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          securityContext:
+            allowPrivilegeEscalation: true
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          volumeMounts:
+            - name: work
+              mountPath: /home/runner/_work
+            - name: dind-sock
+              mountPath: /var/run
+      volumes:
+        - name: work
+          emptyDir: {}
+        - name: dind-sock
+          emptyDir: {}
+        - name: dind-externals
+          emptyDir: {}
+        - name: docker-data
+          emptyDir:
+            sizeLimit: 20Gi
+
+network:
+  kubernetesServiceAddress: "10.96.0.1/32"
+  controlPlaneApiEndpoints:
+    - "192.168.20.9/32"
+    - "192.168.20.10/32"
+    - "192.168.20.11/32"
+    - "192.168.20.12/32"

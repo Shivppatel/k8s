@@ -17,7 +17,7 @@ The `github-actions-runner-auth` `ExternalSecret` refreshes that value every hou
 
 Use `runs-on: shivws-runners` (or the `homelab` and `linux` scale-set labels) in trusted organization workflows. Configure the `Default` runner group to allow only the private repositories that should use the homelab. Pull requests from forks should remain on GitHub-hosted runners because they execute untrusted code.
 
-The runner namespace has a default-deny network policy. It permits DNS, the Kubernetes API endpoints listed in `values.yaml`, and outbound HTTPS while blocking the pod, service, node, and link-local address ranges used by the homelab. The listed API addresses match the current `10.96.0.1` service and `192.168.20.9`–`192.168.20.12` control-plane endpoints; update both ARC charts if those addresses change. Docker-in-Docker is intentionally disabled; add a separate, more isolated runner scale set if a future workflow needs container actions or image builds.
+The runner namespace has a default-deny network policy. It permits DNS, the Kubernetes API endpoints listed in `values.yaml`, and outbound HTTPS while blocking the pod, service, node, and link-local address ranges used by the homelab. The listed API addresses match the current `10.96.0.1` service and `192.168.20.9`–`192.168.20.12` control-plane endpoints; update both ARC charts if those addresses change. Docker-in-Docker is intentionally disabled here; use the separate `shivws-docker-runners` scale set for trusted jobs that need container actions or image builds.
 
 ## Validation and rollout
 

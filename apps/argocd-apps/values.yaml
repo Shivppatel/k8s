@@ -302,6 +302,34 @@ argocd-apps:
             - .status
             - .spec.refreshInterval
 
+    github-actions-docker-runners:
+      name: github-actions-docker-runners
+      namespace: argocd
+      additionalAnnotations:
+        argocd.argoproj.io/sync-wave: "1"
+      destination:
+        namespace: github-actions-docker-runners
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/github-actions-docker-runners
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+          - SkipDryRunOnMissingResource=true
+      ignoreDifferences:
+        - group: external-secrets.io
+          kind: ExternalSecret
+          jqPathExpressions:
+            - .status
+            - .spec.refreshInterval
+
     authentik:
       name: authentik
       namespace: argocd
