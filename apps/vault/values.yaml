@@ -1,5 +1,26 @@
 vault:
   server:
+    annotations:
+      ad.datadoghq.com/vault.checks: |
+        {
+          "vault": {
+            "init_config": {},
+            "instances": [
+              {
+                "api_url": "http://%%host%%:8200/v1",
+                "no_token": true,
+                "use_openmetrics": true
+              }
+            ]
+          }
+        }
+      ad.datadoghq.com/vault.logs: |
+        [
+          {
+            "source": "vault",
+            "service": "vault"
+          }
+        ]
     ha:
       enabled: true
       raft:
