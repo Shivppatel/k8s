@@ -68,6 +68,22 @@ spec:
             logs:
               - source: coredns
                 service: coredns
+          calico.yaml: |-
+            ad_identifiers:
+              - calico/node
+            init_config:
+            instances:
+              - openmetrics_endpoint: http://%%host%%:9091/metrics
+                service: calico-felix
+            logs:
+              - source: calico
+                service: calico-node
+          calico-controllers.yaml: |-
+            ad_identifiers:
+              - calico/kube-controllers
+            logs:
+              - source: calico
+                service: calico-kube-controllers
       containers:
         agent:
           env:
