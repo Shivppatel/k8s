@@ -10,6 +10,34 @@ metadata:
     argocd.argoproj.io/compare-options: IgnoreExtraneous
     argocd.argoproj.io/hook-delete-policy: HookFailed
 spec:
+  inheritedMetadata:
+    annotations:
+      ad.datadoghq.com/postgres.checks: |
+        {
+          "postgres": {
+            "init_config": {},
+            "instances": [
+              {
+                "host": "%%host%%",
+                "port": "5432",
+                "username": "datadog",
+                "password": "ENC[k8s_secret@postgresql/datadog-db-secret/password]",
+                "dbname": "postgres",
+                "dbm": false,
+                "database_autodiscovery": {
+                  "enabled": true
+                }
+              }
+            ]
+          }
+        }
+      ad.datadoghq.com/postgres.logs: |
+        [
+          {
+            "source": "postgresql",
+            "service": "postgresql"
+          }
+        ]
   instances: 3
   enablePDB: true
   failoverDelay: 60
