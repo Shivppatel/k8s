@@ -13,6 +13,56 @@ argo-cd:
       policy.csv: "g, readonly, role:readonly"
   redis-ha:
     enabled: true
+    redis:
+      podAnnotations:
+        ad.datadoghq.com/redis.checks: |
+          {
+            "redisdb": {
+              "init_config": {},
+              "instances": [
+                {
+                  "host": "%%host%%",
+                  "port": "6379",
+                  "password": "ENC[k8s_secret@argocd/argocd-redis/auth]"
+                }
+              ]
+            }
+          }
+        ad.datadoghq.com/redis.logs: |
+          [
+            {
+              "source": "redis",
+              "service": "argocd-redis"
+            }
+          ]
+        ad.datadoghq.com/sentinel.checks: |
+          {
+            "redisdb": {
+              "init_config": {},
+              "instances": [
+                {
+                  "host": "%%host%%",
+                  "port": "26379",
+                  "password": "ENC[k8s_secret@argocd/argocd-redis/auth]"
+                }
+              ]
+            }
+          }
+        ad.datadoghq.com/sentinel.logs: |
+          [
+            {
+              "source": "redis",
+              "service": "argocd-redis-sentinel"
+            }
+          ]
+        ad.datadoghq.com/split-brain-fix.metrics_exclude: "true"
+        ad.datadoghq.com/split-brain-fix.logs: |
+          [
+            {
+              "source": "redis",
+              "service": "argocd-redis-split-brain"
+            }
+          ]
   controller:
     podAnnotations:
       profiles.grafana.com/cpu.scrape: "true"
@@ -32,6 +82,27 @@ argo-cd:
       serviceMonitor:
         enabled: false
   redis:
+    podAnnotations:
+      ad.datadoghq.com/redis.checks: |
+        {
+          "redisdb": {
+            "init_config": {},
+            "instances": [
+              {
+                "host": "%%host%%",
+                "port": "6379",
+                "password": "ENC[k8s_secret@argocd/argocd-redis/auth]"
+              }
+            ]
+          }
+        }
+      ad.datadoghq.com/redis.logs: |
+        [
+          {
+            "source": "redis",
+            "service": "argocd-redis"
+          }
+        ]
     metrics:
       enabled: true
       serviceMonitor:
