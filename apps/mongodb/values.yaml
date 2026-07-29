@@ -1,4 +1,6 @@
 mongodb:
+  auth:
+    existingSecret: mongodb-auth
   image:
     registry: registry-1.docker.io
     repository: bitnamilegacy/mongodb
