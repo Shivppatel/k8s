@@ -58,6 +58,9 @@ spec:
                 service: etcd
       containers:
         agent:
+          env:
+            - name: DD_IGNORE_AUTOCONF
+              value: "etcd"
           volumeMounts:
             - name: etcd-ca
               mountPath: /etc/etcd-certs/ca.crt
