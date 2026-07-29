@@ -1344,6 +1344,8 @@ gitlab:
   gitlab-runner:
     install: true
     gitlabUrl: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/
+    metrics:
+      enabled: true
     rbac:
       create: true
     runners:
@@ -1369,6 +1371,27 @@ gitlab:
     podAnnotations:
       gitlab.com/prometheus_scrape: "true"
       gitlab.com/prometheus_port: 9252
+      ad.datadoghq.com/gitlab-gitlab-runner.checks: |-
+        {
+          "gitlab_runner": {
+            "init_config": {},
+            "instances": [
+              {
+                "gitlab_url": "http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/",
+                "health_service_check": true,
+                "prometheus_endpoint": "http://%%host%%:9252/metrics",
+                "service": "gitlab-runner"
+              }
+            ]
+          }
+        }
+      ad.datadoghq.com/gitlab-gitlab-runner.logs: |-
+        [
+          {
+            "service": "gitlab-runner",
+            "source": "gitlab-runner"
+          }
+        ]
     podSecurityContext:
       seccompProfile:
         type: "RuntimeDefault"
