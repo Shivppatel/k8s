@@ -61,7 +61,26 @@ argo-rollouts:
     # -- Labels to be added to the controller deployment
     deploymentLabels: {}
     # -- Annotations to be added to application controller pods
-    podAnnotations: {}
+    podAnnotations:
+      ad.datadoghq.com/argo-rollouts.checks: |
+        {
+          "argo_rollouts": {
+            "init_config": {},
+            "instances": [
+              {
+                "openmetrics_endpoint": "http://%%host%%:8090/metrics",
+                "service": "argo-rollouts"
+              }
+            ]
+          }
+        }
+      ad.datadoghq.com/argo-rollouts.logs: |
+        [
+          {
+            "source": "argo_rollouts",
+            "service": "argo-rollouts"
+          }
+        ]
     # -- Labels to be added to the application controller pods
     podLabels: {}
     # -- [Node selector]
