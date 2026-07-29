@@ -13,6 +13,20 @@ rabbitmq:
     existingErlangSecret: rabbitmq
     # Force password update even with existing persisted data
     forcePassword: true
+  podAnnotations:
+    ad.datadoghq.com/rabbitmq.checks: |
+      {
+        "rabbitmq": {
+          "init_config": {},
+          "instances": [
+            {
+              "prometheus_plugin": {
+                "url": "http://%%host%%:9419"
+              }
+            }
+          ]
+        }
+      }
   metrics:
     enabled: true
     serviceMonitor:
