@@ -41,6 +41,46 @@ spec:
     nodeAgent:
       image:
         jmxEnabled: true
+      extraConfd:
+        configDataMap:
+          etcd.yaml: |-
+            ad_identifiers:
+              - etcd
+            init_config:
+            instances:
+              - prometheus_url: https://%%host%%:2379/metrics
+                tls_ca_cert: /etc/etcd-certs/ca.crt
+                tls_cert: /etc/etcd-certs/client.crt
+                tls_private_key: /etc/etcd-certs/client.key
+                service: etcd
+            logs:
+              - source: etcd
+                service: etcd
+      containers:
+        agent:
+          volumeMounts:
+            - name: etcd-ca
+              mountPath: /etc/etcd-certs/ca.crt
+              readOnly: true
+            - name: etcd-client-cert
+              mountPath: /etc/etcd-certs/client.crt
+              readOnly: true
+            - name: etcd-client-key
+              mountPath: /etc/etcd-certs/client.key
+              readOnly: true
+      volumes:
+        - name: etcd-ca
+          hostPath:
+            path: /etc/kubernetes/pki/etcd/ca.crt
+            type: File
+        - name: etcd-client-cert
+          hostPath:
+            path: /etc/kubernetes/pki/apiserver-etcd-client.crt
+            type: File
+        - name: etcd-client-key
+          hostPath:
+            path: /etc/kubernetes/pki/apiserver-etcd-client.key
+            type: File
   # override:
   #   clusterAgent:
   #     extraConfd:
