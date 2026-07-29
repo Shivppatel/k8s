@@ -9,10 +9,38 @@ redis:
   auth:
     existingSecret: redis-password-secret
   master:
+    podAnnotations:
+      ad.datadoghq.com/redis.checks: |
+        {
+          "redisdb": {
+            "init_config": {},
+            "instances": [
+              {
+                "host": "%%host%%",
+                "port": "6379",
+                "password": "ENC[k8s_secret@redis/redis-password-secret/redis-password]"
+              }
+            ]
+          }
+        }
     persistence:
       enabled: true
   replica:
     replicaCount: 3
+    podAnnotations:
+      ad.datadoghq.com/redis.checks: |
+        {
+          "redisdb": {
+            "init_config": {},
+            "instances": [
+              {
+                "host": "%%host%%",
+                "port": "6379",
+                "password": "ENC[k8s_secret@redis/redis-password-secret/redis-password]"
+              }
+            ]
+          }
+        }
     persistence:
       enabled: true
     updateStrategy:
