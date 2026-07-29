@@ -39,7 +39,26 @@ emqx:
   clusterDomain: cluster.local
 
   ## Custom annotations to be added to the pods
-  podAnnotations: {}
+  podAnnotations:
+    ad.datadoghq.com/emqx.checks: |
+      {
+        "emqx": {
+          "init_config": {},
+          "instances": [
+            {
+              "openmetrics_endpoint": "http://%%host%%:18083/api/v5/prometheus/stats",
+              "service": "emqx"
+            }
+          ]
+        }
+      }
+    ad.datadoghq.com/emqx.logs: |
+      [
+        {
+          "source": "emqx",
+          "service": "emqx"
+        }
+      ]
 
   ## Custom labels to be added to the pods
   podLabels: {}

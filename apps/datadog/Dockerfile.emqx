@@ -1,0 +1,6 @@
+FROM gcr.io/datadoghq/agent:7.73.0-jmx@sha256:1da9f3cf352b1e1578dc7ba3c1be55a6b7581320ed4f8d7f973632d88c7dcf6e
+
+LABEL org.opencontainers.image.source="https://github.com/Shivppatel/k8s"
+LABEL org.opencontainers.image.description="Datadog Agent with the EMQX community integration"
+
+RUN agent integration install -r -t datadog-emqx==1.1.0
