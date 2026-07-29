@@ -1291,6 +1291,14 @@ gitlab:
   ## https://docs.gitlab.com/charts/architecture/decisions#registry
   ## https://docs.gitlab.com/charts/charts/registry/
   registry:
+    annotations:
+      ad.datadoghq.com/registry.logs: |-
+        [
+          {
+            "service": "gitlab-registry",
+            "source": "gitlab"
+          }
+        ]
     storage:
       secret: gitlab-registry-storage
       key: config
@@ -1481,6 +1489,15 @@ gitlab:
               "source": "gitlab"
             }
           ]
+    kas:
+      annotations:
+        ad.datadoghq.com/kas.logs: |-
+          [
+            {
+              "service": "gitlab-kas",
+              "source": "gitlab"
+            }
+          ]
     sidekiq:
       annotations:
         ad.datadoghq.com/sidekiq.logs: |-
@@ -1521,6 +1538,14 @@ gitlab:
         tag: "16.7.0"
     ## https://docs.gitlab.com/charts/charts/gitlab/toolbox
     toolbox:
+      annotations:
+        ad.datadoghq.com/toolbox.logs: |-
+          [
+            {
+              "service": "gitlab-toolbox",
+              "source": "gitlab"
+            }
+          ]
       replicas: 1
       antiAffinityLabels:
         matchLabels:
