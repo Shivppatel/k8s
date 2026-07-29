@@ -24,8 +24,8 @@ spec:
     helmCheck:
       enabled: false
     logCollection:
-      enabled: true
-      containerCollectAll: true
+      enabled: false
+      containerCollectAll: false
     otelCollector:
       enabled: false
       ports:
