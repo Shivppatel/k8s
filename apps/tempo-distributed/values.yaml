@@ -116,6 +116,15 @@ tempo-distributed:
       storage:
         remote_write:
           - url: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090/api/v1/write
+  memcached:
+    podAnnotations:
+      ad.datadoghq.com/memcached.logs: |
+        [
+          {
+            "source": "memcached",
+            "service": "tempo-memcached"
+          }
+        ]
   overrides:
     defaults:
       metrics_generator:
