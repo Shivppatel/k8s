@@ -712,7 +712,22 @@ kafka:
     ##   - name: KAFKA_CFG_BACKGROUND_THREADS
     ##     value: "10"
     ##
-    extraEnvVars: []
+    extraEnvVars:
+      - name: POD_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
+      - name: JMX_PORT
+        value: "9999"
+      - name: KAFKA_JMX_OPTS
+        value: >-
+          -Dcom.sun.management.jmxremote=true
+          -Dcom.sun.management.jmxremote.authenticate=false
+          -Dcom.sun.management.jmxremote.ssl=false
+          -Dcom.sun.management.jmxremote.local.only=false
+          -Dcom.sun.management.jmxremote.port=9999
+          -Dcom.sun.management.jmxremote.rmi.port=9999
+          -Djava.rmi.server.hostname=$(POD_IP)
     ## @param controller.extraEnvVarsCM ConfigMap with extra environment variables
     ##
     extraEnvVarsCM: ""
@@ -721,7 +736,10 @@ kafka:
     extraEnvVarsSecret: ""
     ## @param controller.extraContainerPorts Kafka controller-eligible extra containerPorts.
     ##
-    extraContainerPorts: []
+    extraContainerPorts:
+      - name: jmx
+        containerPort: 9999
+        protocol: TCP
     ## Configure extra options for Kafka containers' liveness, readiness and startup probes
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
     ## @param controller.livenessProbe.enabled Enable livenessProbe on Kafka containers
@@ -860,7 +878,29 @@ kafka:
     ## @param controller.podAnnotations Extra annotations for Kafka pods
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
     ##
-    podAnnotations: {}
+    podAnnotations:
+      ad.datadoghq.com/kafka.checks: |
+        {
+          "kafka": {
+            "init_config": {
+              "is_jmx": true,
+              "collect_default_metrics": true
+            },
+            "instances": [
+              {
+                "host": "%%host%%",
+                "port": 9999
+              }
+            ]
+          }
+        }
+      ad.datadoghq.com/kafka.logs: |
+        [
+          {
+            "source": "kafka",
+            "service": "kafka"
+          }
+        ]
     ## @param controller.topologyKey Override common lib default topology key. If empty - "kubernetes.io/hostname" is used
     ## i.e. topologyKey: topology.kubernetes.io/zone
     ##
@@ -1904,7 +1944,18 @@ kafka:
     ##                 operator: In
     ##                 values:
     ##                   - frontend
-    extraIngress: []
+    extraIngress:
+      - ports:
+          - port: 9999
+            protocol: TCP
+        from:
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: datadog
+            podSelector:
+              matchLabels:
+                app.kubernetes.io/component: agent
+                app.kubernetes.io/instance: datadog-agent
     ## @param networkPolicy.extraEgress [array] Add extra ingress rules to the NetworkPolicy
     ## e.g:
     ## extraEgress:
