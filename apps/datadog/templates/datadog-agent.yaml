@@ -56,11 +56,23 @@ spec:
             logs:
               - source: etcd
                 service: etcd
+          coredns.yaml: |-
+            ad_identifiers:
+              - coredns
+            init_config:
+            instances:
+              - prometheus_url: http://%%host%%:9153/metrics
+                service: coredns
+                tags:
+                  - dns-pod:%%host%%
+            logs:
+              - source: coredns
+                service: coredns
       containers:
         agent:
           env:
             - name: DD_IGNORE_AUTOCONF
-              value: "etcd"
+              value: "etcd coredns"
           volumeMounts:
             - name: etcd-ca
               mountPath: /etc/etcd-certs/ca.crt
