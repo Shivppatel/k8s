@@ -70,7 +70,7 @@ spec:
                 service: coredns
           calico.yaml: |-
             ad_identifiers:
-              - quay.io/calico/node
+              - node
             init_config:
             instances:
               - openmetrics_endpoint: http://%%host%%:9091/metrics
@@ -80,7 +80,7 @@ spec:
                 service: calico-node
           calico-controllers.yaml: |-
             ad_identifiers:
-              - quay.io/calico/kube-controllers
+              - kube-controllers
             logs:
               - source: calico
                 service: calico-kube-controllers
