@@ -13,6 +13,27 @@ argo-cd:
       policy.csv: "g, readonly, role:readonly"
   redis-ha:
     enabled: true
+    haproxy:
+      podAnnotations:
+        ad.datadoghq.com/haproxy.checks: |
+          {
+            "haproxy": {
+              "init_config": {},
+              "instances": [
+                {
+                  "openmetrics_endpoint": "http://%%host%%:9101/metrics",
+                  "use_openmetrics": true
+                }
+              ]
+            }
+          }
+        ad.datadoghq.com/haproxy.logs: |
+          [
+            {
+              "source": "haproxy",
+              "service": "argocd-redis-haproxy"
+            }
+          ]
     redis:
       podAnnotations:
         ad.datadoghq.com/redis.checks: |
