@@ -41,17 +41,17 @@ gitlab:
       https: true
       externalIP:
       ssh:
-      gitlab: 
+      gitlab:
         name: gitlab.shivpatel.xyz
-      minio: 
+      minio:
         name: minio.shivpatel.xyz
-      registry: 
+      registry:
         name: registry.shivpatel.xyz
       tls: {}
       smartcard: {}
-      kas: 
+      kas:
         name: kas.shivpatel.xyz
-      pages: 
+      pages:
         name: pages.shivpatel.xyz
       openbao: {}
       workspaces: {}
@@ -1384,7 +1384,71 @@ gitlab:
   ## Settings for individual sub-charts under GitLab
   ## Note: Many of these settings are configurable via globals
   gitlab:
+    webservice:
+      annotations:
+        ad.datadoghq.com/webservice.checks: |-
+          {
+            "gitlab": {
+              "init_config": {},
+              "instances": [
+                {
+                  "gitlab_url": "http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/",
+                  "openmetrics_endpoint": "http://%%host%%:8083/metrics",
+                  "service": "gitlab-webservice"
+                }
+              ]
+            }
+          }
+        ad.datadoghq.com/webservice.logs: |-
+          [
+            {
+              "service": "gitlab-webservice",
+              "source": "gitlab"
+            }
+          ]
+        ad.datadoghq.com/gitlab-workhorse.logs: |-
+          [
+            {
+              "service": "gitlab-workhorse",
+              "source": "gitlab"
+            }
+          ]
+    sidekiq:
+      annotations:
+        ad.datadoghq.com/sidekiq.logs: |-
+          [
+            {
+              "service": "gitlab-sidekiq",
+              "source": "gitlab"
+            }
+          ]
+    gitaly:
+      annotations:
+        ad.datadoghq.com/gitaly.logs: |-
+          [
+            {
+              "service": "gitlab-gitaly",
+              "source": "gitlab"
+            }
+          ]
+    gitlab-shell:
+      annotations:
+        ad.datadoghq.com/gitlab-shell.logs: |-
+          [
+            {
+              "service": "gitlab-shell",
+              "source": "gitlab"
+            }
+          ]
     gitlab-exporter:
+      annotations:
+        ad.datadoghq.com/gitlab-exporter.logs: |-
+          [
+            {
+              "service": "gitlab-exporter",
+              "source": "gitlab"
+            }
+          ]
       image:
         tag: "16.7.0"
     ## https://docs.gitlab.com/charts/charts/gitlab/toolbox
