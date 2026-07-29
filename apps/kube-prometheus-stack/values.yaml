@@ -32,6 +32,25 @@ kube-prometheus-stack:
       GF_DIAGNOSTICS_PROFILING_ADDR: "0.0.0.0"
       GF_DIAGNOSTICS_PROFILING_PORT: "6060"
     podAnnotations:
+      ad.datadoghq.com/grafana.checks: |
+        {
+          "grafana": {
+            "init_config": {},
+            "instances": [
+              {
+                "openmetrics_endpoint": "http://%%host%%:3000/metrics",
+                "service": "grafana"
+              }
+            ]
+          }
+        }
+      ad.datadoghq.com/grafana.logs: |
+        [
+          {
+            "source": "grafana",
+            "service": "grafana"
+          }
+        ]
       profiles.grafana.com/cpu.scrape: "true"
       profiles.grafana.com/cpu.port_name: "profiling"
       profiles.grafana.com/memory.scrape: "true"
