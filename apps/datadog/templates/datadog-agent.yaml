@@ -37,6 +37,10 @@ spec:
           hostPort: 4318
           name: "otel-http"
           protocol: TCP
+  override:
+    nodeAgent:
+      image:
+        jmxEnabled: true
   # override:
   #   clusterAgent:
   #     extraConfd:
