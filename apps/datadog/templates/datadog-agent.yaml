@@ -57,6 +57,15 @@ spec:
                   - ssh.service
                 tags:
                   - service:systemd
+          journald.yaml: |-
+            logs:
+              - type: journald
+                source: journald
+                service: systemd
+                include_units:
+                  - containerd.service
+                  - kubelet.service
+                  - ssh.service
           etcd.yaml: |-
             ad_identifiers:
               - etcd
@@ -104,6 +113,15 @@ spec:
             - name: DD_IGNORE_AUTOCONF
               value: "etcd coredns"
           volumeMounts:
+            - name: host-machine-id
+              mountPath: /etc/machine-id
+              readOnly: true
+            - name: host-persistent-journal
+              mountPath: /var/log/journal
+              readOnly: true
+            - name: host-runtime-journal
+              mountPath: /run/log/journal
+              readOnly: true
             - name: systemd-run
               mountPath: /host/run/systemd
               readOnly: true
@@ -117,6 +135,18 @@ spec:
               mountPath: /etc/etcd-certs/client.key
               readOnly: true
       volumes:
+        - name: host-machine-id
+          hostPath:
+            path: /etc/machine-id
+            type: File
+        - name: host-persistent-journal
+          hostPath:
+            path: /var/log/journal
+            type: Directory
+        - name: host-runtime-journal
+          hostPath:
+            path: /run/log/journal
+            type: Directory
         - name: systemd-run
           hostPath:
             path: /run/systemd
