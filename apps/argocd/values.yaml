@@ -42,8 +42,7 @@ argo-cd:
               "instances": [
                 {
                   "host": "%%host%%",
-                  "port": "26379",
-                  "password": "ENC[k8s_secret@argocd/argocd-redis/auth]"
+                  "port": "26379"
                 }
               ]
             }
