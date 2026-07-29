@@ -6,10 +6,45 @@ nextcloud:
       secretName: nextcloud-secret
       usernameKey: nextcloud-username
       passwordKey: nextcloud-password
+    hooks:
+      before-starting: |-
+        #!/bin/sh
+        set -eu
+        cat > /etc/apache2/conf-available/datadog-status.conf <<'EOF'
+        Listen 8081
+        ExtendedStatus On
+        <VirtualHost *:8081>
+          <Location /server-status>
+            SetHandler server-status
+            Require all granted
+          </Location>
+        </VirtualHost>
+        EOF
+        a2enconf datadog-status >/dev/null
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
+  podAnnotations:
+    ad.datadoghq.com/nextcloud.checks: |
+      {
+        "apache": {
+          "init_config": {},
+          "instances": [
+            {
+              "apache_status_url": "http://%%host%%:8081/server-status?auto",
+              "service": "nextcloud-apache"
+            }
+          ]
+        }
+      }
+    ad.datadoghq.com/nextcloud.logs: |
+      [
+        {
+          "source": "apache",
+          "service": "nextcloud-apache"
+        }
+      ]
   persistence:
     enabled: true
     # using default storageclass (longhorn) for core files
