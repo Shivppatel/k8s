@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-apache-status
+data:
+  datadog-status.conf: |-
+    Listen 8081
+    ExtendedStatus On
+    <VirtualHost *:8081>
+      <Location /server-status>
+        SetHandler server-status
+        Require all granted
+      </Location>
+    </VirtualHost>

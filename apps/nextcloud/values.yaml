@@ -6,21 +6,15 @@ nextcloud:
       secretName: nextcloud-secret
       usernameKey: nextcloud-username
       passwordKey: nextcloud-password
-    hooks:
-      before-starting: |-
-        #!/bin/sh
-        set -eu
-        cat > /etc/apache2/conf-available/datadog-status.conf <<'EOF'
-        Listen 8081
-        ExtendedStatus On
-        <VirtualHost *:8081>
-          <Location /server-status>
-            SetHandler server-status
-            Require all granted
-          </Location>
-        </VirtualHost>
-        EOF
-        a2enconf datadog-status >/dev/null
+    extraVolumes:
+      - name: apache-status
+        configMap:
+          name: nextcloud-apache-status
+    extraVolumeMounts:
+      - name: apache-status
+        mountPath: /etc/apache2/conf-enabled/datadog-status.conf
+        subPath: datadog-status.conf
+        readOnly: true
     metrics:
       enabled: true
       serviceMonitor:
