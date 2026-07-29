@@ -1,0 +1,88 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongodb-datadog-user
+  namespace: mongodb
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mongodb-datadog-user
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: create-user
+          image: registry-1.docker.io/bitnamilegacy/mongodb:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/bash
+            - -ec
+          args:
+            - |
+              mongosh --quiet \
+                --host mongodb.mongodb.svc.cluster.local \
+                --port 27017 \
+                --username "${MONGODB_ROOT_USER}" \
+                --password "${MONGODB_ROOT_PASSWORD}" \
+                --authenticationDatabase admin \
+                --eval '
+                  const admin = db.getSiblingDB("admin");
+                  const username = process.env.MONGODB_DATADOG_USERNAME;
+                  const password = process.env.MONGODB_DATADOG_PASSWORD;
+                  const roles = [
+                    { role: "read", db: "admin" },
+                    { role: "clusterMonitor", db: "admin" },
+                    { role: "read", db: "local" },
+                    { role: "readAnyDatabase", db: "admin" }
+                  ];
+                  if (admin.getUser(username) === null) {
+                    admin.createUser({ user: username, pwd: password, roles });
+                  } else {
+                    admin.updateUser(username, { pwd: password, roles });
+                  }
+                '
+          env:
+            - name: HOME
+              value: /tmp
+            - name: MONGODB_ROOT_USER
+              value: root
+            - name: MONGODB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb
+                  key: mongodb-root-password
+            - name: MONGODB_DATADOG_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-datadog
+                  key: username
+            - name: MONGODB_DATADOG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-datadog
+                  key: password
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: tmp
+          emptyDir: {}
