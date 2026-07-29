@@ -4,6 +4,37 @@ mongodb:
     repository: bitnamilegacy/mongodb
   updateStrategy:
     type: Recreate
+  podAnnotations:
+    ad.datadoghq.com/mongodb.checks: |
+      {
+        "mongo": {
+          "init_config": {},
+          "instances": [
+            {
+              "hosts": [
+                "%%host%%:27017"
+              ],
+              "username": "datadog",
+              "password": "ENC[k8s_secret@mongodb/mongodb-datadog/password]",
+              "database": "admin",
+              "options": {
+                "authSource": "admin"
+              },
+              "dbm": false,
+              "database_autodiscovery": {
+                "enabled": true
+              }
+            }
+          ]
+        }
+      }
+    ad.datadoghq.com/mongodb.logs: |
+      [
+        {
+          "source": "mongodb",
+          "service": "mongodb"
+        }
+      ]
   metrics:
     enabled: true
     serviceMonitor:
