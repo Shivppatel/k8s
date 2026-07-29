@@ -35,6 +35,6 @@ jobs:
           file: apps/datadog/Dockerfile.emqx
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/shivppatel/datadog-agent-emqx:7.73.0-jmx-emqx-1.1.0-grafana-1.0.0
+          tags: ghcr.io/shivppatel/datadog-agent-emqx:7.73.0-jmx-emqx-1.1.0-grafana-1.0.0-nextcloud-2.0.0
           cache-from: type=gha
           cache-to: type=gha,mode=max
