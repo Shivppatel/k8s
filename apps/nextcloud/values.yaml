@@ -35,7 +35,10 @@ nextcloud:
           "init_config": {},
           "instances": [
             {
-              "url": "http://%%host%%/ocs/v2.php/apps/serverinfo/api/v1/info",
+              "url": "http://nextcloud.nextcloud.svc.cluster.local:8080/ocs/v2.php/apps/serverinfo/api/v1/info",
+              "headers": {
+                "Host": "nextcloud.shivpatel.xyz"
+              },
               "username": "ENC[k8s_secret@nextcloud/nextcloud-secret/nextcloud-username]",
               "password": "ENC[k8s_secret@nextcloud/nextcloud-secret/nextcloud-password]",
               "service": "nextcloud"
