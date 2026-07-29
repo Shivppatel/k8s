@@ -110,6 +110,25 @@ loki:
   bloomGateway:
     replicas: 0
 
+  chunksCache:
+    podAnnotations:
+      ad.datadoghq.com/memcached.logs: |
+        [
+          {
+            "source": "memcached",
+            "service": "loki-chunks-cache"
+          }
+        ]
+  resultsCache:
+    podAnnotations:
+      ad.datadoghq.com/memcached.logs: |
+        [
+          {
+            "source": "memcached",
+            "service": "loki-results-cache"
+          }
+        ]
+
   monitoring:
     dashboards:
       enabled: true
