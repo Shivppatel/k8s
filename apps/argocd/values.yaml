@@ -64,6 +64,27 @@ argo-cd:
           ]
   controller:
     podAnnotations:
+      ad.datadoghq.com/application-controller.checks: |
+        {
+          "argocd": {
+            "init_config": {},
+            "instances": [
+              {
+                "app_controller_endpoint": "http://%%host%%:8082/metrics",
+                "rename_labels": {
+                  "name": "argocd_app_name"
+                }
+              }
+            ]
+          }
+        }
+      ad.datadoghq.com/application-controller.logs: |
+        [
+          {
+            "source": "argocd",
+            "service": "argocd-application-controller"
+          }
+        ]
       profiles.grafana.com/cpu.scrape: "true"
       profiles.grafana.com/cpu.port_name: "metrics"
       profiles.grafana.com/memory.scrape: "true"
@@ -76,6 +97,14 @@ argo-cd:
       serviceMonitor:
         enabled: true
   dex:
+    podAnnotations:
+      ad.datadoghq.com/dex-server.logs: |
+        [
+          {
+            "source": "argocd",
+            "service": "argocd-dex"
+          }
+        ]
     metrics:
       enabled: false
       serviceMonitor:
@@ -108,6 +137,24 @@ argo-cd:
         enabled: true
   server:
     podAnnotations:
+      ad.datadoghq.com/server.checks: |
+        {
+          "argocd": {
+            "init_config": {},
+            "instances": [
+              {
+                "api_server_endpoint": "http://%%host%%:8083/metrics"
+              }
+            ]
+          }
+        }
+      ad.datadoghq.com/server.logs: |
+        [
+          {
+            "source": "argocd",
+            "service": "argocd-server"
+          }
+        ]
       profiles.grafana.com/cpu.scrape: "true"
       profiles.grafana.com/cpu.port_name: "metrics"
       profiles.grafana.com/memory.scrape: "true"
@@ -123,6 +170,24 @@ argo-cd:
         enabled: true
   repoServer:
     podAnnotations:
+      ad.datadoghq.com/repo-server.checks: |
+        {
+          "argocd": {
+            "init_config": {},
+            "instances": [
+              {
+                "repo_server_endpoint": "http://%%host%%:8084/metrics"
+              }
+            ]
+          }
+        }
+      ad.datadoghq.com/repo-server.logs: |
+        [
+          {
+            "source": "argocd",
+            "service": "argocd-repo-server"
+          }
+        ]
       profiles.grafana.com/cpu.scrape: "true"
       profiles.grafana.com/cpu.port_name: "metrics"
       profiles.grafana.com/memory.scrape: "true"
@@ -137,12 +202,50 @@ argo-cd:
       serviceMonitor:
         enabled: true
   applicationSet:
+    podAnnotations:
+      ad.datadoghq.com/applicationset-controller.checks: |
+        {
+          "argocd": {
+            "init_config": {},
+            "instances": [
+              {
+                "appset_controller_endpoint": "http://%%host%%:8080/metrics"
+              }
+            ]
+          }
+        }
+      ad.datadoghq.com/applicationset-controller.logs: |
+        [
+          {
+            "source": "argocd",
+            "service": "argocd-applicationset-controller"
+          }
+        ]
     replicas: 2
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
   notifications:
+    podAnnotations:
+      ad.datadoghq.com/notifications-controller.checks: |
+        {
+          "argocd": {
+            "init_config": {},
+            "instances": [
+              {
+                "notifications_controller_endpoint": "http://%%host%%:9001/metrics"
+              }
+            ]
+          }
+        }
+      ad.datadoghq.com/notifications-controller.logs: |
+        [
+          {
+            "source": "argocd",
+            "service": "argocd-notifications-controller"
+          }
+        ]
     metrics:
       enabled: true
       serviceMonitor:
