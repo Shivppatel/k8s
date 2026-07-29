@@ -47,6 +47,16 @@ spec:
         jmxEnabled: true
       extraConfd:
         configDataMap:
+          systemd.yaml: |-
+            init_config:
+            instances:
+              - private_socket: /host/run/systemd/private
+                unit_names:
+                  - containerd.service
+                  - kubelet.service
+                  - ssh.service
+                tags:
+                  - service:systemd
           etcd.yaml: |-
             ad_identifiers:
               - etcd
@@ -94,6 +104,9 @@ spec:
             - name: DD_IGNORE_AUTOCONF
               value: "etcd coredns"
           volumeMounts:
+            - name: systemd-run
+              mountPath: /host/run/systemd
+              readOnly: true
             - name: etcd-ca
               mountPath: /etc/etcd-certs/ca.crt
               readOnly: true
@@ -104,6 +117,10 @@ spec:
               mountPath: /etc/etcd-certs/client.key
               readOnly: true
       volumes:
+        - name: systemd-run
+          hostPath:
+            path: /run/systemd
+            type: Directory
         - name: etcd-ca
           hostPath:
             path: /etc/kubernetes/pki/etcd/ca.crt
