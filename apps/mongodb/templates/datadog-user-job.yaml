@@ -53,7 +53,7 @@ spec:
             - name: MONGODB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb
+                  name: mongodb-auth
                   key: mongodb-root-password
             - name: MONGODB_DATADOG_USERNAME
               valueFrom:
