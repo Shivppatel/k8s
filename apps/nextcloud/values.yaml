@@ -30,6 +30,17 @@ nextcloud:
               "service": "nextcloud-apache"
             }
           ]
+        },
+        "nextcloud": {
+          "init_config": {},
+          "instances": [
+            {
+              "url": "http://%%host%%/ocs/v2.php/apps/serverinfo/api/v1/info",
+              "username": "ENC[k8s_secret@nextcloud/nextcloud-secret/nextcloud-username]",
+              "password": "ENC[k8s_secret@nextcloud/nextcloud-secret/nextcloud-password]",
+              "service": "nextcloud"
+            }
+          ]
         }
       }
     ad.datadoghq.com/nextcloud.logs: |
