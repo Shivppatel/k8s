@@ -43,6 +43,28 @@ immich:
     enabled: true
     controllers:
       main:
+        pod:
+          annotations:
+            ad.datadoghq.com/main.checks: |
+              {
+                "redisdb": {
+                  "init_config": {},
+                  "instances": [
+                    {
+                      "host": "%%host%%",
+                      "port": 6379,
+                      "service": "immich-valkey"
+                    }
+                  ]
+                }
+              }
+            ad.datadoghq.com/main.logs: |
+              [
+                {
+                  "source": "redis",
+                  "service": "immich-valkey"
+                }
+              ]
         containers:
           main:
             image:
