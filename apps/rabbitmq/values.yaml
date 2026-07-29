@@ -27,6 +27,20 @@ rabbitmq:
           ]
         }
       }
+    ad.datadoghq.com/rabbitmq.logs: |
+      [
+        {
+          "source": "rabbitmq",
+          "service": "rabbitmq",
+          "log_processing_rules": [
+            {
+              "type": "multi_line",
+              "name": "logs_starts_with_equal_sign",
+              "pattern": "="
+            }
+          ]
+        }
+      ]
   metrics:
     enabled: true
     serviceMonitor:
