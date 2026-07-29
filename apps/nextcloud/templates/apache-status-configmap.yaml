@@ -7,6 +7,11 @@ data:
     Listen 8081
     ExtendedStatus On
     <VirtualHost *:8081>
+      DocumentRoot /tmp
+      <Directory /tmp>
+        AllowOverride None
+        Require all denied
+      </Directory>
       <Location /server-status>
         SetHandler server-status
         Require all granted
