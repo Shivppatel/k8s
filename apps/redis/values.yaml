@@ -23,6 +23,13 @@ redis:
             ]
           }
         }
+      ad.datadoghq.com/redis.logs: |
+        [
+          {
+            "source": "redis",
+            "service": "redis"
+          }
+        ]
     persistence:
       enabled: true
   replica:
@@ -41,6 +48,13 @@ redis:
             ]
           }
         }
+      ad.datadoghq.com/redis.logs: |
+        [
+          {
+            "source": "redis",
+            "service": "redis"
+          }
+        ]
     persistence:
       enabled: true
     updateStrategy:
