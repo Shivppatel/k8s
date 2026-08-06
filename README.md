@@ -1,229 +1,192 @@
 # ShivWS
 
-> Personal cloud infrastructure. Think AWS, but the bill is fixed and the on-call is just me.
+ShivWS is the GitOps application layer for a three-node bare-metal Kubernetes
+homelab. I use it to operate shared platform services and self-hosted
+workloads, with desired state split between this public repository and a
+private workload repository.
 
-![GitOps](https://img.shields.io/badge/GitOps-ArgoCD-EF7B4D?logo=argo&logoColor=white)
-![Kubernetes](https://img.shields.io/badge/Platform-Kubernetes-326CE5?logo=kubernetes&logoColor=white)
-![Vault](https://img.shields.io/badge/Secrets-Vault_HA_Raft-FFEC6E?logo=vault&logoColor=black)
-![Renovate](https://img.shields.io/badge/Dependencies-Renovate-24292F?logo=renovatebot&logoColor=white)
-![Gitleaks](https://img.shields.io/badge/Security-Gitleaks-red?logo=git&logoColor=white)
-![Commits](https://img.shields.io/github/commit-activity/t/Shivppatel/k8s?label=Commits&color=brightgreen)
+> This repository starts at the application-delivery layer. Node provisioning,
+> Kubernetes bootstrap, network-appliance configuration, live secret values,
+> and break-glass procedures are outside its scope.
 
----
+## Current Footprint
 
-## What This Is
+Snapshot verified against both Git sources and the live cluster on 2026-08-06.
 
-A production-grade, fully declarative GitOps platform running on a 3-node bare-metal Kubernetes cluster. Every workload is version-controlled, every secret is managed through Vault, every change syncs automatically — no manual `kubectl apply`, ever.
+| Area | Current state |
+|---|---|
+| Compute | Three bare-metal control-plane nodes with dedicated NAS storage |
+| GitOps inventory | 63 Argo CD Applications across the public and private repositories |
+| Packaging | 60 Helm chart directories: 47 public and 13 private |
+| Public source | Shared controllers, data services, observability, delivery tooling, and selected applications |
+| Private source | 11 active personal workload Applications plus one source-only, disabled chart |
 
-Built to run real self-hosted services with real operational requirements: high availability, automated TLS, SSO on every app, full distributed observability from metrics down to continuous profiling, and automated dependency management across the entire stack.
-
-The goal was never "get something running." It was to build infrastructure the same way a platform team at a top tech company would — with the operational rigor to match.
-
----
+The Application count includes Argo CD roots, platform controllers, data
+services, and workloads. It is not a claim of 63 user-facing services.
 
 ## Hardware
 
-| Node | Device | Specs |
-|------|--------|-------|
-| node0 / node1 / node2 | Minisforum MS-A2 (×3) | AMD Ryzen 9 9955HX · 64GB DDR5-5600 · 1TB NVMe · 10G SFP+ |
-| NAS | UniFi UNAS Pro 8 | 56TB usable (4× Ironwolf Pro 28TB, RAID 6) · 2TB NVMe cache · 10G SFP+ |
-| Core Switch | UniFi USW Aggregation | 8× 10G SFP+ — all nodes and NAS at line rate |
-| Router / Firewall | UniFi Cloud Gateway Fiber | IDS/IPS · Zone-based firewall · Encrypted DNS · Region blocking |
+| Role | Hardware | Capacity and connectivity |
+|---|---|---|
+| Compute | 3x Minisforum MS-A2 | AMD Ryzen 9 9955HX, 64 GB RAM, 1 TB NVMe, and 10 GbE per node |
+| Storage | UniFi UNAS Pro 8 | 56 TB usable RAID 6, 2 TB NVMe cache, and 10 GbE |
+| Network edge | UniFi USW Aggregation and Cloud Gateway Fiber | 10 GbE compute/storage fabric with a dedicated routing and firewall boundary |
 
-All three compute nodes connect at 10Gbps to the aggregation switch. The NAS is dedicated storage only — no k8s workloads run on it. Workloads requiring high-IOPS block storage use Longhorn; large media and shared volumes mount NFS directly from the UNAS.
+All compute nodes and the NAS connect through the 10 GbE aggregation switch.
+The NAS is dedicated to storage and does not run Kubernetes workloads.
+Latency-sensitive volumes use Longhorn-managed node storage, while bulk and
+shared datasets use NFS. Hardware and network provisioning remain outside this
+repository.
 
----
+## Desired-State Architecture
 
-## Architecture
+```mermaid
+flowchart TB
+  public["k8s (public)<br/>Shared platform and selected workloads"]
+  private["k8s-private (private)<br/>Personal workloads"]
+  argo["Argo CD<br/>App-of-Apps"]
+  cluster["Three-node Kubernetes cluster"]
+  platform["Platform services<br/>Ingress, secrets, data, delivery, observability"]
+  workloads["Public and private workloads"]
+  storage["Longhorn block storage<br/>NAS NFS and standalone MinIO"]
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                          GitHub                             │
-│               Source of truth — this repository             │
-└───────────────────────────┬─────────────────────────────────┘
-                            │  ArgoCD watches & reconciles
-┌───────────────────────────▼─────────────────────────────────┐
-│                     GitOps Layer                            │
-│            ArgoCD App-of-Apps · Kyverno Policies            │
-└──────────┬──────────────┬───────────────┬───────────────────┘
-           │              │               │
-  ┌────────▼──────┐ ┌─────▼──────┐ ┌─────▼───────────────────┐
-  │  Networking   │ │  Secrets   │ │     Observability       │
-  │  Traefik      │ │  Vault HA  │ │  Prometheus · Grafana   │
-  │  cert-manager │ │  ESO       │ │  Loki · Tempo           │
-  │  Cloudflare   │ │            │ │  Pyroscope · Alloy      │
-  │  Tunnel/Access│ │            │ │                         │
-  └───────────────┘ └────────────┘ └─────────────────────────┘
-           │
-  ┌────────▼──────────────────────────────────────────────────┐
-  │                      Data Layer                           │
-  │   CloudNativePG · Redis · MinIO · Kafka · RabbitMQ        │
-  └────────┬──────────────────────────────────────────────────┘
-           │
-  ┌────────▼──────────────────────────────────────────────────┐
-  │                    Workload Layer                         │
-  │  Jellyfin · Immich · Nextcloud · Vaultwarden · GitLab     │
-  │  Paperless-NGX · Ollama · AdGuard Home · Homepage · ...   │
-  └────────┬──────────────────────────────────────────────────┘
-           │
-  ┌────────▼──────────────────────────────────────────────────┐
-  │                    Storage Layer                          │
-  │      Longhorn (replicated block) · UNAS NFS (bulk)        │
-  └───────────────────────────────────────────────────────────┘
+  public --> argo
+  private --> argo
+  argo --> cluster
+  cluster --> platform
+  cluster --> workloads
+  platform --> storage
+  workloads --> storage
 ```
 
-### Layer Design Rationale
+The public [Application inventory](apps/argocd-apps/values.yaml) also creates
+the private root Application. Most child Applications use automated sync,
+self-healing, and pruning. Argo CD itself remains manual-sync, and pruning is
+disabled selectively where an automatic delete would carry a larger state or
+control-plane risk.
 
-The platform is split into four explicit layers because that's how production infrastructure teams think about it. Each layer has a single owner and a clear contract with the layers above and below it.
+## Platform Surface
 
-- **Platform before apps** — ingress, secrets, observability, and policy are deployed first as shared services. Workloads are consumers, not owners.
-- **Data layer is centralized** — all stateful backends live in one managed layer. Applications don't own their databases; they reference CNPG cluster endpoints. This makes backup, failover, and schema migration a platform concern, not an app concern.
-- **Storage is tiered by workload type** — high-IOPS stateful apps (databases, object storage) get replicated Longhorn PVCs. Large-scale media gets NFS mounts directly from the UNAS. Replicating terabytes of media across three nodes would waste IOPS for no HA benefit — media is replaceable, database state is not.
+| Area | Implementation and evidence |
+|---|---|
+| GitOps and delivery | [Argo CD App-of-Apps](apps/argocd-apps/), [Argo Rollouts](apps/argo-rollouts/), [canary](apps/canary-demo/), and [blue-green](apps/rollouts-demo/) examples |
+| Networking | [Traefik](apps/traefik/), [MetalLB](apps/metallb/), [cert-manager](apps/cert-manager/), and [Cloudflare Tunnel](apps/cloudflared/) |
+| Identity and secrets | [Vault with Raft storage](apps/vault/) and [External Secrets Operator](apps/external-secrets/) |
+| Data and storage | A [three-instance CloudNativePG cluster](apps/postgresql/templates/cluster.yaml), Redis, MongoDB, Kafka, RabbitMQ, Longhorn, NAS NFS, and standalone MinIO |
+| Observability | Prometheus, Grafana, Alertmanager, Loki, Tempo, Pyroscope, Alloy, and Datadog integrations |
+| Policy and scanning | Kyverno, Policy Reporter, and Trivy provide policy and vulnerability-reporting infrastructure; custom policy coverage is still being developed |
+| CI infrastructure | Autoscaling [GitHub Actions runners](apps/github-actions-runners/) and isolated [Docker runners](apps/github-actions-docker-runners/) managed with Actions Runner Controller |
 
----
+These components provide platform capabilities; their presence does not imply
+that every workload has identical authentication, telemetry, policy, or
+availability coverage.
 
-## Stack
+## Selected Engineering Decisions
 
-### GitOps & Delivery
+### Reconciliation with explicit failure boundaries
 
-| Tool | Purpose |
-|------|---------|
-| **ArgoCD** | GitOps controller. App-of-Apps pattern — one root Application manages all others. Automated sync + self-healing. Cluster state always converges to Git. |
-| **Renovate** | Automated dependency updates for all Helm chart versions and container image tags. PRs are opened automatically; merged PRs deploy automatically. |
-| **GitHub Actions** | Helm lint + YAML schema validation on every PR. Nothing malformed merges. |
-| **Gitleaks** (pre-commit) | Blocks commits containing secrets before they ever reach the remote. Defense-in-depth alongside Vault. |
+Application reconciliation is Git-driven, but automation is not treated as an
+absolute. The [Argo CD configuration](apps/argocd-apps/values.yaml) keeps the
+controller's own upgrade manual and disables pruning for selected stateful or
+control-plane components. This reduces the blast radius of a bad desired-state
+change while retaining self-healing for normal workloads.
 
-### Secrets Management
+### Secrets stay referenced in Git
 
-| Tool | Purpose |
-|------|---------|
-| **HashiCorp Vault** | HA Raft cluster — KV secrets engine, PKI, full audit logging. No plaintext secrets anywhere in the repo or in etcd. |
-| **External Secrets Operator** | Syncs Vault secrets into k8s Secret objects consumed by workloads. Vault is the source of truth; ESO is the bridge. |
+Vault is the credential authority for most workloads. External Secrets reads
+Vault references and materializes ordinary Kubernetes Secret objects for
+applications. This keeps live credential values out of Git without making a
+broader claim about Kubernetes Secret or etcd storage.
 
-### Networking & Access
+### Storage is selected per workload
 
-| Tool | Purpose |
-|------|---------|
-| **Traefik** | Ingress controller + middleware chain (auth, rate limiting, headers) |
-| **cert-manager** | Automatic TLS certificate provisioning via Let's Encrypt + Cloudflare DNS-01 challenge |
-| **Cloudflare Tunnel / Access** | Zero-trust external access. No ports exposed to the internet. External traffic routes through Cloudflare's edge, authenticated before it touches the cluster. |
-| **Authentik** | Self-hosted SSO + identity provider. Every internal service is behind Authentik — no per-app login sprawl. |
+[Longhorn](apps/longhorn/) provides block storage with a two-replica default
+and an explicit one-replica class for data with a different durability/cost
+tradeoff. Large shared datasets use NAS-backed NFS. [MinIO](apps/minio/) is a
+single instance on NFS and is not described as a distributed object store.
 
-### Observability — Full LGTM+P Stack
+### Telemetry coverage is incremental
 
-| Tool | Purpose |
-|------|---------|
-| **Prometheus** | Metrics collection, alerting rules, recording rules |
-| **Grafana** | Dashboards across all four telemetry signals |
-| **Loki** | Log aggregation from all pods and nodes |
-| **Tempo** (distributed) | Distributed tracing — full request traces across service boundaries |
-| **Pyroscope** | Continuous profiling — always-on CPU/memory flame graphs per workload |
-| **Alloy** | Unified telemetry pipeline. Replaces Promtail and standalone OTEL Collector. Single agent ships logs, metrics, traces, and profiles. |
+[Prometheus and Grafana](apps/kube-prometheus-stack/) provide metrics,
+dashboards, and alerting. [Alloy](apps/alloy/) centralizes logs and exposes
+receivers for traces; Tempo and Pyroscope support instrumented or annotated
+workloads. The repository describes the telemetry platform, not universal
+end-to-end instrumentation.
 
-Running Pyroscope completes the four pillars of observability: metrics, logs, traces, and profiles. Most production environments don't have all four. This one does.
+### CI runners are workloads, not pets
 
-### Data Layer
+The runner charts use bounded autoscaling, non-root containers, dropped
+capabilities, disabled service-account token mounting, namespace quotas, and
+targeted network policies. See the
+[runner values](apps/github-actions-runners/values.yaml) and
+[network policy](apps/github-actions-runners/templates/network-policy.yaml).
 
-| Tool | Purpose |
-|------|---------|
-| **CloudNativePG** | Postgres operator — HA clusters with streaming replication, automated failover, scheduled backups to MinIO |
-| **Redis** | Shared caching + session storage for stateless apps |
-| **MinIO** | S3-compatible object storage on the UNAS. Velero backup target, CNPG backup destination. |
-| **Kafka** | Event streaming |
-| **RabbitMQ** | AMQP message queue |
+## Change and Validation Path
 
-### Policy & Security
+```text
+Pull request
+  ├─ changed Helm app: helm lint + helm template
+  └─ changed non-template YAML: relaxed yamllint
 
-| Tool | Purpose |
-|------|---------|
-| **Kyverno** | Policy-as-code enforcement. Validates image sources, enforces resource limits, requires labels, blocks privileged containers. Policies are version-controlled like everything else. |
+Merge to main
+  └─ Argo CD reconciles automated Applications
 
-### Storage
-
-| Tool | Purpose |
-|------|---------|
-| **Longhorn** | Distributed block storage. PVCs are replicated across all three nodes — a node loss doesn't lose volume data. Used for all databases and stateful apps requiring high IOPS. |
-| **UNAS NFS** | 56TB RAID 6. NFS exports for Jellyfin media, Immich photos, and large shared volumes. No replication needed — RAID 6 provides local redundancy. |
-
----
-
-## Repo Structure
-
+Renovate
+  └─ opens Helm dependency updates; non-major updates are grouped
 ```
+
+The workflows are intentionally described narrowly:
+
+- [Helm CI](.github/workflows/helm-lint.yaml) checks changed chart directories,
+  not every chart on every pull request.
+- [YAML CI](.github/workflows/yaml-lint.yaml) is syntax/style linting for
+  changed non-template YAML, not Kubernetes schema or integration validation.
+- [Renovate](renovate.json) tracks Helm dependencies, not container image tags.
+- [Gitleaks](.pre-commit-config.yaml) is available as a local pre-commit check.
+
+## Review Path
+
+For a focused code review, start with:
+
+1. [Application ownership and sync policy](apps/argocd-apps/values.yaml)
+2. [PostgreSQL topology and managed roles](apps/postgresql/templates/cluster.yaml)
+3. [Operational alert rules](apps/kube-prometheus-stack/templates/homelab-observability-rules.yaml)
+4. [Self-hosted runner isolation](apps/github-actions-runners/)
+5. [Progressive-delivery examples](apps/canary-demo/rollout.yaml)
+
+## Scope and Current Priorities
+
+This is a personal, single-site lab used to practice production-oriented
+platform engineering. It is not presented as a customer production
+environment or an SLA-backed service.
+
+- Git records desired state; this README is not a point-in-time availability
+  report.
+- Availability, replication, authentication, and instrumentation vary by
+  workload. A three-node cluster does not make every component highly
+  available.
+- Backup configuration, successful restore drills, and measured RPO/RTO are
+  not currently versioned here, so no disaster-recovery guarantee is claimed.
+- Kyverno and Policy Reporter are installed, but committed custom policy
+  coverage is not yet comprehensive.
+
+The next engineering priorities are to add repeatable recovery evidence,
+version policy guardrails, narrow Argo project permissions, strengthen
+dependency and raw-manifest validation, and replace remaining mutable image
+references.
+
+## Repository Layout
+
+```text
 apps/
-├── argocd/                  # ArgoCD bootstrap — deployed first, owns everything else
-├── argocd-apps/             # Root Application + all grouped Application definitions
-├── vault/                   # Vault HA Raft cluster
-├── external-secrets/        # ESO operator + ClusterSecretStore
-├── actions-runner-controller/# ARC controller for GitHub Actions runners
-├── github-actions-runners/  # Hardened organization-scoped ARC runner scale set
-├── github-actions-docker-runners/ # Isolated on-demand ARC runners with Docker
-├── traefik/                 # Ingress controller + middlewares
-├── cert-manager/            # Certificate issuers + TLS automation
-├── kube-prometheus-stack/   # Prometheus + Grafana + Alertmanager
-├── loki/                    # Log aggregation
-├── tempo-distributed/       # Distributed tracing
-├── pyroscope/               # Continuous profiling
-├── alloy/                   # Unified telemetry agent
-├── cloudnative-pg/          # CNPG operator
-├── postgresql/              # Postgres cluster definitions + bootstrap jobs
-├── gitlab/                  # Self-hosted Git + container registry (private workloads)
-└── ...                      # Application Helm charts
+├── argocd/                 # Argo CD configuration
+├── argocd-apps/            # Public and private Application inventory
+├── <platform>/             # Shared platform Helm wrappers and templates
+└── <workload>/             # Selected public workload configuration
+
+.github/workflows/          # Changed-chart and YAML validation
+renovate.json               # Helm dependency update policy
 ```
 
-### The App-of-Apps Pattern
-
-`apps/argocd-apps/` contains a root ArgoCD Application that owns all other Applications in the cluster. Adding a new service is a single Git commit — create the Application manifest, merge the PR, ArgoCD detects it and deploys. No imperative steps. No undocumented cluster state.
-
-This is the same pattern used in large-scale production GitOps environments. Everything the cluster is running exists in this repository.
-
----
-
-## CI/CD Pipeline
-
-Every pull request triggers:
-
-```
-PR opened
-  └── GitHub Actions
-        ├── helm lint          # All charts render without errors
-        └── YAML validation    # Schema validation on all manifests
-
-PR merged to main
-  └── ArgoCD detects diff (~3 min polling)
-        └── Sync + self-heal → cluster converges to new state
-```
-
-Pre-commit (local):
-```
-git commit
-  └── gitleaks scan           # Blocks commit if secrets detected
-```
-
----
-
-## Key Design Decisions
-
-**Why full upstream Kubernetes instead of k3s?**
-The goal is to learn what production clusters actually look like. k3s abstracts away the parts that matter most — etcd, the control plane, and how components actually compose. Operational complexity here is intentional.
-
-**Why HashiCorp Vault over Sealed Secrets?**
-Sealed Secrets solves one problem: encrypting k8s Secrets at rest in Git. Vault solves that plus dynamic credentials, secret leasing and renewal, PKI, audit logging, and multi-backend support. The HA Raft configuration means Vault survives a node failure without operator intervention. Sealed Secrets is a good tool — Vault is the right tool for a serious platform.
-
-**Why CloudNativePG over managing Postgres StatefulSets?**
-Running Postgres as a raw StatefulSet means you own HA, replication, failover, connection pooling, and backup orchestration. CNPG gives you all of that as a CRD. It's the same reasoning behind not writing your own ingress controller — operators exist to encode operational knowledge into the platform. Use them.
-
-**Why Longhorn over Rook/Ceph?**
-Ceph is the right answer at scale with dedicated OSD nodes. On a 3-node cluster where compute and storage are collocated, Ceph's overhead is hard to justify and its failure modes are harder to reason about at this scale. Longhorn gives replicated block storage with a simple mental model, clean UI, and straightforward recovery procedures. Pragmatic choice for this scale.
-
-**Why Pyroscope?**
-Continuous profiling is the fourth pillar of observability — it answers questions that metrics, logs, and traces can't: *which function is consuming CPU right now, always, across every request?* Google's pprof and Meta's Strobelight have made it standard practice at top-tier companies. Running it here closes the observability gap.
-
-**Why Alloy over standalone Promtail + OTEL Collector?**
-Alloy is Grafana's unified telemetry agent — it replaces Promtail and the standalone OTEL Collector with a single agent and a single configuration pipeline. Fewer agents, fewer DaemonSets, fewer failure surfaces.
-
----
-
-## What's Not Here
-
-This is the **public** repository. Personal workloads and anything not suitable for a public audience live in a separate private repository following the same GitOps pattern — same ArgoCD, same Vault, same observability stack.
+Normal application changes should flow through Git and Argo CD. Cluster
+bootstrap and documented break-glass operations are explicit exceptions.
