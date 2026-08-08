@@ -182,9 +182,16 @@ argo-cd:
       profiles.grafana.com/memory.port_name: "metrics"
       profiles.grafana.com/goroutine.scrape: "true"
       profiles.grafana.com/goroutine.port_name: "metrics"
+    # Utilization-based HPA metrics require requests on every target container.
+    resources:
+      requests:
+        cpu: 25m
+        memory: 128Mi
     autoscaling:
       enabled: true
       minReplicas: 2
+      targetCPUUtilizationPercentage: 80
+      targetMemoryUtilizationPercentage: 80
     metrics:
       enabled: true
       serviceMonitor:
@@ -215,9 +222,16 @@ argo-cd:
       profiles.grafana.com/memory.port_name: "metrics"
       profiles.grafana.com/goroutine.scrape: "true"
       profiles.grafana.com/goroutine.port_name: "metrics"
+    # Utilization-based HPA metrics require requests on every target container.
+    resources:
+      requests:
+        cpu: 25m
+        memory: 128Mi
     autoscaling:
       enabled: true
       minReplicas: 2
+      targetCPUUtilizationPercentage: 80
+      targetMemoryUtilizationPercentage: 80
     metrics:
       enabled: true
       serviceMonitor:
