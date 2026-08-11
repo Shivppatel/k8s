@@ -1,0 +1,629 @@
+name: Argo CD Diff
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: argocd-diff-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  ARGOCD_VERSION: v3.5.0
+  ARGOCD_CLI_SHA256: 82f2ffe3f3df32baed1229963f0866e9a8a3c74e136e9e5f36646d9004332cc5
+  ARGOCD_SERVER: ${{ vars.ARGOCD_SERVER || 'argocd.shivpatel.xyz' }}
+  ARGOCD_ROOT_APPLICATION: argocd-apps
+
+jobs:
+  diff:
+    name: Preview application changes
+    # This privileged event deliberately never checks out or executes PR code.
+    # Argo CD fetches the immutable same-repository head revision itself.
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Find changed application paths
+        id: changes
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              per_page: 100,
+            });
+
+            const directories = new Set();
+            const addPath = (filename) => {
+              const match = filename?.match(/^apps\/([a-z0-9](?:[-a-z0-9.]*[a-z0-9])?)(?:\/|$)/);
+              if (match) directories.add(match[1]);
+            };
+
+            for (const file of files) {
+              addPath(file.filename);
+              if (file.status === 'renamed') addPath(file.previous_filename);
+            }
+
+            const changed = [...directories].sort((a, b) => a.localeCompare(b));
+            const pathExists = async (repoPath, ref) => {
+              try {
+                await github.rest.repos.getContent({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  path: repoPath,
+                  ref,
+                });
+                return true;
+              } catch (error) {
+                if (error.status === 404) return false;
+                throw error;
+              }
+            };
+
+            const present = [];
+            const basePresent = [];
+            for (const directory of changed) {
+              const repoPath = `apps/${directory}`;
+              if (await pathExists(repoPath, context.payload.pull_request.head.sha)) {
+                present.push(directory);
+              }
+              if (await pathExists(repoPath, context.payload.pull_request.base.sha)) {
+                basePresent.push(directory);
+              }
+            }
+
+            let rootValues = '';
+            const rootValuesPath = `apps/${process.env.ARGOCD_ROOT_APPLICATION}/values.yaml`;
+            try {
+              const response = await github.rest.repos.getContent({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                path: rootValuesPath,
+                ref: context.payload.pull_request.head.sha,
+              });
+              if (!Array.isArray(response.data) && response.data.content) {
+                rootValues = Buffer.from(
+                  response.data.content,
+                  response.data.encoding || 'base64'
+                ).toString('utf8');
+              }
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+
+            const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const registered = changed.filter((directory) => {
+              const escaped = escapeRegExp(directory);
+              const sourcePath = new RegExp(
+                `^\\s*path:\\s*["']?apps/${escaped}(?:/[^"'\\s]+)?["']?\\s*$`,
+                'm'
+              );
+              return sourcePath.test(rootValues);
+            });
+
+            const output = path.join(process.env.RUNNER_TEMP, 'argocd-changed-apps.txt');
+            const presentOutput = path.join(process.env.RUNNER_TEMP, 'argocd-present-apps.txt');
+            const basePresentOutput = path.join(process.env.RUNNER_TEMP, 'argocd-base-present-apps.txt');
+            const registeredOutput = path.join(process.env.RUNNER_TEMP, 'argocd-registered-apps.txt');
+            fs.writeFileSync(output, changed.length ? `${changed.join('\n')}\n` : '');
+            fs.writeFileSync(presentOutput, present.length ? `${present.join('\n')}\n` : '');
+            fs.writeFileSync(basePresentOutput, basePresent.length ? `${basePresent.join('\n')}\n` : '');
+            fs.writeFileSync(registeredOutput, registered.length ? `${registered.join('\n')}\n` : '');
+            core.setOutput('count', String(changed.length));
+            core.setOutput('file', output);
+            core.setOutput('present_file', presentOutput);
+            core.setOutput('base_present_file', basePresentOutput);
+            core.setOutput('registered_file', registeredOutput);
+            core.info(`Changed application paths: ${changed.join(', ') || 'none'}`);
+
+      - name: Install Argo CD CLI
+        id: install
+        if: steps.changes.outputs.count != '0'
+        run: |
+          set -euo pipefail
+
+          binary="${RUNNER_TEMP}/argocd-linux-amd64"
+          curl -fsSL \
+            "https://github.com/argoproj/argo-cd/releases/download/${ARGOCD_VERSION}/argocd-linux-amd64" \
+            -o "$binary"
+          echo "${ARGOCD_CLI_SHA256}  ${binary}" | sha256sum --check --status
+          install -m 0555 "$binary" "${RUNNER_TEMP}/argocd"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+      - name: Collect application diffs
+        id: collect
+        if: steps.changes.outputs.count != '0'
+        env:
+          # Configure a dedicated applications,get-only token in repository secrets.
+          ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
+          BASE_PRESENT_APPS_FILE: ${{ steps.changes.outputs.base_present_file }}
+          CHANGED_APPS_FILE: ${{ steps.changes.outputs.file }}
+          PRESENT_APPS_FILE: ${{ steps.changes.outputs.present_file }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          REGISTERED_APPS_FILE: ${{ steps.changes.outputs.registered_file }}
+        run: |
+          set -euo pipefail
+
+          output_dir="${RUNNER_TEMP}/argocd-diffs"
+          status_file="${RUNNER_TEMP}/argocd-diff-status.tsv"
+          error_flag="${RUNNER_TEMP}/argocd-diff-errors"
+          app_list="${RUNNER_TEMP}/argocd-app-list.json"
+          app_sources="${RUNNER_TEMP}/argocd-app-sources.tsv"
+          mapping="${RUNNER_TEMP}/argocd-app-mapping.tsv"
+          processed_apps="${RUNNER_TEMP}/argocd-processed-apps.txt"
+          processed_dirs="${RUNNER_TEMP}/argocd-processed-dirs.txt"
+          mkdir -p "$output_dir"
+          : > "$status_file"
+          : > "$mapping"
+          : > "$processed_apps"
+          : > "$processed_dirs"
+
+          strip_ansi() {
+            perl -pe 's/\e\[[0-9;?]*[ -\/]*[@-~]//g' "$1" > "$2"
+          }
+
+          normalize_repo() {
+            local value
+            value="$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')"
+            value="${value%.git}"
+            value="${value#ssh://git@github.com/}"
+            value="${value#git@github.com:}"
+            value="${value#https://github.com/}"
+            value="${value#http://github.com/}"
+            printf '%s' "$value"
+          }
+
+          record_setup_error() {
+            local message="$1"
+            local index=0
+            local directory
+
+            while IFS= read -r directory; do
+              [[ -n "$directory" ]] || continue
+              index=$((index + 1))
+              local output="${output_dir}/${index}.txt"
+              printf '%s\n' "$message" > "$output"
+              printf '%s\terror\tapps/%s\t%s\n' \
+                "$directory" "$directory" "$output" >> "$status_file"
+            done < "$CHANGED_APPS_FILE"
+            touch "$error_flag"
+          }
+
+          if [[ -z "${ARGOCD_AUTH_TOKEN:-}" ]]; then
+            record_setup_error \
+              'The ARGOCD_AUTH_TOKEN repository secret is not configured.'
+            exit 0
+          fi
+
+          list_stderr="${RUNNER_TEMP}/argocd-app-list.stderr"
+          set +e
+          argocd app list \
+            --server "$ARGOCD_SERVER" \
+            --grpc-web \
+            --http-retry-max 3 \
+            --output json \
+            > "$app_list" 2> "$list_stderr"
+          list_status=$?
+          set -e
+
+          if [[ $list_status -ne 0 ]] || ! jq -e 'type == "array"' "$app_list" > /dev/null; then
+            clean_error="${RUNNER_TEMP}/argocd-app-list-error.txt"
+            strip_ansi "$list_stderr" "$clean_error"
+            if [[ ! -s "$clean_error" ]]; then
+              printf 'Unable to list Argo CD applications (exit %s).\n' \
+                "$list_status" > "$clean_error"
+            fi
+            record_setup_error "$(<"$clean_error")"
+            exit 0
+          fi
+
+          jq -r '
+            .[] as $app
+            | if (($app.spec.sources // []) | length) > 0 then
+                $app.spec.sources[]
+                | select((.repoURL // "") != "" and (.path // "") != "")
+                | [$app.metadata.name, .repoURL, .path, "multi"]
+                | @tsv
+              else
+                $app.spec.source
+                | select((.repoURL // "") != "" and (.path // "") != "")
+                | [$app.metadata.name, .repoURL, .path, "single"]
+                | @tsv
+              end
+          ' "$app_list" > "$app_sources"
+
+          current_repo="$(printf '%s' "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')"
+          while IFS=$'\t' read -r application repo_url source_path source_mode; do
+            [[ "$(normalize_repo "$repo_url")" == "$current_repo" ]] || continue
+            [[ "$source_path" == apps/* ]] || continue
+            directory="${source_path#apps/}"
+            directory="${directory%%/*}"
+            [[ -n "$directory" ]] || continue
+            printf '%s\t%s\t%s\t%s\n' \
+              "$directory" "$application" "$source_path" "$source_mode" >> "$mapping"
+          done < "$app_sources"
+          sort -u -o "$mapping" "$mapping"
+
+          index=0
+          while IFS= read -r directory; do
+            [[ -n "$directory" ]] || continue
+
+            matches="${RUNNER_TEMP}/argocd-matches-${index}.tsv"
+            awk -F '\t' -v directory="$directory" \
+              '$1 == directory && !seen[$2]++ { print $2 "\t" $3 "\t" $4 }' \
+              "$mapping" > "$matches"
+
+            if ! grep -Fqx "$directory" "$PRESENT_APPS_FILE"; then
+              index=$((index + 1))
+              output="${output_dir}/${index}.txt"
+              if grep -Fqx "$directory" "$REGISTERED_APPS_FILE"; then
+                state=error
+                printf '%s\n' \
+                  'This source directory was removed, but the app-of-apps inventory still references it.' \
+                  > "$output"
+                touch "$error_flag"
+              elif [[ ! -s "$matches" ]]; then
+                state=unregistered
+                printf '%s\n' \
+                  'This source-only path was removed and has no live Argo CD Application.' \
+                  > "$output"
+              elif [[ "$directory" != "$ARGOCD_ROOT_APPLICATION" ]]; then
+                state=removed
+                printf '%s\n' \
+                  'This source directory was removed. Its resource deletions are shown in the app-of-apps diff.' \
+                  > "$output"
+              else
+                state=error
+                printf '%s\n' \
+                  'This live Application source was removed without a corresponding app-of-apps change.' \
+                  > "$output"
+                touch "$error_flag"
+              fi
+              printf '%s\t%s\tapps/%s\t%s\n' \
+                "$directory" "$state" "$directory" "$output" >> "$status_file"
+              printf '%s\n' "$directory" >> "$processed_dirs"
+              continue
+            fi
+
+            if [[ ! -s "$matches" ]]; then
+              index=$((index + 1))
+              output="${output_dir}/${index}.txt"
+              if grep -Fqx "$directory" "$REGISTERED_APPS_FILE"; then
+                state=unregistered
+                printf '%s\n' \
+                  'This Application is not live yet; its registration is shown in the app-of-apps diff.' \
+                  > "$output"
+              elif grep -Fqx "$directory" "$BASE_PRESENT_APPS_FILE"; then
+                state=unregistered
+                printf '%s\n' \
+                  'This source path is intentionally not registered as a live Argo CD Application.' \
+                  > "$output"
+              else
+                state=error
+                printf '%s\n' \
+                  'This new source path is not registered in the app-of-apps inventory.' \
+                  > "$output"
+                touch "$error_flag"
+              fi
+              printf '%s\t%s\tapps/%s\t%s\n' \
+                "$directory" "$state" "$directory" "$output" >> "$status_file"
+              printf '%s\n' "$directory" >> "$processed_dirs"
+              continue
+            fi
+
+            while IFS=$'\t' read -r application source_path source_mode; do
+              [[ -n "$application" ]] || continue
+              if grep -Fqx "$application" "$processed_apps"; then
+                continue
+              fi
+              printf '%s\n' "$application" >> "$processed_apps"
+              index=$((index + 1))
+              stdout_file="${RUNNER_TEMP}/argocd-diff-${index}.stdout"
+              stderr_file="${RUNNER_TEMP}/argocd-diff-${index}.stderr"
+              clean_stdout="${RUNNER_TEMP}/argocd-diff-${index}.clean.stdout"
+              clean_stderr="${RUNNER_TEMP}/argocd-diff-${index}.clean.stderr"
+              output="${output_dir}/${index}.txt"
+
+              if [[ "$source_mode" == multi ]]; then
+                printf '%s\n' \
+                  'This workflow cannot safely override a multi-source Application revision.' \
+                  > "$output"
+                printf '%s\terror\t%s\t%s\n' \
+                  "$application" "$source_path" "$output" >> "$status_file"
+                touch "$error_flag"
+                continue
+              fi
+
+              set +e
+              KUBECTL_EXTERNAL_DIFF='diff -u -N --label live --label proposed' \
+                timeout 120s argocd app diff "$application" \
+                  --revision "$PR_HEAD_SHA" \
+                  --server "$ARGOCD_SERVER" \
+                  --grpc-web \
+                  --http-retry-max 3 \
+                  --exit-code=false \
+                  > "$stdout_file" 2> "$stderr_file"
+              diff_status=$?
+              set -e
+
+              strip_ansi "$stdout_file" "$clean_stdout"
+              strip_ansi "$stderr_file" "$clean_stderr"
+
+              if [[ $diff_status -ne 0 ]]; then
+                {
+                  [[ ! -s "$clean_stderr" ]] || cat "$clean_stderr"
+                  [[ ! -s "$clean_stdout" ]] || cat "$clean_stdout"
+                  if [[ ! -s "$clean_stderr" && ! -s "$clean_stdout" ]]; then
+                    printf 'Argo CD diff failed with exit %s.\n' "$diff_status"
+                  fi
+                } > "$output"
+                state=error
+                touch "$error_flag"
+              elif [[ -s "$clean_stdout" ]]; then
+                mv "$clean_stdout" "$output"
+                state=diff
+              else
+                printf '%s\n' 'No differences from the live Application.' > "$output"
+                state=no_diff
+              fi
+
+              printf '%s\t%s\t%s\t%s\n' \
+                "$application" "$state" "$source_path" "$output" >> "$status_file"
+            done < "$matches"
+            printf '%s\n' "$directory" >> "$processed_dirs"
+          done < "$CHANGED_APPS_FILE"
+
+      - name: Update PR comment
+        if: always()
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          CHANGES_OUTCOME: ${{ steps.changes.outcome }}
+          CHANGED_APPS_FILE: ${{ steps.changes.outputs.file }}
+          COLLECT_OUTCOME: ${{ steps.collect.outcome }}
+          INSTALL_OUTCOME: ${{ steps.install.outcome }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PROCESSED_DIRS_FILE: ${{ runner.temp }}/argocd-processed-dirs.txt
+          STATUS_FILE: ${{ runner.temp }}/argocd-diff-status.tsv
+        with:
+          script: |
+            const fs = require('fs');
+
+            const marker = '<!-- argocd-diff -->';
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const pullNumber = context.issue.number;
+            const changedFile = process.env.CHANGED_APPS_FILE;
+            const processedFile = process.env.PROCESSED_DIRS_FILE;
+            const statusFile = process.env.STATUS_FILE;
+            const headSha = process.env.PR_HEAD_SHA;
+
+            if (process.env.CHANGES_OUTCOME !== 'success') {
+              core.setFailed('Unable to determine the changed application paths.');
+              return;
+            }
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number: pullNumber,
+              per_page: 100,
+            });
+            const existing = comments.find((comment) =>
+              comment.user?.login === 'github-actions[bot]' &&
+              comment.body?.includes(marker)
+            );
+
+            const changed = changedFile && fs.existsSync(changedFile)
+              ? fs.readFileSync(changedFile, 'utf8').split('\n').filter(Boolean)
+              : [];
+
+            const { data: pull } = await github.rest.pulls.get({
+              owner,
+              repo,
+              pull_number: pullNumber,
+            });
+            if (pull.head.sha !== headSha) {
+              core.info('A newer PR revision exists; skipping this stale comment update.');
+              return;
+            }
+
+            if (changed.length === 0) {
+              if (existing) {
+                await github.rest.issues.deleteComment({
+                  owner,
+                  repo,
+                  comment_id: existing.id,
+                });
+              }
+              core.info('No application changes; no Argo CD comment is needed.');
+              return;
+            }
+
+            const parseStatuses = () => {
+              if (!fs.existsSync(statusFile)) return [];
+              return fs.readFileSync(statusFile, 'utf8')
+                .split('\n')
+                .filter(Boolean)
+                .map((line) => {
+                  const [application, state, sourcePath, outputPath] = line.split('\t');
+                  return { application, state, sourcePath, outputPath };
+                });
+            };
+
+            let entries = parseStatuses();
+            if (entries.length === 0) {
+              const outcome = process.env.INSTALL_OUTCOME === 'failure'
+                ? 'The Argo CD CLI could not be installed. See the workflow log.'
+                : process.env.COLLECT_OUTCOME === 'failure'
+                  ? 'The Argo CD diff step failed before producing output. See the workflow log.'
+                  : 'The workflow did not produce an Argo CD diff. See the workflow log.';
+              entries = changed.map((application) => ({
+                application,
+                state: 'error',
+                sourcePath: `apps/${application}`,
+                inlineOutput: outcome,
+              }));
+            } else if (process.env.COLLECT_OUTCOME === 'failure') {
+              const processed = processedFile && fs.existsSync(processedFile)
+                ? new Set(fs.readFileSync(processedFile, 'utf8').split('\n').filter(Boolean))
+                : new Set();
+              for (const directory of changed.filter((value) => !processed.has(value))) {
+                entries.push({
+                  application: directory,
+                  state: 'error',
+                  sourcePath: `apps/${directory}`,
+                  inlineOutput: 'Diff collection stopped before this application completed. See the workflow log.',
+                });
+              }
+            }
+
+            entries.sort((a, b) => a.application.localeCompare(b.application));
+
+            const escapeHtml = (value) => value
+              .replaceAll('&', '&amp;')
+              .replaceAll('<', '&lt;')
+              .replaceAll('>', '&gt;')
+              .replaceAll('"', '&quot;')
+              .replaceAll("'", '&#39;');
+
+            const truncateUtf8 = (value, maxBytes) => {
+              const input = Buffer.from(value, 'utf8');
+              if (input.length <= maxBytes) return { value, truncated: false };
+              let output = input.subarray(0, maxBytes).toString('utf8');
+              if (output.endsWith('\uFFFD')) output = output.slice(0, -1);
+              return { value: `${output}\n...`, truncated: true };
+            };
+
+            const fenceFor = (value) => {
+              const runs = value.match(/`+/g) || [];
+              const longest = runs.reduce((max, run) => Math.max(max, run.length), 0);
+              return '`'.repeat(Math.max(3, longest + 1));
+            };
+
+            const labels = {
+              diff: ['🟡', 'changes detected'],
+              no_diff: ['✅', 'no live difference'],
+              unregistered: ['⚪', 'not registered in Argo CD'],
+              removed: ['🔴', 'source removed'],
+              error: ['❌', 'diff failed'],
+            };
+
+            const counts = entries.reduce((result, entry) => {
+              result[entry.state] = (result[entry.state] || 0) + 1;
+              return result;
+            }, {});
+
+            const buildBody = (entryBudget) => {
+              const shortSha = headSha.slice(0, 7);
+              const commitUrl = `${context.serverUrl}/${owner}/${repo}/commit/${headSha}`;
+              const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+              const summary = [
+                `${counts.diff || 0} changed`,
+                `${counts.no_diff || 0} unchanged`,
+                `${counts.unregistered || 0} unregistered`,
+                `${counts.removed || 0} removed`,
+                `${counts.error || 0} failed`,
+              ].join(' · ');
+
+              const body = [
+                marker,
+                '## Argo CD application diff',
+                '',
+                `Compared PR commit [\`${shortSha}\`](${commitUrl}) with the current live cluster.`,
+                '',
+                `**${summary}** · [workflow run](${runUrl})`,
+                '',
+                '> [!NOTE]',
+                '> This is proposed desired state versus live state, so existing drift can appear. Argo CD omits Kubernetes Secret data from diffs.',
+                '',
+              ];
+
+              for (const entry of entries) {
+                const [icon, label] = labels[entry.state] || labels.error;
+                const application = escapeHtml(entry.application);
+                const sourcePath = escapeHtml(entry.sourcePath || 'unknown source');
+                let output = entry.inlineOutput || '';
+                if (!output && entry.outputPath && fs.existsSync(entry.outputPath)) {
+                  output = fs.readFileSync(entry.outputPath, 'utf8').trimEnd();
+                }
+
+                body.push(
+                  '<details>',
+                  `<summary>${icon} <strong>${application}</strong> - ${label}</summary>`,
+                  '',
+                  `<sub>Source: <code>${sourcePath}</code></sub>`,
+                  ''
+                );
+
+                if (entry.state === 'diff' || entry.state === 'error') {
+                  const truncated = truncateUtf8(output || 'No output was captured.', entryBudget);
+                  const fence = fenceFor(truncated.value);
+                  body.push(
+                    `${fence}${entry.state === 'diff' ? 'diff' : 'text'}`,
+                    truncated.value,
+                    fence,
+                    ''
+                  );
+                  if (truncated.truncated) {
+                    body.push('_Output truncated to fit GitHub\'s PR comment limit._', '');
+                  }
+                } else {
+                  body.push(output || 'No diff output.', '');
+                }
+
+                body.push('</details>', '');
+              }
+
+              return body.join('\n');
+            };
+
+            let budget = Math.max(512, Math.floor(42000 / entries.length));
+            let body = buildBody(budget);
+            while (Buffer.byteLength(body, 'utf8') > 60000 && budget > 128) {
+              budget = Math.max(128, Math.floor(budget * 0.75));
+              body = buildBody(budget);
+            }
+
+            if (Buffer.byteLength(body, 'utf8') > 60000) {
+              core.setFailed('The generated PR comment exceeds the 60,000-byte safety limit.');
+              return;
+            }
+
+            if (existing) {
+              if (existing.body !== body) {
+                await github.rest.issues.updateComment({
+                  owner,
+                  repo,
+                  comment_id: existing.id,
+                  body,
+                });
+              }
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: pullNumber,
+                body,
+              });
+            }
+
+      - name: Fail on Argo CD errors
+        if: always() && steps.changes.outputs.count != '0'
+        run: |
+          if [[ -f "${RUNNER_TEMP}/argocd-diff-errors" ]]; then
+            echo 'One or more Argo CD diffs failed. See the PR comment.' >&2
+            exit 1
+          fi
