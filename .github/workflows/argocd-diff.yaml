@@ -147,8 +147,10 @@ jobs:
         id: collect
         if: steps.changes.outputs.count != '0'
         env:
-          # Configure a dedicated applications,get-only token in repository secrets.
+          # Configure Argo CD and Cloudflare Access credentials as repository secrets.
           ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
+          CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
           BASE_PRESENT_APPS_FILE: ${{ steps.changes.outputs.base_present_file }}
           CHANGED_APPS_FILE: ${{ steps.changes.outputs.file }}
           PRESENT_APPS_FILE: ${{ steps.changes.outputs.present_file }}
@@ -208,12 +210,24 @@ jobs:
             exit 0
           fi
 
+          if [[ -z "${CF_ACCESS_CLIENT_ID:-}" || -z "${CF_ACCESS_CLIENT_SECRET:-}" ]]; then
+            record_setup_error \
+              'The CF_ACCESS_CLIENT_ID and CF_ACCESS_CLIENT_SECRET repository secrets are required for Cloudflare Access.'
+            exit 0
+          fi
+
+          argocd_access_headers=(
+            --header "CF-Access-Client-Id: ${CF_ACCESS_CLIENT_ID}"
+            --header "CF-Access-Client-Secret: ${CF_ACCESS_CLIENT_SECRET}"
+          )
+
           list_stderr="${RUNNER_TEMP}/argocd-app-list.stderr"
           set +e
           argocd app list \
             --server "$ARGOCD_SERVER" \
             --grpc-web \
             --http-retry-max 3 \
+            "${argocd_access_headers[@]}" \
             --output json \
             > "$app_list" 2> "$list_stderr"
           list_status=$?
@@ -354,6 +368,7 @@ jobs:
                   --server "$ARGOCD_SERVER" \
                   --grpc-web \
                   --http-retry-max 3 \
+                  "${argocd_access_headers[@]}" \
                   --exit-code=false \
                   > "$stdout_file" 2> "$stderr_file"
               diff_status=$?
