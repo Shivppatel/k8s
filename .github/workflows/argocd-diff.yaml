@@ -401,6 +401,94 @@ jobs:
             printf '%s\n' "$directory" >> "$processed_dirs"
           done < "$CHANGED_APPS_FILE"
 
+      - name: Publish full diffs to run summary
+        if: always() && steps.changes.outputs.count != '0'
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          STATUS_FILE: ${{ runner.temp }}/argocd-diff-status.tsv
+        run: |
+          set -euo pipefail
+
+          summary="$GITHUB_STEP_SUMMARY"
+          status_file="$STATUS_FILE"
+          max_summary_bytes=900000
+          summary_bytes=$(wc -c < "$summary")
+
+          {
+            echo '# Argo CD application diff'
+            echo
+            echo "Full desired-state versus live-state output for PR commit \`${PR_HEAD_SHA:0:7}\`."
+            echo
+          } >> "$summary"
+
+          if [[ ! -s "$status_file" ]]; then
+            echo 'No application diff output was produced. See the workflow log.' >> "$summary"
+            exit 0
+          fi
+
+          index=0
+          while IFS=$'\t' read -r application state source_path output; do
+            [[ -n "$application" ]] || continue
+            index=$((index + 1))
+            block="${RUNNER_TEMP}/argocd-summary-${index}.md"
+
+            case "$state" in
+              diff) icon='🟡'; label='changes detected'; language='diff' ;;
+              no_diff) icon='✅'; label='no live difference'; language='text' ;;
+              unregistered) icon='⚪'; label='not registered in Argo CD'; language='text' ;;
+              removed) icon='🔴'; label='source removed'; language='text' ;;
+              *) icon='❌'; label='diff failed'; language='text' ;;
+            esac
+
+            {
+              printf '<details>\n<summary>%s <strong>%s</strong> - %s</summary>\n\n' \
+                "$icon" "$application" "$label"
+              printf '<sub>Source: <code>%s</code></sub>\n\n' "$source_path"
+
+              if [[ -f "$output" ]]; then
+                fence='```'
+                while grep -Fq "$fence" "$output"; do
+                  fence="${fence}$(printf '\140')"
+                done
+                printf '%s%s\n' "$fence" "$language"
+                cat "$output"
+                printf '\n%s\n\n' "$fence"
+              else
+                echo 'No output was captured for this application.'
+                echo
+              fi
+
+              echo '</details>'
+              echo
+            } > "$block"
+
+            block_bytes=$(wc -c < "$block")
+            if (( summary_bytes + block_bytes > max_summary_bytes )); then
+              {
+                printf '<details>\n<summary>%s <strong>%s</strong> - %s</summary>\n\n' \
+                  "$icon" "$application" "$label"
+                echo "The full output is retained in the \`argocd-diffs\` workflow artifact because it exceeds GitHub's run-summary limit."
+                echo
+                echo '</details>'
+                echo
+              } >> "$summary"
+            else
+              cat "$block" >> "$summary"
+              summary_bytes=$((summary_bytes + block_bytes))
+            fi
+          done < <(sort -t $'\t' -k1,1 "$status_file")
+
+      - name: Archive full application diffs
+        if: always() && steps.changes.outputs.count != '0'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: argocd-diffs-pr-${{ github.event.pull_request.number }}
+          path: |
+            ${{ runner.temp }}/argocd-diffs/
+            ${{ runner.temp }}/argocd-diff-status.tsv
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Update PR comment
         if: always()
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
@@ -514,20 +602,6 @@ jobs:
               .replaceAll('"', '&quot;')
               .replaceAll("'", '&#39;');
 
-            const truncateUtf8 = (value, maxBytes) => {
-              const input = Buffer.from(value, 'utf8');
-              if (input.length <= maxBytes) return { value, truncated: false };
-              let output = input.subarray(0, maxBytes).toString('utf8');
-              if (output.endsWith('\uFFFD')) output = output.slice(0, -1);
-              return { value: `${output}\n...`, truncated: true };
-            };
-
-            const fenceFor = (value) => {
-              const runs = value.match(/`+/g) || [];
-              const longest = runs.reduce((max, run) => Math.max(max, run.length), 0);
-              return '`'.repeat(Math.max(3, longest + 1));
-            };
-
             const labels = {
               diff: ['🟡', 'changes detected'],
               no_diff: ['✅', 'no live difference'],
@@ -541,7 +615,7 @@ jobs:
               return result;
             }, {});
 
-            const buildBody = (entryBudget) => {
+            const buildBody = () => {
               const shortSha = headSha.slice(0, 7);
               const commitUrl = `${context.serverUrl}/${owner}/${repo}/commit/${headSha}`;
               const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
@@ -570,11 +644,6 @@ jobs:
                 const [icon, label] = labels[entry.state] || labels.error;
                 const application = escapeHtml(entry.application);
                 const sourcePath = escapeHtml(entry.sourcePath || 'unknown source');
-                let output = entry.inlineOutput || '';
-                if (!output && entry.outputPath && fs.existsSync(entry.outputPath)) {
-                  output = fs.readFileSync(entry.outputPath, 'utf8').trimEnd();
-                }
-
                 body.push(
                   '<details>',
                   `<summary>${icon} <strong>${application}</strong> - ${label}</summary>`,
@@ -584,19 +653,15 @@ jobs:
                 );
 
                 if (entry.state === 'diff' || entry.state === 'error') {
-                  const truncated = truncateUtf8(output || 'No output was captured.', entryBudget);
-                  const fence = fenceFor(truncated.value);
+                  const outputLabel = entry.state === 'diff' ? 'diff' : 'error output';
                   body.push(
-                    `${fence}${entry.state === 'diff' ? 'diff' : 'text'}`,
-                    truncated.value,
-                    fence,
+                    `[View the full ${outputLabel} in the workflow summary](${runUrl}).`,
+                    '',
+                    'The `argocd-diffs` workflow artifact retains the unabridged file.',
                     ''
                   );
-                  if (truncated.truncated) {
-                    body.push('_Output truncated to fit GitHub\'s PR comment limit._', '');
-                  }
                 } else {
-                  body.push(output || 'No diff output.', '');
+                  body.push(entry.inlineOutput || 'No diff output.', '');
                 }
 
                 body.push('</details>', '');
@@ -605,12 +670,7 @@ jobs:
               return body.join('\n');
             };
 
-            let budget = Math.max(512, Math.floor(42000 / entries.length));
-            let body = buildBody(budget);
-            while (Buffer.byteLength(body, 'utf8') > 60000 && budget > 128) {
-              budget = Math.max(128, Math.floor(budget * 0.75));
-              body = buildBody(budget);
-            }
+            const body = buildBody();
 
             if (Buffer.byteLength(body, 'utf8') > 60000) {
               core.setFailed('The generated PR comment exceeds the 60,000-byte safety limit.');
