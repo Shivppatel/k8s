@@ -62,20 +62,19 @@ metrics-server:
     # if you use Weave network on EKS
     enabled: false
 
-  replicas: 1
+  replicas: 2
 
   revisionHistoryLimit:
 
-  updateStrategy: {}
-  #   type: RollingUpdate
-  #   rollingUpdate:
-  #     maxSurge: 0
-  #     maxUnavailable: 1
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
 
   podDisruptionBudget:
     # https://kubernetes.io/docs/tasks/run-application/configure-pdb/
-    enabled: false
-    minAvailable:
+    enabled: true
+    minAvailable: 1
     maxUnavailable:
     unhealthyPodEvictionPolicy:
 
@@ -174,7 +173,14 @@ metrics-server:
 
   tolerations: []
 
-  affinity: {}
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: metrics-server
+              app.kubernetes.io/name: metrics-server
+          topologyKey: kubernetes.io/hostname
 
   topologySpreadConstraints: []
 
