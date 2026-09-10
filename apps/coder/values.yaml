@@ -1,0 +1,40 @@
+coder:
+  coder:
+    replicaCount: 1
+    annotations:
+      secret.reloader.stakater.com/reload: "coder-db-secret"
+    env:
+      - name: CODER_ACCESS_URL
+        value: "https://coder.shivpatel.xyz"
+      - name: CODER_PG_CONNECTION_URL
+        valueFrom:
+          secretKeyRef:
+            name: coder-db-secret
+            key: url
+      - name: CODER_OAUTH2_GITHUB_DEFAULT_PROVIDER_ENABLE
+        value: "false"
+      - name: CODER_TELEMETRY_ENABLE
+        value: "false"
+      - name: CODER_PROMETHEUS_ENABLE
+        value: "true"
+    service:
+      type: ClusterIP
+    ingress:
+      enable: false
+    serviceAccount:
+      workspacePerms: false
+      enableDeployments: false
+      workspaceNamespaces:
+        - name: coder-workspaces
+          workspacePerms: true
+          enableDeployments: false
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "1Gi"
+      limits:
+        cpu: "2"
+        memory: "2Gi"
+    securityContext:
+      capabilities:
+        drop: [ALL]

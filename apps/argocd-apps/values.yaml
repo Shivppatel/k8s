@@ -799,6 +799,24 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
+    coder:
+      name: coder
+      namespace: argocd
+      destination:
+        namespace: coder
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/coder
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
     atlantis:
       name: atlantis
       namespace: argocd

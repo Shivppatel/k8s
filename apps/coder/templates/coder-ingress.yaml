@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: coder-ingress
+  namespace: {{ .Release.Namespace }}
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`coder.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: coder
+          port: 80
+  tls: {}

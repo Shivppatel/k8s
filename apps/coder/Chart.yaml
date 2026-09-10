@@ -1,0 +1,10 @@
+apiVersion: v2
+name: coder
+description: Coder remote development control plane
+type: application
+version: 0.1.0
+appVersion: "2.35.4"
+dependencies:
+  - name: coder
+    repository: https://helm.coder.com/v2
+    version: 2.35.4

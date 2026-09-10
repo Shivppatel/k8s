@@ -1,0 +1,14 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: coder
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-options: "Prune=false"
+spec:
+  name: coder
+  owner: coder
+  cluster:
+    name: postgresql
+  ensure: present
+  databaseReclaimPolicy: retain
