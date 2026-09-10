@@ -87,54 +87,72 @@ spec:
     roles:
       - name: coder
         ensure: present
+        connectionLimit: -1
+        inherit: true
         login: true
         superuser: false
         passwordSecret:
           name: coder-db-secret
       - name: postgresql_setup
         ensure: present
+        connectionLimit: -1
+        inherit: true
         login: true
         superuser: true
         passwordSecret:
           name: postgresql-setup-secret
       - name: immich
         ensure: present
+        connectionLimit: -1
+        inherit: true
         login: true
         superuser: false
         passwordSecret:
           name: immich-db-secret
       - name: n8n
         ensure: present
+        connectionLimit: -1
+        inherit: true
         login: true
         superuser: false
         passwordSecret:
           name: n8n-db-secret
       - name: terraform
         ensure: present
+        connectionLimit: -1
+        inherit: true
         login: true
         superuser: false
         passwordSecret:
           name: terraform-db-secret
       - name: teslamate
         ensure: present
+        connectionLimit: -1
+        inherit: true
         login: true
         superuser: false
         passwordSecret:
           name: teslamate-db-secret
       - name: authentik
         ensure: present
+        connectionLimit: -1
+        inherit: true
         login: true
         superuser: false
         passwordSecret:
           name: authentik-db-secret
       - name: gitlab
         ensure: present
+        connectionLimit: -1
+        inherit: true
         login: true
         superuser: false
         passwordSecret:
           name: gitlab-db-secret
       - name: datadog
         ensure: present
+        connectionLimit: -1
+        inherit: true
         login: true
         superuser: false
         inRoles:
@@ -143,6 +161,8 @@ spec:
           name: datadog-db-secret
       - name: lnd
         ensure: present
+        connectionLimit: -1
+        inherit: true
         login: true
         superuser: false
         passwordSecret:
