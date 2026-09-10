@@ -13,6 +13,8 @@ Coder uses the official pinned Helm chart, the shared CloudNativePG cluster, Vau
 
 ## Reconciliation and first use
 
+The PostgreSQL managed role list declares CNPG defaults explicitly (`ensure`, `connectionLimit`, and `inherit`). Do not ignore fields inside this list while `RespectIgnoreDifferences=true` is enabled: Argo can preserve the entire live list during sync and omit newly added roles.
+
 Within the PostgreSQL application, the role ExternalSecret is wave `0`, Cluster is wave `1`, and Database is wave `2`. These waves do not order separate Argo applications: Coder may restart until ESO, the role, and the database are ready. The workspace namespace is wave `-1` within Coder and is protected from pruning to preserve workspace PVCs.
 
 After merging, verify `postgresql` and `coder` are Synced/Healthy, `Database/coder` is reconciled, both ExternalSecrets are ready, and the HTTPS endpoint serves Coder. Initialize the first administrator promptly from a trusted connection; until that account exists, anyone who can reach setup can claim it. The default shared GitHub OAuth provider is disabled. Local password login is available; dedicated OIDC/OAuth configuration is a separate follow-up.

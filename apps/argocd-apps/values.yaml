@@ -617,9 +617,6 @@ argocd-apps:
             - .spec.bootstrap.initdb.encoding
             - .spec.bootstrap.initdb.localeCType
             - .spec.bootstrap.initdb.localeCollate
-            - .spec.managed.roles[].connectionLimit
-            - .spec.managed.roles[].ensure
-            - .spec.managed.roles[].inherit
         - group: ""
           kind: PersistentVolumeClaim
           jqPathExpressions:
