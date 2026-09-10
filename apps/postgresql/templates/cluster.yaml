@@ -85,6 +85,12 @@ spec:
 
   managed:
     roles:
+      - name: coder
+        ensure: present
+        login: true
+        superuser: false
+        passwordSecret:
+          name: coder-db-secret
       - name: postgresql_setup
         ensure: present
         login: true
