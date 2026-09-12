@@ -27,7 +27,7 @@ coder:
       workspaceNamespaces:
         - name: coder-workspaces
           workspacePerms: true
-          enableDeployments: false
+          enableDeployments: true
     resources:
       requests:
         cpu: "500m"
