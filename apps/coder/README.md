@@ -1,6 +1,6 @@
 # Coder
 
-Coder uses the official pinned Helm chart, the shared CloudNativePG cluster, Vault-backed ExternalSecrets, and Traefik at **https://coder.shivpatel.xyz**. The Argo CD application tracks `main` and automatically reconciles after merge.
+Coder uses the official pinned Helm chart, the shared CloudNativePG cluster, Vault-backed ExternalSecrets, and Traefik at **https://coder.shivpatel.xyz**. The Argo CD application tracks `main` and automatically reconciles after merge. Wildcard workspace applications use `*-coder.shivpatel.xyz`.
 
 ## Configuration
 
@@ -8,6 +8,7 @@ Coder uses the official pinned Helm chart, the shared CloudNativePG cluster, Vau
 - `coder-db-secret` in `postgresql` supplies the CNPG managed role. The same ExternalSecret name in `coder` builds the connection URL with URL-escaped credentials and `sslmode=require` (encryption, without server certificate verification).
 - `Database/coder` in `postgresql` declaratively creates the database owned by the non-superuser `coder` role. Database deletion retains data. It deliberately does not extend the legacy setup Job, which performs unrelated extension changes.
 - The control plane uses a ClusterIP Service on port 80. `IngressRoute/coder-ingress` uses `websecure` and Traefik's default `wildcard-cert-new` certificate. DNS must route this hostname to Traefik, and any upstream proxy must support WebSockets.
+- `CODER_WILDCARD_ACCESS_URL=*-coder.shivpatel.xyz` enables Coder apps marked `subdomain = true`, including port forwarding. Create a DNS wildcard record for `*.shivpatel.xyz` pointing to Traefik; the existing certificate for `*.shivpatel.xyz` covers these hosts. The IngressRoute accepts both the dashboard hostname and generated `*-coder.shivpatel.xyz` app hostnames. Ensure this broad wildcard does not overlap another service that owns subdomains under `shivpatel.xyz`.
 - One control-plane replica has CPU/memory requests and limits, upstream readiness checks, non-root execution, seccomp, and dropped capabilities. Reloader restarts it after database Secret changes. `PodMonitor/coder` supplies metrics to the existing Prometheus installation.
 - Control-plane state lives in PostgreSQL; no control-plane PVC is needed. Existing PostgreSQL storage is retained. Kubernetes workspace templates should use `coder-workspaces`, in-cluster authentication, and explicitly choose `longhorn` for persistent workspace volumes. Namespace-scoped RBAC permits pods and PVCs there, with no workspace-management permissions in the control-plane namespace or cluster-wide role.
 

@@ -12,4 +12,9 @@ spec:
       services:
         - name: coder
           port: 80
+    - match: HostRegexp(`{app:[a-z0-9-]+}-coder.shivpatel.xyz`)
+      kind: Rule
+      services:
+        - name: coder
+          port: 80
   tls: {}
