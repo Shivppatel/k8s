@@ -31,10 +31,10 @@ jellyfin:
   image:
     # -- Container image repository for Jellyfin.
     repository: docker.io/jellyfin/jellyfin
-    # -- Jellyfin container image tag. Leave empty to automatically use the Chart's app version.
-    tag: "latest"
+    # -- Jellyfin container image tag. Pin this explicitly to avoid surprise major-version pulls.
+    tag: "10.11.8"
     # -- Image pull policy (Always, IfNotPresent, or Never).
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
   # -- Override the default name of the chart.
   nameOverride: ""
