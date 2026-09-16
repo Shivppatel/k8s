@@ -34,7 +34,7 @@ jellyfin:
     # -- Jellyfin container image tag. Leave empty to automatically use the Chart's app version.
     tag: "latest"
     # -- Image pull policy (Always, IfNotPresent, or Never).
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
 
   # -- Override the default name of the chart.
   nameOverride: ""
