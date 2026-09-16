@@ -32,7 +32,7 @@ jellyfin:
     # -- Container image repository for Jellyfin.
     repository: docker.io/jellyfin/jellyfin
     # -- Jellyfin container image tag. Pin this explicitly to avoid surprise major-version pulls.
-    tag: "10.11.8"
+    tag: "12.1.20260915-010956"
     # -- Image pull policy (Always, IfNotPresent, or Never).
     pullPolicy: IfNotPresent
 
