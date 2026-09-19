@@ -1,6 +1,6 @@
 dependencies:
 - name: localstack
   repository: https://helm.localstack.cloud
-  version: 0.7.0
-digest: sha256:370775a0b76bd736878fb6b242c2baf6baf6d1da15c3a6820cd9c6f5a331ed93
-generated: "2026-03-12T22:47:48.747514835Z"
+  version: 0.7.1
+digest: sha256:961fed46e6e67ef30ef9cd29daf0ddca0c8f1eb35d18cfd7f83afc46926beb95
+generated: "2026-09-19T18:35:20.404488542Z"
