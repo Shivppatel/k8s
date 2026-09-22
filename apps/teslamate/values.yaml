@@ -53,7 +53,7 @@ teslamate:
           name: teslamateapi
           image:
             repository: tobiasehlert/teslamateapi
-            tag: 1.24.2
+            tag: 1.25.0
           env:
             ENCRYPTION_KEY: "{{ .Values.controllers.main.containers.main.env.ENCRYPTION_KEY }}"
             DATABASE_USER: "teslamate"
@@ -74,7 +74,7 @@ teslamate:
           enabled: false
           image:
             repository: mattjeanes/teslamateagile
-            tag: v1.22.0
+            tag: v1.23.0
           env:
             DATABASE_USER: "teslamate"
             DATABASE_PASS:

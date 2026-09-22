@@ -100,7 +100,7 @@ atlantis:
   image:
     repository: ghcr.io/runatlantis/atlantis
     # -- If not set appVersion field from Chart.yaml is used
-    tag: v0.47.1
+    tag: v0.48.0
     pullPolicy: Always
 
   # -- Optionally specify an array of imagePullSecrets.
@@ -507,7 +507,7 @@ atlantis:
   initConfig:
     # -- Install providers/plugins into a path shared with the Atlantis pod.
     enabled: false
-    image: alpine:3.23 # renovate: datasource=docker depName=alpine
+    image: alpine:3.24 # renovate: datasource=docker depName=alpine
     imagePullPolicy: IfNotPresent
     # -- SharedDir is set as env var INIT_SHARED_DIR.
     sharedDir: /plugins

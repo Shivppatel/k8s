@@ -6,7 +6,7 @@ home-assistant:
   hostNetwork: true
   initContainers:
     - name: install-hacs
-      image: alpine:3.23 # renovate: datasource=docker depName=alpine
+      image: alpine:3.24 # renovate: datasource=docker depName=alpine
       command: ["/bin/sh", "-c"]
       args:
         - |

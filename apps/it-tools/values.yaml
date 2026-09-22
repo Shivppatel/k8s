@@ -62,7 +62,7 @@ it-tools:
     image:
       repository: nginx/nginx-prometheus-exporter
       pullPolicy: IfNotPresent
-      tag: "1.5.1"
+      tag: "1.5.3"
     args:
       - --nginx.scrape-uri=http://localhost:8081/stub_status
     port: 9113

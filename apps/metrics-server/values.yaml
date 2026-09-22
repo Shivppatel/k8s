@@ -118,7 +118,7 @@ metrics-server:
     enabled: false
     image:
       repository: registry.k8s.io/autoscaling/addon-resizer
-      tag: 1.8.23
+      tag: 1.8.24
     securityContext:
       allowPrivilegeEscalation: false
       readOnlyRootFilesystem: true
