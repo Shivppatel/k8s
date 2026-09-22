@@ -119,7 +119,7 @@ argo-rollouts:
       # -- Repository to use
       repository: argoproj/argo-rollouts
       # -- Overrides the image tag (default is the chart appVersion)
-      tag: ""
+      tag: v1.10.0
       # -- Image pull policy
       pullPolicy: IfNotPresent
 
@@ -377,7 +377,7 @@ argo-rollouts:
       # --  Repository to use
       repository: argoproj/kubectl-argo-rollouts
       # -- Overrides the image tag (default is the chart appVersion)
-      tag: ""
+      tag: v1.10.0
       # -- Image pull policy
       pullPolicy: IfNotPresent
     # -- Additional command line arguments to pass to rollouts-dashboard. A list of flags.

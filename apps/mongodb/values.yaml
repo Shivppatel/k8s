@@ -4,6 +4,8 @@ mongodb:
   image:
     registry: registry-1.docker.io
     repository: bitnamilegacy/mongodb
+    tag: "latest@sha256:b0652af9c8d07b4b0bec60cf352a7c04d5e769d0d6e30e93566792affa3c0f20"
+    pullPolicy: IfNotPresent
   updateStrategy:
     type: Recreate
   podAnnotations:

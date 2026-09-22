@@ -3,7 +3,7 @@ descheduler:
 
   image:
     repository: registry.k8s.io/descheduler/descheduler
-    tag: ""
+    tag: v0.36.0
     pullPolicy: IfNotPresent
 
   imagePullSecrets:

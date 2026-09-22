@@ -16,7 +16,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: create-user
-          image: registry-1.docker.io/bitnamilegacy/mongodb:latest
+          image: "{{ .Values.mongodb.image.registry }}/{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
           imagePullPolicy: IfNotPresent
           command:
             - /bin/bash

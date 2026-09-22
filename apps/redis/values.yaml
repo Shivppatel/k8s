@@ -5,7 +5,8 @@ redis:
   image:
     registry: registry-1.docker.io
     repository: bitnamilegacy/redis
-    tag: latest
+    tag: "latest@sha256:5927ff3702df7106bbb7dcc0f8e3d053d979253c3aecce53f07f40db990f823b"
+    pullPolicy: IfNotPresent
   auth:
     existingSecret: redis-password-secret
   master:

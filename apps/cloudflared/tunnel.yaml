@@ -19,7 +19,8 @@ spec:
           - name: net.ipv4.ping_group_range
             value: "65532 65532"
       containers:
-        - image: cloudflare/cloudflared:latest
+        - image: cloudflare/cloudflared:2026.9.1 # renovate: datasource=docker depName=cloudflare/cloudflared
+          imagePullPolicy: IfNotPresent
           name: cloudflared
           env:
             # Defines an environment variable for the tunnel token.
