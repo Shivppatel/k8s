@@ -258,7 +258,7 @@ emqx:
       path: /mqtt
       pathType: ImplementationSpecific
       hosts:
-        - mqtt.emqx.local
+      - mqtt.emqx.local
       tls: []
 
   podSecurityContext:
@@ -267,7 +267,7 @@ emqx:
     fsGroupChangePolicy: Always
     runAsUser: 1000
     supplementalGroups:
-      - 1000
+    - 1000
 
   containerSecurityContext:
     enabled: true
