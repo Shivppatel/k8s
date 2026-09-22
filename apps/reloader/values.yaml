@@ -5,9 +5,9 @@ reloader:
     ##
     imageRegistry: ""
     imagePullSecrets: []
-    #imagePullSecrets:
+    # imagePullSecrets:
     #  - name: my-pull-secret
-    #imagePullSecrets:
+    # imagePullSecrets:
     #  - my-pull-secret
 
   kubernetes:
