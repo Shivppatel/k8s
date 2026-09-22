@@ -602,6 +602,66 @@ jobs:
               .replaceAll('"', '&quot;')
               .replaceAll("'", '&#39;');
 
+            const minifyDiff = (value) => {
+              const lines = value.replace(/\r\n?/g, '\n').trimEnd().split('\n');
+              const hasDiffStructure = lines.some((line) =>
+                line.startsWith('@@') ||
+                line.startsWith('=====') ||
+                line.startsWith('diff --git ')
+              );
+              if (!hasDiffStructure) return value.trimEnd();
+
+              const compact = [];
+              let omittedContext = false;
+              let hasChange = false;
+
+              for (const line of lines) {
+                if (
+                  line.startsWith('diff --git ') ||
+                  line.startsWith('index ') ||
+                  line === '--- live' ||
+                  line === '+++ proposed'
+                ) {
+                  continue;
+                }
+
+                const isChange = line.startsWith('+') || line.startsWith('-');
+                const keep =
+                  line.startsWith('@@') ||
+                  isChange ||
+                  line.startsWith('=====') ||
+                  line.startsWith('\\ No newline');
+
+                if (!keep) {
+                  omittedContext = true;
+                  continue;
+                }
+
+                if (omittedContext && compact.length && compact[compact.length - 1] !== '...') {
+                  compact.push('...');
+                }
+                compact.push(line);
+                omittedContext = false;
+                hasChange ||= isChange;
+              }
+
+              return hasChange ? compact.join('\n') : value.trimEnd();
+            };
+
+            const truncateUtf8 = (value, maxBytes) => {
+              const input = Buffer.from(value, 'utf8');
+              if (input.length <= maxBytes) return { value, truncated: false };
+              let output = input.subarray(0, maxBytes).toString('utf8');
+              if (output.endsWith('\uFFFD')) output = output.slice(0, -1);
+              return { value: `${output}\n...`, truncated: true };
+            };
+
+            const fenceFor = (value) => {
+              const runs = value.match(/`+/g) || [];
+              const longest = runs.reduce((max, run) => Math.max(max, run.length), 0);
+              return '`'.repeat(Math.max(3, longest + 1));
+            };
+
             const labels = {
               diff: ['🟡', 'changes detected'],
               no_diff: ['✅', 'no live difference'],
@@ -637,6 +697,7 @@ jobs:
                 '',
                 '> [!NOTE]',
                 '> This is proposed desired state versus live state, so existing drift can appear. Argo CD omits Kubernetes Secret data from diffs.',
+                '> Inline diffs show changed lines only; additions are green and removals are red.',
                 '',
               ];
 
@@ -644,6 +705,11 @@ jobs:
                 const [icon, label] = labels[entry.state] || labels.error;
                 const application = escapeHtml(entry.application);
                 const sourcePath = escapeHtml(entry.sourcePath || 'unknown source');
+                let output = entry.inlineOutput || '';
+                if (!output && entry.outputPath && fs.existsSync(entry.outputPath)) {
+                  output = fs.readFileSync(entry.outputPath, 'utf8').trimEnd();
+                }
+
                 body.push(
                   '<details>',
                   `<summary>${icon} <strong>${application}</strong> - ${label}</summary>`,
@@ -653,7 +719,22 @@ jobs:
                 );
 
                 if (entry.state === 'diff' || entry.state === 'error') {
+                  const inlineOutput = entry.state === 'diff' ? minifyDiff(output) : output;
+                  const truncated = truncateUtf8(
+                    inlineOutput || 'No output was captured.',
+                    entryBudget
+                  );
+                  const fence = fenceFor(truncated.value);
                   const outputLabel = entry.state === 'diff' ? 'diff' : 'error output';
+                  body.push(
+                    `${fence}${entry.state === 'diff' ? 'diff' : 'text'}`,
+                    truncated.value,
+                    fence,
+                    '',
+                  );
+                  if (truncated.truncated) {
+                    body.push('_Inline output truncated to fit GitHub\'s PR comment limit._', '');
+                  }
                   body.push(
                     `[View the full ${outputLabel} in the workflow summary](${runUrl}).`,
                     '',
@@ -670,7 +751,12 @@ jobs:
               return body.join('\n');
             };
 
-            const body = buildBody();
+            let budget = Math.max(512, Math.floor(42000 / entries.length));
+            let body = buildBody(budget);
+            while (Buffer.byteLength(body, 'utf8') > 60000 && budget > 128) {
+              budget = Math.max(128, Math.floor(budget * 0.75));
+              body = buildBody(budget);
+            }
 
             if (Buffer.byteLength(body, 'utf8') > 60000) {
               core.setFailed('The generated PR comment exceeds the 60,000-byte safety limit.');
