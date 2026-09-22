@@ -88,7 +88,7 @@ localstack:
   mountDind:
     enabled: false
     forceTLS: true
-    image: "docker:20.10-dind"
+    image: "docker:20.10-dind" # renovate: datasource=docker depName=docker
 
   ## All the parameters from the configuatioan can be added using extraEnvVars.
   ## Ref. https://docs.localstack.cloud/references/configuration/
@@ -276,7 +276,7 @@ localstack:
     # or tag is needed for an environment
     image:
       repository: amazon/aws-cli
-      tag: latest
+      tag: "latest@sha256:c240dd63cdbab17197486d55460675ef2b94c9cc372dedae34dee53ccd30657c"
 
   # @param volumeMounts Extra volumes to mount
   volumeMounts: []

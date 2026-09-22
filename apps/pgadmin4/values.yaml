@@ -1,5 +1,6 @@
 pgadmin4:
   image:
     registry: registry-1.docker.io
-    # repository: bitnami-legacy/postgresql
-    tag: latest
+    repository: dpage/pgadmin4
+    tag: 9.16
+    pullPolicy: IfNotPresent

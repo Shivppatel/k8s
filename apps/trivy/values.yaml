@@ -203,7 +203,7 @@ trivy-operator:
     repository: "aquasec/trivy-operator"
     # -- tag is an override of the image tag, which is by default set by the
     # appVersion field in Chart.yaml.
-    tag: ""
+    tag: 0.34.0
     # -- pullPolicy set the operator pullPolicy
     pullPolicy: IfNotPresent
     # -- pullSecrets set the operator pullSecrets
@@ -833,4 +833,3 @@ trivy-operator:
     podSecurityContext:
       runAsUser: 10000
       fsGroup: 10000
-

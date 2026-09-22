@@ -5,8 +5,16 @@
     ":dependencyDashboard"
   ],
   "enabledManagers": [
-    "helmv3"
+    "helmv3",
+    "helm-values",
+    "kubernetes",
+    "custom.regex"
   ],
+  "kubernetes": {
+    "managerFilePatterns": [
+      "/(^|/)apps/[^/]+/[^/]+\\.ya?ml$/"
+    ]
+  },
   "labels": [
     "dependencies",
     "renovate"
@@ -34,6 +42,35 @@
         "major"
       ],
       "automerge": false
+    },
+    {
+      "description": "Group container image updates",
+      "matchManagers": [
+        "helm-values",
+        "kubernetes",
+        "custom.regex"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "groupName": "all container image updates",
+      "groupSlug": "all-container-image-updates",
+      "automerge": false
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Track scalar image references in Helm values and Kubernetes YAML",
+      "managerFilePatterns": [
+        "/(^|/)values\\.ya?ml$/",
+        "/(^|/)templates/.+\\.ya?ml$/",
+        "/(^|/)apps/[^/]+/[^/]+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "(?:-\\s*)?image:\\s*[\\\"']?(?:[^\\s\\\"'/:]+/)*[^\\s\\\"'/:]+:(?<currentValue>[^\\s\\\"']+)[\\\"']?\\s+#\\s*renovate:\\s+datasource=docker\\s+depName=(?<depName>[^\\s]+)"
+      ],
+      "datasourceTemplate": "docker"
     }
   ]
 }
