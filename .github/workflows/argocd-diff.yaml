@@ -675,7 +675,7 @@ jobs:
               return result;
             }, {});
 
-            const buildBody = () => {
+            const buildBody = (entryBudget) => {
               const shortSha = headSha.slice(0, 7);
               const commitUrl = `${context.serverUrl}/${owner}/${repo}/commit/${headSha}`;
               const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
