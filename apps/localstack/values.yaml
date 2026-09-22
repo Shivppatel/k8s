@@ -11,7 +11,7 @@ localstack:
     repository: localstack/localstack
     # Pin the image: `latest` moved to a release that requires a license for
     # Pro activation, which caused the pod to crash-loop without credentials.
-    tag: "2026.6.3"
+    tag: "2026.08.3"
     pullPolicy: IfNotPresent
 
   imagePullSecrets: []
