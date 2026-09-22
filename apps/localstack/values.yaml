@@ -88,7 +88,7 @@ localstack:
   mountDind:
     enabled: false
     forceTLS: true
-    image: "docker:20.10-dind" # renovate: datasource=docker depName=docker
+    image: "docker:29.8-dind" # renovate: datasource=docker depName=docker
 
   ## All the parameters from the configuatioan can be added using extraEnvVars.
   ## Ref. https://docs.localstack.cloud/references/configuration/
