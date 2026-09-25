@@ -391,7 +391,48 @@ jellyfin:
   #     volumeMounts:
   #       - name: config
   #         mountPath: /config
-  extraInitContainers: []
+  # Keep the persisted proxy trust and remote bitrate limit aligned with the
+  # Cloudflare Tunnel path. The image tag must track jellyfin.image.tag.
+  extraInitContainers:
+    - name: configure-proxy-streaming
+      image: docker.io/jellyfin/jellyfin:12.1.20260915-010956
+      imagePullPolicy: IfNotPresent
+      command:
+        - /bin/sh
+        - -ec
+        - |
+          JF_NETWORK_CONFIG=/config/config/network.xml
+          JF_SYSTEM_CONFIG=/config/config/system.xml
+          JF_PROXY_XML='<KnownProxies><string>10.244.0.0/26</string><string>10.244.1.0/26</string><string>10.244.2.0/26</string><string>10.244.104.0/26</string><string>10.244.135.128/26</string><string>10.244.166.128/26</string></KnownProxies>'
+
+          test -f "$JF_NETWORK_CONFIG"
+          test -f "$JF_SYSTEM_CONFIG"
+
+          JF_NETWORK_TMP="${JF_NETWORK_CONFIG}.tmp"
+          awk -v replacement="$JF_PROXY_XML" '
+            /<KnownProxies[[:space:]]*\/>/ {
+              print replacement
+              found = 1
+              next
+            }
+            /<KnownProxies>/ {
+              print replacement
+              found = 1
+              if ($0 !~ /<\/KnownProxies>/) skip = 1
+              next
+            }
+            skip && /<\/KnownProxies>/ { skip = 0; next }
+            !skip { print }
+            END { if (!found) exit 1 }
+          ' "$JF_NETWORK_CONFIG" > "$JF_NETWORK_TMP"
+          mv "$JF_NETWORK_TMP" "$JF_NETWORK_CONFIG"
+
+          grep -q '<RemoteClientBitrateLimit>' "$JF_SYSTEM_CONFIG"
+          sed -i 's#<RemoteClientBitrateLimit>[^<]*</RemoteClientBitrateLimit>#<RemoteClientBitrateLimit>20000000</RemoteClientBitrateLimit>#' "$JF_SYSTEM_CONFIG"
+          grep -q '<RemoteClientBitrateLimit>20000000</RemoteClientBitrateLimit>' "$JF_SYSTEM_CONFIG"
+      volumeMounts:
+        - name: config
+          mountPath: /config
 
   # -- additional sidecar containers to run inside the pod.
   extraContainers: []
