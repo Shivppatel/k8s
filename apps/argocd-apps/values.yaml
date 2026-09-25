@@ -617,8 +617,7 @@ argocd-apps:
             - .spec.bootstrap.initdb.encoding
             - .spec.bootstrap.initdb.localeCType
             - .spec.bootstrap.initdb.localeCollate
-        - group: ""
-          kind: PersistentVolumeClaim
+        - kind: PersistentVolumeClaim
           jqPathExpressions:
             - .metadata.annotations
             - .metadata.labels
@@ -979,8 +978,7 @@ argocd-apps:
           - CreateNamespace=true
           - PrunePropagationPolicy=foreground
       ignoreDifferences:
-        - group: ""
-          kind: PersistentVolumeClaim
+        - kind: PersistentVolumeClaim
           jqPathExpressions:
             - .metadata.annotations
             - .metadata.labels
