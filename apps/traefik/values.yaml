@@ -24,6 +24,9 @@ traefik:
     - --entryPoints.web.http.redirections.entryPoint.scheme=https
     - --entryPoints.web.http.redirections.entryPoint.permanent=true
     - --entryPoints.websecure.http.middlewares=traefik-security-headers@kubernetescrd
+    # Accept forwarded client headers only from Cloudflared pod IPAM blocks.
+    - --entryPoints.web.forwardedHeaders.trustedIPs=10.244.0.0/26,10.244.1.0/26,10.244.2.0/26,10.244.104.0/26,10.244.135.128/26,10.244.166.128/26
+    - --entryPoints.websecure.forwardedHeaders.trustedIPs=10.244.0.0/26,10.244.1.0/26,10.244.2.0/26,10.244.104.0/26,10.244.135.128/26,10.244.166.128/26
     - --tracing.addinternals=true
     - --tracing.otlp=true
     - --tracing.otlp.grpc=true
