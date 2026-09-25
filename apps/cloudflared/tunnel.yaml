@@ -19,7 +19,7 @@ spec:
           - name: net.ipv4.ping_group_range
             value: "65532 65532"
       containers:
-        - image: cloudflare/cloudflared:2026.9.1 # renovate: datasource=docker depName=cloudflare/cloudflared
+        - image: cloudflare/cloudflared:2026.9.3 # renovate: datasource=docker depName=cloudflare/cloudflared
           imagePullPolicy: IfNotPresent
           name: cloudflared
           env:
