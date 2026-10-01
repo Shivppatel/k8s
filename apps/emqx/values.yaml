@@ -6,7 +6,7 @@ emqx:
     # EMQX 5.9+ requires a license for clustered deployments. Keep the
     # existing three-node cluster on the last pre-BSL release until a license
     # is configured through a secret.
-    tag: 5.8.9
+    tag: 5.10.5
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/

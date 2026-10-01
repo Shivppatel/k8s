@@ -11,7 +11,7 @@ localstack:
     repository: localstack/localstack
     # Pin the image: `latest` moved to a release that requires a license for
     # Pro activation, which caused the pod to crash-loop without credentials.
-    tag: "2026.08.4"
+    tag: "2026.08.5"
     pullPolicy: IfNotPresent
 
   imagePullSecrets: []
@@ -276,7 +276,7 @@ localstack:
     # or tag is needed for an environment
     image:
       repository: amazon/aws-cli
-      tag: "latest@sha256:fdd8d1fcbea9c371678dee5a40df8b178c7a781b4586605756ee28114c97ead6"
+      tag: "latest@sha256:420ab345e847291b541b45d989535f55bcff957c27fa1100fae4aa233e86398c"
 
   # @param volumeMounts Extra volumes to mount
   volumeMounts: []
