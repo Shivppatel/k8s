@@ -1,0 +1,6 @@
+dependencies:
+- name: caretta
+  repository: https://helm.groundcover.com
+  version: 0.0.16
+digest: sha256:f15d2b7f5899f3047ceb940935207943a25c3bd246a815a7007d23a7634d1347
+generated: "2026-10-01T22:39:48.509332-04:00"

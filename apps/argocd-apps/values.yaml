@@ -171,6 +171,24 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
+    caretta:
+      name: caretta
+      namespace: argocd
+      destination:
+        namespace: caretta
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/caretta
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
     radar:
       name: radar
       namespace: argocd

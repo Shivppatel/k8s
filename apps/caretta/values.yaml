@@ -1,0 +1,41 @@
+caretta:
+  image:
+    pullPolicy: IfNotPresent
+
+  # Use the existing Prometheus/Grafana installation instead of bundled servers.
+  victoria-metrics-single:
+    enabled: false
+  grafana:
+    enabled: false
+
+  # PSP was removed from Kubernetes; this cluster does not use OpenShift SCCs.
+  rbac:
+    pspEnabled: false
+    sccEnabled: false
+
+  nodeSelector:
+    kubernetes.io/os: linux
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+    - key: node-role.kubernetes.io/master
+      operator: Exists
+      effect: NoSchedule
+
+  # Required by the upstream eBPF collector; not an ordinary non-root workload.
+  securityContext:
+    privileged: true
+    readOnlyRootFilesystem: true
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 320Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  prometheusPort: 7117
+  prometheusEndpoint: /metrics
+  pollIntervalSeconds: 5
