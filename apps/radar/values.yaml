@@ -1,0 +1,61 @@
+radar:
+  fullnameOverride: radar
+  replicaCount: 1
+
+  service:
+    type: ClusterIP
+    port: 9280
+
+  # Exposure uses the repository's custom Traefik IngressRoute.
+  ingress:
+    enabled: false
+  httpRoute:
+    enabled: false
+
+  # Authentication is enforced upstream by Cloudflare, not by Radar.
+  auth:
+    mode: none
+  rbac:
+    create: true
+    helm: false
+    secrets: false
+    podExec: false
+    podLogs: true
+    portForward: false
+    selfUpgrade: false
+    traffic: false
+    viewRBAC: false
+    viewWebhooks: false
+    viewNodeRuntime: false
+
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: "2"
+      memory: 1Gi
+
+  timeline:
+    storage: sqlite
+    retention: 168h
+    maxSize: 800Mi
+  persistence:
+    enabled: true
+    storageClassName: longhorn
+    accessMode: ReadWriteOnce
+    size: 1Gi
+
+  traffic:
+    prometheusUrl: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090
+
+  usageReporting:
+    enabled: false
+  cloud:
+    enabled: false
+  mcp:
+    enabled: false
