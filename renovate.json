@@ -56,6 +56,14 @@
       "groupName": "all container image updates",
       "groupSlug": "all-container-image-updates",
       "automerge": false
+    },
+    {
+      "description": "Freeze EMQX chart and image until clustered deployment licensing is resolved",
+      "matchPackageNames": [
+        "emqx",
+        "emqx/emqx"
+      ],
+      "enabled": false
     }
   ],
   "customManagers": [
