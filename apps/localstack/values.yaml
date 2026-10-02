@@ -11,11 +11,10 @@ localstack:
 
   image:
     repository: localstack/localstack
-    # 2026.08.5 exits with license error 55 even with ACTIVATE_PRO=0.
-    # Keep the verified working Community release until licensing is resolved.
-    # Renovate updates for the chart and image are disabled in renovate.json.
-    # Keep both frozen until unlicensed deployment compatibility is verified.
-    tag: "4.14.0"
+    # Verified licensed startup with the Vault-backed LOCALSTACK_AUTH_TOKEN.
+    # Renovate chart and image updates remain disabled in renovate.json;
+    # verify license activation and storage compatibility before manual upgrades.
+    tag: "2026.08.5"
     pullPolicy: IfNotPresent
 
   imagePullSecrets: []
@@ -101,16 +100,19 @@ localstack:
   ##     value: "us-east-1"
   ##   - name: SERVICES
   ##     value: "serverless,sqs,es"
-  # Start the community feature set when no LocalStack auth token is supplied.
+  # License activation requires secret/localstack/auth property auth-token.
+  # ExternalSecret/localstack-auth-secret syncs at wave -1 before the workload.
+  # Rotate this Vault entry rather than committing credentials; restart the pod
+  # after External Secrets refreshes because envFrom is read only at startup.
   # Keep persistence enabled below; the existing PVC is intentionally retained.
-  extraEnvVars:
-    - name: ACTIVATE_PRO
-      value: "0"
+  extraEnvVars: []
 
   ## envFrom Allows you to set additional environment variables from a ConfigMap or Secret
   ## - configMapRef:
   ##     name: configmap-name
-  envFrom: []
+  envFrom:
+    - secretRef:
+        name: localstack-auth-secret
 
   livenessProbe:
     initialDelaySeconds: 10
