@@ -65,6 +65,11 @@ self-healing, and pruning. Argo CD itself remains manual-sync, and pruning is
 disabled selectively where an automatic delete would carry a larger state or
 control-plane risk.
 
+The public `argocd-apps` root enables automated sync, self-healing, and pruning
+in both its [bootstrap manifest](apps/argocd-apps/application.yaml) and its
+self-managed inventory entry. Removing a child Application from Git can prune
+that Application. Argo CD itself still requires manual sync.
+
 ## Platform Surface
 
 | Area | Implementation and evidence |
