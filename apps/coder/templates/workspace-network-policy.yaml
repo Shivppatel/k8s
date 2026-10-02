@@ -1,0 +1,68 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: coder-workspace
+  namespace: coder-workspaces
+  labels:
+    app.kubernetes.io/name: coder-workspace
+    app.kubernetes.io/part-of: coder-workspaces
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: coder-workspaces
+  policyTypes:
+    - Ingress
+    - Egress
+  # Deny unsolicited inbound traffic from outside the pod.
+  # Local traffic between the Coder agent and workspace apps over loopback
+  # (127.0.0.1) is contained within the pod network namespace and unaffected.
+  ingress: []
+  egress:
+    # Cluster DNS resolution
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: coredns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Control plane communication (Service HTTP port 80 and container/DERP port 8080)
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: coder
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 8080
+    # Outbound public HTTP/HTTPS for package managers and PI OAuth
+    # Blocks private RFC1918, CGNAT, link-local, and metadata networks
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              - 100.64.0.0/10
+              - 169.254.0.0/16
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 443
