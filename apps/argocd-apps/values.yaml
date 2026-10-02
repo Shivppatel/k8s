@@ -1,6 +1,6 @@
 argocd-apps:
   applications:
-    # ArgoCD itself - manual sync only to avoid self-bricking
+    # ArgoCD itself - automated sync with pruning and self-healing
     argocd:
       name: argocd
       namespace: argocd
@@ -13,6 +13,9 @@ argocd-apps:
         repoURL: "git@github.com:shivppatel/k8s.git"
         targetRevision: main
       syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true

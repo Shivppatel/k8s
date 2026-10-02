@@ -61,14 +61,16 @@ flowchart TB
 
 The public [Application inventory](apps/argocd-apps/values.yaml) also creates
 the private root Application. Most child Applications use automated sync,
-self-healing, and pruning. Argo CD itself remains manual-sync, and pruning is
-disabled selectively where an automatic delete would carry a larger state or
+self-healing, and pruning, including Argo CD itself. Pruning is disabled
+selectively where an automatic delete would carry a larger state or
 control-plane risk.
 
 The public `argocd-apps` root enables automated sync, self-healing, and pruning
 in both its [bootstrap manifest](apps/argocd-apps/application.yaml) and its
 self-managed inventory entry. Removing a child Application from Git can prune
-that Application. Argo CD itself still requires manual sync.
+that Application. The `argocd` Application automatically reconciles
+`apps/argocd` from `main`, including upgrades, drift correction, and resource
+deletions, while retaining `CreateNamespace=true` and `ServerSideApply=true`.
 
 ## Platform Surface
 
@@ -91,10 +93,11 @@ availability coverage.
 ### Reconciliation with explicit failure boundaries
 
 Application reconciliation is Git-driven, but automation is not treated as an
-absolute. The [Argo CD configuration](apps/argocd-apps/values.yaml) keeps the
-controller's own upgrade manual and disables pruning for selected stateful or
-control-plane components. This reduces the blast radius of a bad desired-state
-change while retaining self-healing for normal workloads.
+absolute. The [Application configuration](apps/argocd-apps/values.yaml) enables
+automated sync, self-healing, and pruning for Argo CD itself, while disabling
+pruning for selected stateful or control-plane components. Changes to Argo CD
+on `main` reconcile without a manual sync, so controller upgrades and resource
+deletions require review before merge.
 
 ### Secrets stay referenced in Git
 
