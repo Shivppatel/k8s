@@ -78,7 +78,7 @@ that Application. Argo CD itself still requires manual sync.
 | Networking | [Traefik](apps/traefik/), [MetalLB](apps/metallb/), [cert-manager](apps/cert-manager/), and [Cloudflare Tunnel](apps/cloudflared/) |
 | Identity and secrets | [Vault with Raft storage](apps/vault/) and [External Secrets Operator](apps/external-secrets/) |
 | Data and storage | A [three-instance CloudNativePG cluster](apps/postgresql/templates/cluster.yaml), Redis, MongoDB, Kafka, RabbitMQ, Longhorn, NAS NFS, and standalone MinIO |
-| Observability | Prometheus, Grafana, Alertmanager, Loki, Tempo, Pyroscope, Alloy, and Datadog integrations |
+| Observability | Prometheus, Grafana, Alertmanager, Loki, Tempo, Pyroscope, Alloy, Datadog integrations, and [Radar](apps/radar/) with [Caretta](apps/caretta/) network flows |
 | Policy and scanning | Kyverno, Policy Reporter, and Trivy provide policy and vulnerability-reporting infrastructure; custom policy coverage is still being developed |
 | CI infrastructure | Autoscaling [GitHub Actions runners](apps/github-actions-runners/) and isolated [Docker runners](apps/github-actions-docker-runners/) managed with Actions Runner Controller |
 

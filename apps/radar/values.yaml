@@ -18,15 +18,21 @@ radar:
   rbac:
     create: true
     helm: false
-    secrets: false
+    secrets: true
     podExec: false
     podLogs: true
     portForward: false
     selfUpgrade: false
     traffic: false
-    viewRBAC: false
-    viewWebhooks: false
-    viewNodeRuntime: false
+    viewRBAC: true
+    viewWebhooks: true
+    viewNodeRuntime: true
+    # Full API read visibility, including every installed/future CRD.
+    crdGroups:
+      all: true
+    additionalRules:
+      - nonResourceURLs: ["*"]
+        verbs: ["get"]
 
   podSecurityContext:
     seccompProfile:
