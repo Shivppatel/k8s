@@ -35,15 +35,15 @@ radar:
   resources:
     requests:
       cpu: 200m
-      memory: 1Gi
+      memory: 4Gi
     limits:
       cpu: "2"
-      memory: 2Gi
+      memory: 8Gi
 
-  # Keep Go-managed memory below the container limit, leaving native/cache headroom.
+  # Budget for full SBOM caches plus concurrent dashboard/topology copies.
   env:
     - name: GOMEMLIMIT
-      value: "1536MiB"
+      value: "4GiB"
 
   timeline:
     storage: sqlite
