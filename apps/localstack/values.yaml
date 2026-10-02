@@ -155,6 +155,11 @@ localstack:
     ##
     clusterIP: ""
 
+  # HTTPS API access uses templates/localstack-ingress.yaml at
+  # https://localstack.shivpatel.xyz on Traefik websecure with default TLS.
+  # This is an API endpoint for the hosted Resource Browser, not a built-in UI.
+  # No authentication middleware is configured; restrict network access.
+  # Keep the upstream Kubernetes Ingress disabled to avoid duplicate routes.
   ingress:
     enabled: false
     annotations: {}
