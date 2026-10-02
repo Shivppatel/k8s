@@ -65,7 +65,7 @@ gha-runner-scale-set:
             - name: dind-externals
               mountPath: /home/runner/tmpDir
         - name: dind
-          image: docker:29.8.1-dind # renovate: datasource=docker depName=docker
+          image: docker:29.8.2-dind # renovate: datasource=docker depName=docker
           args:
             - dockerd
             - --host=unix:///var/run/docker.sock
