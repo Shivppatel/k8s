@@ -11,6 +11,8 @@ localstack:
     repository: localstack/localstack
     # Pin the image: `latest` moved to a release that requires a license for
     # Pro activation, which caused the pod to crash-loop without credentials.
+    # Renovate updates for the chart and image are disabled in renovate.json.
+    # Keep both frozen until unlicensed deployment compatibility is verified.
     tag: "2026.08.5"
     pullPolicy: IfNotPresent
 

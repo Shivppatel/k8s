@@ -64,6 +64,14 @@
         "emqx/emqx"
       ],
       "enabled": false
+    },
+    {
+      "description": "Freeze LocalStack chart and image until unlicensed deployment compatibility is verified",
+      "matchPackageNames": [
+        "localstack",
+        "localstack/localstack"
+      ],
+      "enabled": false
     }
   ],
   "customManagers": [
