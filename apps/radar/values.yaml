@@ -35,10 +35,15 @@ radar:
   resources:
     requests:
       cpu: 200m
-      memory: 256Mi
+      memory: 1Gi
     limits:
       cpu: "2"
-      memory: 1Gi
+      memory: 2Gi
+
+  # Keep Go-managed memory below the container limit, leaving native/cache headroom.
+  env:
+    - name: GOMEMLIMIT
+      value: "1536MiB"
 
   timeline:
     storage: sqlite
