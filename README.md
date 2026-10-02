@@ -118,6 +118,39 @@ receivers for traces; Tempo and Pyroscope support instrumented or annotated
 workloads. The repository describes the telemetry platform, not universal
 end-to-end instrumentation.
 
+#### Grafana admin credentials and persistence
+
+Grafana at `https://grafana.shivpatel.xyz` uses the `grafana-admin`
+ExternalSecret in `observability`, backed by `vault-backend`. The credential
+authority is Vault KV v2 path `secret/observability/grafana`, property
+`adminPassword`. Provision this property before initial deployment. The manifest's
+API path is `secret/data/observability/grafana`. ESO creates Secret
+`grafana-admin` with `admin-user: admin` and `admin-password`; no password
+value belongs in Git.
+
+The chart references this existing Secret instead of generating credentials.
+Argo CD renders Helm offline, so the chart's `lookup` cannot reuse the live
+Secret and its random-password fallback otherwise changes desired credentials
+on each render. The ExternalSecret and StatefulSet use the default sync wave
+`0`; the pod waits for ESO to materialize the Secret. `vault-backend` and ESO
+must already be healthy. Credentials refresh hourly; a missing Vault property
+retains an already materialized Secret rather than replacing it.
+
+Grafana retains its SQLite database, including password changes made in the
+UI, on the existing 20 GiB ReadWriteOnce StatefulSet claim
+`storage-kube-prometheus-stack-grafana-0`, mounted at `/var/lib/grafana`.
+Storage class selection remains the cluster default (currently `longhorn`);
+this change does not replace the claim or change its storage class.
+Keep that PVC across chart upgrades and pod replacement.
+
+The Secret supplies **initial** admin credentials, not a continuous database
+password reset. On an existing database, changing the Secret, syncing Argo CD,
+or restarting the pod does not change the login password. If the database
+password already differs, recover it using Grafana's supported admin-password
+reset procedure, then keep the retained password in Vault. Changing a password
+in Grafana also requires updating Vault if fresh-database recovery should use
+the same password. Do not delete the database or PVC to repair authentication.
+
 ### CI runners are workloads, not pets
 
 The runner charts use bounded autoscaling, non-root containers, dropped
