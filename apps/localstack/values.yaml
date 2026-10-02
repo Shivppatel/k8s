@@ -105,7 +105,11 @@ localstack:
   # Rotate this Vault entry rather than committing credentials; restart the pod
   # after External Secrets refreshes because envFrom is read only at startup.
   # Keep persistence enabled below; the existing PVC is intentionally retained.
-  extraEnvVars: []
+  extraEnvVars:
+    # Capture service operations and payloads for the hosted App Inspector.
+    - name: LOCALSTACK_APP_INSPECTOR
+      value: "1"
+    # IAM Policy Stream is excluded by the current license; leave IAM flags unset.
 
   ## envFrom Allows you to set additional environment variables from a ConfigMap or Secret
   ## - configMapRef:
