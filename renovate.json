@@ -66,7 +66,7 @@
       "enabled": false
     },
     {
-      "description": "Freeze LocalStack chart and image until unlicensed deployment compatibility is verified",
+      "description": "Freeze LocalStack chart and image; manually verify license activation and storage compatibility before upgrades",
       "matchPackageNames": [
         "localstack",
         "localstack/localstack"
