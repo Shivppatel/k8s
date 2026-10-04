@@ -64,7 +64,7 @@ class DatadogPermissionsTest(unittest.TestCase):
         resources = render("datadog", "datadog")
         role = resources[("ClusterRole", "datadog-datadog-operator")]
         permissions = {resource: set(rule["verbs"]) for rule in role["rules"]
-                       if rule["apiGroups"] == ["datadoghq.com"]
+                       if rule.get("apiGroups") == ["datadoghq.com"]
                        for resource in rule["resources"] if resource.startswith("datadogagentinternals")}
         self.assertEqual(permissions, {
             "datadogagentinternals": {"create", "delete", "get", "list", "patch", "update", "watch"},
