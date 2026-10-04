@@ -69,7 +69,7 @@ def start_postgres(name: str, network: str, password: str) -> None:
     docker("run", "--detach", "--name", name, "--network", network,
            "--network-alias", "postgres", "--env", "POSTGRES_PASSWORD", POSTGRES_IMAGE,
            environment={**os.environ, "POSTGRES_PASSWORD": password})
-    wait = "for i in $(seq 1 30); do pg_isready -U postgres >/dev/null && exit 0; sleep 1; done; exit 1"
+    wait = "for i in $(seq 1 30); do pg_isready -h 127.0.0.1 -U postgres >/dev/null && exit 0; sleep 1; done; exit 1"
     docker("exec", name, "sh", "-c", wait, timeout=40)
     docker("exec", name, "psql", "-U", "postgres", "-v", "ON_ERROR_STOP=1", "-c",
            "CREATE TABLE telemetry_fixture (value integer); INSERT INTO telemetry_fixture VALUES (1);")
@@ -90,6 +90,8 @@ def assert_installed_integrations(image: str, name: str) -> None:
                "assert all(m.version(p)==v for p,v in expected.items())")
     docker("run", "--rm", "--name", name, "--network", "none", "--entrypoint",
            "/opt/datadog-agent/embedded/bin/python", image, "-c", imports)
+    docker("run", "--rm", "--name", name, "--network", "none", "--entrypoint",
+           "java", image, "-version")
 
 
 def assert_old_query_fails(image: str, name: str, network: str, directory: Path, database: str) -> int:

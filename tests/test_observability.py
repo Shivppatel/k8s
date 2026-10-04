@@ -54,9 +54,18 @@ class ArgoProfilingTest(unittest.TestCase):
         self.assertEqual(params.get("reposerver.profile.enabled"), "true")
         repo = resources[("Deployment", "argocd-repo-server")]["spec"]["template"]
         self.assertEqual(repo["metadata"]["annotations"]["profiles.grafana.com/cpu.scrape"], "true")
-        items = [item for volume in repo["spec"]["volumes"]
-                 for item in volume.get("configMap", {}).get("items", [])]
-        self.assertIn({"key": "reposerver.profile.enabled", "path": "profiler.enabled"}, items)
+
+    def test_profiler_file_uses_the_correct_readonly_configmap_mount(self) -> None:
+        repo = render("argocd", "argocd")[("Deployment", "argocd-repo-server")]["spec"]["template"]
+        volume = next(item for item in repo["spec"]["volumes"] if item["name"] == "profiler-config")
+        self.assertEqual(volume["configMap"], {
+            "name": "argocd-cmd-params-cm",
+            "items": [{"key": "reposerver.profile.enabled", "path": "profiler.enabled"}],
+        })
+        container = next(item for item in repo["spec"]["containers"] if item["name"] == "repo-server")
+        mount = next(item for item in container["volumeMounts"] if item["name"] == volume["name"])
+        self.assertEqual(mount, {"name": "profiler-config", "mountPath": "/home/argocd/params", "readOnly": True})
+        self.assertEqual(container["image"], "quay.io/argoproj/argocd:v3.5.3")
 
 
 class DatadogPermissionsTest(unittest.TestCase):
