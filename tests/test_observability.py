@@ -59,5 +59,23 @@ class ArgoProfilingTest(unittest.TestCase):
         self.assertIn({"key": "reposerver.profile.enabled", "path": "profiler.enabled"}, items)
 
 
+class DatadogPermissionsTest(unittest.TestCase):
+    def test_operator_can_reconcile_internal_resources(self) -> None:
+        resources = render("datadog", "datadog")
+        role = resources[("ClusterRole", "datadog-datadog-operator")]
+        permissions = {resource: set(rule["verbs"]) for rule in role["rules"]
+                       if rule["apiGroups"] == ["datadoghq.com"]
+                       for resource in rule["resources"] if resource.startswith("datadogagentinternals")}
+        self.assertEqual(permissions, {
+            "datadogagentinternals": {"create", "delete", "get", "list", "patch", "update", "watch"},
+            "datadogagentinternals/finalizers": {"create", "delete", "get", "list", "patch", "update", "watch"},
+            "datadogagentinternals/status": {"get", "patch", "update"},
+        })
+        binding = resources[("ClusterRoleBinding", "datadog-datadog-operator")]
+        self.assertEqual(binding["roleRef"]["name"], role["metadata"]["name"])
+        self.assertIn({"kind": "ServiceAccount", "name": "datadog-datadog-operator",
+                       "namespace": "datadog"}, binding["subjects"])
+
+
 if __name__ == "__main__":
     unittest.main()
