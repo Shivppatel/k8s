@@ -19,7 +19,11 @@ def docker(*arguments: str, timeout: int = 180, environment: dict | None = None)
                             timeout=timeout, env=environment)
     if result.returncode:
         # Do not include captured configuration, check output, or fixture passwords.
-        raise RuntimeError(f"Docker {arguments[0]} failed (exit {result.returncode})")
+        text = (result.stdout + result.stderr).lower()
+        categories = [word for word in ("auth_token", "ipc_cert", "certificate", "hostname", "no valid check",
+                      "permission denied", "read-only", "connection refused", "no such file", "configuration",
+                      "could not load", "api key", "unknown flag") if word in text]
+        raise RuntimeError(f"Docker {arguments[0]} failed (exit {result.returncode}, categories={categories})")
     return result.stdout
 
 
@@ -124,7 +128,9 @@ def verify_image(image: str) -> None:
             directory, password = Path(temporary), secrets.token_hex(24)
             write_fixture_configuration(directory, password)
             start_postgres(database, network, password)
+            print("Fixture ready. Run the fixed Agent 7.73 negative control.", flush=True)
             baseline_errors = assert_old_query_fails(BASELINE_IMAGE, agent, network, directory, database)
+            print("Negative control reproduced wal_write. Run the candidate check.", flush=True)
             assert_candidate_output(check_postgres(image, agent, network, directory))
             assert_no_new_sql_errors(database, baseline_errors)
         print("PASS: integration imports and pins; PG18 negative control; candidate WAL metrics and SQL checks")
