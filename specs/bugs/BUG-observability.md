@@ -12,7 +12,9 @@ The deployed manager policy excluded the Prometheus pod. A node-local HTTP GET r
 
 All three Alloy agents reported profiling 401s from Argo CD repo-server pods.
 The response said that the profiler was not enabled in `argocd-cmd-params-cm`.
-The repo-server scrape annotations were present, but `reposerver.profile.enabled` was absent.
+The repo-server scrape annotations were present, but `reposerver.profile.enabled` and its required file mount were absent.
+The first regression test proved that the flag alone was insufficient.
+The vendored Argo chart was 10.9.2, but the dependency lock already required 10.9.6. Both use Argo CD 3.5.3.
 
 The Datadog operator could neither create nor update `datadogagentinternals`.
 Chart 2.27.0 omits those permissions when `datadogAgentInternal.enabled` is false.
@@ -24,7 +26,7 @@ PostgreSQL 18 removed that column. Agent 7.74.0 includes Postgres integration 23
 ## Approved implementation
 
 1. Add a rendered-policy regression test. Set narrowly scoped `longhorn.networkPolicies.metricsScrapeSources`.
-2. Add a profiler regression test. Set `argo-cd.configs.params.reposerver.profile.enabled` to `"true"`.
+2. Add a profiler regression test. Enable the repo-server flag and its read-only file mount. Refresh the already locked chart archive.
 3. Add an operator-permission regression test. Enable internal-resource RBAC without additional wildcard grants.
 4. Add image-contract and runtime checks. Upgrade only the custom Agent base to digest-pinned 7.74.0-jmx.
 5. Preserve EMQX 1.1.0, Grafana 1.0.0, and Nextcloud 2.0.0 integration pins.
@@ -50,7 +52,7 @@ Tempo remains unresolved by explicit owner choice. The append counter increases,
 ## Primary sources
 
 - Longhorn 1.13.0: `chart/templates/network-policies/manager-network-policy.yaml` in the vendored chart.
-- Argo CD: https://github.com/argoproj/argo-cd/blob/v3.3.0/util/profile/profile.go
+- Argo CD 3.5.3: https://github.com/argoproj/argo-cd/blob/v3.5.3/util/profile/profile.go
 - Datadog operator 1.30.0 RBAC: https://github.com/DataDog/datadog-operator/blob/v1.30.0/config/rbac/role.yaml
 - PostgreSQL 18 support: https://github.com/DataDog/integrations-core/pull/21947
 - Postgres integration release: https://github.com/DataDog/integrations-core/blob/postgres-23.3.3/postgres/CHANGELOG.md

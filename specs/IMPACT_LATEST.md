@@ -8,7 +8,8 @@ context: observability repair PR, based on 333a07521789185d56f1af2d14c42cf5c61b7
 ## Target
 
 - `apps/longhorn/values.yaml`: permit the deployed Prometheus scraper through the existing manager policy.
-- `apps/argocd/values.yaml`: enable the repo-server profiler that existing annotations advertise.
+- `apps/argocd/values.yaml`: enable the advertised repo-server profiler and mount its required flag file.
+- `apps/argocd/charts`: refresh the archive to the already locked 10.9.6 version, with the same Argo CD 3.5.3 image.
 - `apps/datadog/values.yaml`: grant the operator required internal-resource permissions.
 - `apps/datadog/Dockerfile.emqx`, the image workflow, and the agent template: use a PostgreSQL 18-compatible Agent release.
 
@@ -18,7 +19,8 @@ context: observability repair PR, based on 333a07521789185d56f1af2d14c42cf5c61b7
 - TCP/9500 also serves the Longhorn REST API. Both namespace and pod selectors must match the scraper.
 - Longhorn storage, webhooks, CSI, recurring jobs, and existing policy peers must remain unchanged.
 - Three Alloy agents scrape annotated Argo CD repo-server replicas on their internal metrics ports.
-- Argo CD consumes `argocd-cmd-params-cm` through an existing projected profiler file.
+- Argo CD 3.5.3 reads `/home/argocd/params/profiler.enabled`. The live repo-server has no profiler mount.
+- The new read-only volume projects only `reposerver.profile.enabled`. It uses no Secret and no `subPath` mount.
 - The Datadog operator reconciles `DatadogAgentInternal` objects in the `datadog` namespace.
 - Three node agents consume the custom Agent image and existing autodiscovery annotations.
 - PostgreSQL runs version 18.3. Its pod annotations configure the Datadog PostgreSQL check.
