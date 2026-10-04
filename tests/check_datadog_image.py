@@ -63,10 +63,7 @@ def write_fixture_configuration(directory: Path, password: str) -> None:
                        "    port: 5432\n    username: postgres\n    dbname: postgres\n"
                        f"    password: {json.dumps(password)}\n    dbm: false\n"
                        "    database_autodiscovery:\n      enabled: true\n")
-    # The one-shot CLI requires an IPC token even without a running Agent daemon.
-    files = [("datadog.yaml", agent_config), ("postgres.yaml", postgres_config),
-             ("auth_token", secrets.token_hex(32))]
-    for name, content in files:
+    for name, content in [("datadog.yaml", agent_config), ("postgres.yaml", postgres_config)]:
         path = directory / name
         path.write_text(content)
         path.chmod(0o600)
@@ -83,11 +80,18 @@ def start_postgres(name: str, network: str, password: str) -> None:
 
 
 def check_postgres(image: str, name: str, network: str, directory: Path) -> str:
-    return docker("run", "--rm", "--name", name, "--user", "0", "--network", network,
-                  "--mount", f"type=bind,src={directory / 'datadog.yaml'},dst=/etc/datadog-agent/datadog.yaml,readonly",
-                  "--mount", f"type=bind,src={directory / 'postgres.yaml'},dst=/etc/datadog-agent/conf.d/postgres.d/conf.yaml,readonly",
-                  "--mount", f"type=bind,src={directory / 'auth_token'},dst=/etc/datadog-agent/auth_token,readonly",
-                  "--entrypoint", "agent", image, "check", "postgres", "--json", "--check-rate")
+    # Use the public Agent startup path to create its IPC token and certificate.
+    # The Docker network is internal, and no host socket, port, or credentials are exposed.
+    docker("run", "--detach", "--name", name, "--user", "0", "--network", network,
+           "--mount", f"type=bind,src={directory / 'datadog.yaml'},dst=/etc/datadog-agent/datadog.yaml,readonly",
+           "--mount", f"type=bind,src={directory / 'postgres.yaml'},dst=/etc/datadog-agent/conf.d/postgres.d/conf.yaml,readonly",
+           "--entrypoint", "agent", image, "run")
+    try:
+        wait = "for i in $(seq 1 30); do test -s /etc/datadog-agent/auth_token && test -s /etc/datadog-agent/ipc_cert.pem && exit 0; sleep 1; done; exit 1"
+        docker("exec", name, "sh", "-c", wait, timeout=40)
+        return docker("exec", name, "agent", "check", "postgres", "--json", "--check-rate")
+    finally:
+        docker("rm", "--force", name, timeout=30)
 
 
 def assert_installed_integrations(image: str, name: str) -> None:

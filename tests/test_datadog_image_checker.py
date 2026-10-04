@@ -44,12 +44,11 @@ class ImageCheckResultTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             assert_candidate_output(json.dumps(payload))
 
-    def test_fixture_creates_private_configuration_and_required_ipc_token(self) -> None:
+    def test_fixture_creates_private_configuration_files(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             directory = Path(temporary)
             write_fixture_configuration(directory, secrets.token_hex(24))
-            self.assertEqual(len((directory / "auth_token").read_text()), 64)
-            for name in ["datadog.yaml", "postgres.yaml", "auth_token"]:
+            for name in ["datadog.yaml", "postgres.yaml"]:
                 self.assertEqual((directory / name).stat().st_mode & 0o777, 0o600)
 
 
