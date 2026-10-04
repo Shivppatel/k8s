@@ -99,6 +99,7 @@ class DatadogImageTest(unittest.TestCase):
         agent = render("datadog", "datadog")[("DatadogAgent", "datadog")]
         image = agent["spec"]["override"]["nodeAgent"]["image"]
         self.assertTrue(image["jmxEnabled"])
+        self.assertRegex(image["name"], r"@sha256:[a-f0-9]{64}$")
         self.assertEqual(image["name"].split("@")[0],
                          "ghcr.io/shivppatel/datadog-agent-emqx:7.74.0-jmx-emqx-1.1.0-grafana-1.0.0-nextcloud-2.0.0")
 

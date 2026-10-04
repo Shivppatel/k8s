@@ -43,7 +43,7 @@ spec:
   override:
     nodeAgent:
       image:
-        name: "ghcr.io/shivppatel/datadog-agent-emqx:7.74.0-jmx-emqx-1.1.0-grafana-1.0.0-nextcloud-2.0.0"
+        name: "ghcr.io/shivppatel/datadog-agent-emqx:7.74.0-jmx-emqx-1.1.0-grafana-1.0.0-nextcloud-2.0.0@sha256:cd04dd736f667bc398e69ac4c70378581e90fc88fdb64ec3bf4e9d9a6f70cc83"
         jmxEnabled: true
       extraConfd:
         configDataMap:
