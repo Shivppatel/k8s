@@ -1,0 +1,51 @@
+"""Offline checks of the manifests consumed by Argo CD."""
+
+from functools import lru_cache
+from pathlib import Path
+import subprocess
+import unittest
+
+import yaml
+
+ROOT = Path(__file__).resolve().parents[1]
+API_VERSIONS = (
+    "monitoring.coreos.com/v1",
+    "external-secrets.io/v1",
+    "traefik.io/v1alpha1",
+    "argoproj.io/v1alpha1",
+    "kyverno.io/v1",
+    "kyverno.io/v2",
+)
+
+
+@lru_cache(maxsize=None)
+def render(app: str, namespace: str) -> dict:
+    command = ["helm", "template", app, str(ROOT / "apps" / app), "--namespace", namespace]
+    for version in API_VERSIONS:
+        command.extend(["--api-versions", version])
+    output = subprocess.run(command, check=True, capture_output=True, text=True, timeout=60)
+    resources = [document for document in yaml.safe_load_all(output.stdout) if document]
+    return {(resource["kind"], resource["metadata"]["name"]): resource for resource in resources}
+
+
+class LonghornMonitoringTest(unittest.TestCase):
+    def test_only_intended_prometheus_peer_can_scrape_manager_port(self) -> None:
+        policy = render("longhorn", "longhorn-system")[("NetworkPolicy", "longhorn-manager")]
+        self.assertEqual(policy["spec"]["podSelector"], {"matchLabels": {"app": "longhorn-manager"}})
+        self.assertEqual(policy["spec"]["policyTypes"], ["Ingress"])
+        scrape_rules = [rule for rule in policy["spec"]["ingress"] if "ports" in rule]
+        self.assertEqual(len(scrape_rules), 1, "The deployed scraper needs a dedicated policy rule")
+        self.assertEqual(scrape_rules[0], {
+            "from": [{
+                "namespaceSelector": {"matchLabels": {"kubernetes.io/metadata.name": "observability"}},
+                "podSelector": {"matchLabels": {
+                    "app.kubernetes.io/name": "prometheus",
+                    "prometheus": "kube-prometheus-stack-prometheus",
+                }},
+            }],
+            "ports": [{"protocol": "TCP", "port": 9500}],
+        })
+
+
+if __name__ == "__main__":
+    unittest.main()
