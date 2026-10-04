@@ -47,5 +47,17 @@ class LonghornMonitoringTest(unittest.TestCase):
         })
 
 
+class ArgoProfilingTest(unittest.TestCase):
+    def test_advertised_repo_server_profiler_is_enabled(self) -> None:
+        resources = render("argocd", "argocd")
+        params = resources[("ConfigMap", "argocd-cmd-params-cm")]["data"]
+        self.assertEqual(params.get("reposerver.profile.enabled"), "true")
+        repo = resources[("Deployment", "argocd-repo-server")]["spec"]["template"]
+        self.assertEqual(repo["metadata"]["annotations"]["profiles.grafana.com/cpu.scrape"], "true")
+        items = [item for volume in repo["spec"]["volumes"]
+                 for item in volume.get("configMap", {}).get("items", [])]
+        self.assertIn({"key": "reposerver.profile.enabled", "path": "profiler.enabled"}, items)
+
+
 if __name__ == "__main__":
     unittest.main()
