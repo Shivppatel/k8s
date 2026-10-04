@@ -94,5 +94,23 @@ class DatadogImageTest(unittest.TestCase):
                          "ghcr.io/shivppatel/datadog-agent-emqx:7.74.0-jmx-emqx-1.1.0-grafana-1.0.0-nextcloud-2.0.0")
 
 
+class ImagePublicationTest(unittest.TestCase):
+    def test_workflow_publishes_only_after_runtime_checks(self) -> None:
+        path = ROOT / ".github/workflows/build-datadog-agent-emqx.yaml"
+        workflow = yaml.load(path.read_text(), Loader=yaml.BaseLoader)
+        steps = workflow["jobs"]["build"]["steps"]
+        build = next(step for step in steps if step.get("uses") == "docker/build-push-action@v6")
+        self.assertEqual(build["with"]["push"], "false")
+        self.assertEqual(build["with"]["load"], "true")
+        verify = next(i for i, step in enumerate(steps) if "check_datadog_image.py" in step.get("run", ""))
+        publish = next(i for i, step in enumerate(steps) if "docker push" in step.get("run", ""))
+        self.assertLess(verify, publish)
+        self.assertEqual(steps[publish]["if"], "github.event_name != 'pull_request'")
+        agent = render("datadog", "datadog")[("DatadogAgent", "datadog")]
+        deployed = agent["spec"]["override"]["nodeAgent"]["image"]["name"].split("@")[0]
+        self.assertEqual(workflow["env"]["AGENT_IMAGE"], deployed)
+        self.assertIn("pull_request", workflow["on"])
+
+
 if __name__ == "__main__":
     unittest.main()
