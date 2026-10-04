@@ -77,5 +77,22 @@ class DatadogPermissionsTest(unittest.TestCase):
                        "namespace": "datadog"}, binding["subjects"])
 
 
+class DatadogImageTest(unittest.TestCase):
+    def test_pg18_compatible_image_preserves_community_integrations(self) -> None:
+        dockerfile = (ROOT / "apps/datadog/Dockerfile.emqx").read_text()
+        self.assertRegex(dockerfile.splitlines()[0], r"^FROM gcr.io/datadoghq/agent:7\.74\.0-jmx@sha256:[a-f0-9]{64}$")
+        installs = [line for line in dockerfile.splitlines() if line.startswith("RUN agent integration")]
+        self.assertEqual(installs, [
+            "RUN agent integration install -r -t datadog-emqx==1.1.0",
+            "RUN agent integration install -r -t datadog-grafana==1.0.0",
+            "RUN agent integration install -r -t datadog-nextcloud==2.0.0",
+        ])
+        agent = render("datadog", "datadog")[("DatadogAgent", "datadog")]
+        image = agent["spec"]["override"]["nodeAgent"]["image"]
+        self.assertTrue(image["jmxEnabled"])
+        self.assertEqual(image["name"].split("@")[0],
+                         "ghcr.io/shivppatel/datadog-agent-emqx:7.74.0-jmx-emqx-1.1.0-grafana-1.0.0-nextcloud-2.0.0")
+
+
 if __name__ == "__main__":
     unittest.main()
