@@ -63,7 +63,10 @@ def write_fixture_configuration(directory: Path, password: str) -> None:
                        "    port: 5432\n    username: postgres\n    dbname: postgres\n"
                        f"    password: {json.dumps(password)}\n    dbm: false\n"
                        "    database_autodiscovery:\n      enabled: true\n")
-    for name, content in [("datadog.yaml", agent_config), ("postgres.yaml", postgres_config)]:
+    # The one-shot CLI requires an IPC token even without a running Agent daemon.
+    files = [("datadog.yaml", agent_config), ("postgres.yaml", postgres_config),
+             ("auth_token", secrets.token_hex(32))]
+    for name, content in files:
         path = directory / name
         path.write_text(content)
         path.chmod(0o600)
@@ -83,6 +86,7 @@ def check_postgres(image: str, name: str, network: str, directory: Path) -> str:
     return docker("run", "--rm", "--name", name, "--user", "0", "--network", network,
                   "--mount", f"type=bind,src={directory / 'datadog.yaml'},dst=/etc/datadog-agent/datadog.yaml,readonly",
                   "--mount", f"type=bind,src={directory / 'postgres.yaml'},dst=/etc/datadog-agent/conf.d/postgres.d/conf.yaml,readonly",
+                  "--mount", f"type=bind,src={directory / 'auth_token'},dst=/etc/datadog-agent/auth_token,readonly",
                   "--entrypoint", "agent", image, "check", "postgres", "--json", "--check-rate")
 
 

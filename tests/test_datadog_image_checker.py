@@ -1,9 +1,12 @@
 """Check that CI cannot mistake an empty or failing Agent result for success."""
 
 import json
+from pathlib import Path
+import secrets
+import tempfile
 import unittest
 
-from check_datadog_image import assert_candidate_output, parse_check_output
+from check_datadog_image import assert_candidate_output, parse_check_output, write_fixture_configuration
 
 
 def successful_output() -> list:
@@ -40,6 +43,14 @@ class ImageCheckResultTest(unittest.TestCase):
         payload[0]["aggregator"]["metrics"] = []
         with self.assertRaises(ValueError):
             assert_candidate_output(json.dumps(payload))
+
+    def test_fixture_creates_private_configuration_and_required_ipc_token(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            write_fixture_configuration(directory, secrets.token_hex(24))
+            self.assertEqual(len((directory / "auth_token").read_text()), 64)
+            for name in ["datadog.yaml", "postgres.yaml", "auth_token"]:
+                self.assertEqual((directory / name).stat().st_mode & 0o777, 0o600)
 
 
 if __name__ == "__main__":
