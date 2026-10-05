@@ -85,6 +85,14 @@ spec:
 
   managed:
     roles:
+      - name: memos
+        ensure: present
+        connectionLimit: -1
+        inherit: true
+        login: true
+        superuser: false
+        passwordSecret:
+          name: memos-db-secret
       - name: coder
         ensure: present
         connectionLimit: -1

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: memos
+description: Memos with shared PostgreSQL and MinIO attachment storage
+type: application
+version: 0.1.0
+appVersion: "0.31.0"
