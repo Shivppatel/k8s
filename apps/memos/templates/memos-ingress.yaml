@@ -11,5 +11,5 @@ spec:
       kind: Rule
       services:
         - name: memos
-          port: {{ .Values.service.port }}
+          port: 5230
   tls: {}

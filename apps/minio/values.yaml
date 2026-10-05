@@ -33,8 +33,3 @@ minio:
     enabled: true
     serviceMonitor:
       enabled: true
-
-memosStorage:
-  bucket: memos-attachments
-  user: memos
-  clientImage: docker.io/bitnamilegacy/minio-client:2025.7.21-debian-12-r2

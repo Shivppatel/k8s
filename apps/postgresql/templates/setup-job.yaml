@@ -40,7 +40,7 @@ spec:
               done
 
               # Ensure all users and databases exist (non-destructive)
-              for app in immich n8n terraform teslamate authentik gitlab datadog lnd; do
+              for app in immich n8n terraform teslamate authentik gitlab datadog lnd memos; do
                 echo "Ensuring $app user and database exist..."
                 psql -c "DO \$\$ BEGIN CREATE USER $app WITH PASSWORD 'temp'; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$;"                
                 # Check if database exists, but don't recreate it if it has data
@@ -101,12 +101,16 @@ spec:
               psql -d lnd -c "ALTER SCHEMA public OWNER TO lnd;"
               psql -d lnd -c "GRANT ALL ON SCHEMA public TO lnd;"
 
+              echo "Setting up memos database..."
+              psql -d memos -c "ALTER SCHEMA public OWNER TO memos;"
+              psql -d memos -c "GRANT ALL ON SCHEMA public TO memos;"
+
               echo "Setting up Datadog Database Monitoring..."
               # NOTE: pg_stat_statements extension is auto-managed by CNPG when pg_stat_statements.* params are set
               # Do NOT create/drop it here - CNPG handles CREATE/DROP EXTENSION in all databases
 
               # Setup datadog schema and functions in ALL databases for DBM
-              for db in postgres immich n8n terraform teslamate authentik gitlab datadog lnd; do
+              for db in postgres immich n8n terraform teslamate authentik gitlab datadog lnd memos; do
                 echo "Setting up Datadog monitoring in $db database..."
                 
                 # Create datadog schema
