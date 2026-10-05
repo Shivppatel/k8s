@@ -28,7 +28,7 @@ self-healing, and pruning.
   named storage `minio-attachments`, private bucket `memos-attachments`, region
   `us-east-1`, and path-style access to
   `http://minio.minio.svc.cluster.local:9000`. The upload limit is 30 MiB.
-- The companion [Terraform repository](https://github.com/Shivppatel/tf)
+- The companion [Terraform PR #12](https://github.com/Shivppatel/tf/pull/12)
   owns the bucket, scoped MinIO account, and bucket-only read/write policy in
   `minio/`. Its `vault/locals.tf` grants ESO read access to exactly the two new
   Vault paths. Provision both entries before the Atlantis plan and apply the
