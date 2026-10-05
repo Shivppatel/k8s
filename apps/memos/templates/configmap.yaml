@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: memos-config
+  namespace: {{ .Release.Namespace }}
+data:
+  memos-instance-setting-access.json: |
+    {
+      "key": "ACCESS",
+      "accessSetting": {
+        "accessMode": "INSTANCE_ACCESS_MODE_PRIVATE"
+      }
+    }
+  memos-instance-setting-general.json: |
+    {
+      "key": "GENERAL",
+      "generalSetting": {
+        "disallowUserRegistration": true,
+        "disallowPasswordAuth": false
+      }
+    }

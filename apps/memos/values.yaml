@@ -1,0 +1,167 @@
+app-template:
+  global:
+    createDefaultServiceAccount: false
+  controllers:
+    main:
+      replicas: 1
+      strategy: Recreate
+      annotations:
+        secret.reloader.stakater.com/reload: "memos-db-secret,memos-storage-secret"
+        configmap.reloader.stakater.com/reload: "memos-config"
+      pod:
+        automountServiceAccountToken: false
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          runAsGroup: 10001
+          fsGroup: 10001
+          seccompProfile:
+            type: RuntimeDefault
+      initContainers:
+        wait-for-minio:
+          image:
+            repository: docker.io/bitnamilegacy/minio-client
+            tag: 2025.7.21-debian-12-r2
+            pullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              mkdir -p /tmp/mc
+              cp /credentials/config.json /tmp/mc/config.json
+              for attempt in $(seq 1 60); do
+                if mc --config-dir /tmp/mc stat memos/memos-attachments >/dev/null 2>&1; then
+                  exit 0
+                fi
+                sleep 5
+              done
+              echo "Memos attachment bucket is not ready" >&2
+              exit 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"
+      containers:
+        main:
+          image:
+            repository: neosmemo/memos
+            tag: "0.31.0@sha256:24c2707ddd8fbd2ceaa7a61ecab86a53cdcde640b24ce572b73da14b00b5785f"
+            pullPolicy: IfNotPresent
+          env:
+            TZ: America/New_York
+            MEMOS_DRIVER: postgres
+            MEMOS_DSN_FILE: /database/dsn
+            MEMOS_DATA: /var/opt/memos
+            MEMOS_PORT: "5230"
+            MEMOS_INSTANCE_URL: https://memos.shivpatel.xyz
+            MEMOS_LOG_LEVEL: info
+          probes:
+            startup:
+              enabled: true
+              custom: true
+              spec:
+                httpGet:
+                  path: /healthz
+                  port: 5230
+                failureThreshold: 60
+                periodSeconds: 5
+            readiness:
+              enabled: true
+              custom: true
+              spec:
+                httpGet:
+                  path: /healthz
+                  port: 5230
+                periodSeconds: 10
+            liveness:
+              enabled: true
+              custom: true
+              spec:
+                httpGet:
+                  path: /healthz
+                  port: 5230
+                periodSeconds: 20
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+  service:
+    main:
+      controller: main
+      ports:
+        http:
+          port: 5230
+  persistence:
+    database-credentials:
+      type: secret
+      name: memos-db-secret
+      defaultMode: 0440
+      advancedMounts:
+        main:
+          main:
+            - path: /database
+              readOnly: true
+    storage-credentials:
+      type: secret
+      name: memos-storage-secret
+      defaultMode: 0440
+      items:
+        - key: config.json
+          path: config.json
+      advancedMounts:
+        main:
+          wait-for-minio:
+            - path: /credentials
+              readOnly: true
+    configuration:
+      type: projected
+      defaultMode: 0440
+      sources:
+        - configMap:
+            name: memos-config
+        - secret:
+            name: memos-storage-secret
+            items:
+              - key: memos-instance-setting-storage.json
+                path: memos-instance-setting-storage.json
+      advancedMounts:
+        main:
+          main:
+            - path: /etc/secrets
+              readOnly: true
+    data:
+      type: emptyDir
+      advancedMounts:
+        main:
+          main:
+            - path: /var/opt/memos
+    tmp:
+      type: emptyDir
+      globalMounts:
+        - path: /tmp
+
+ingress:
+  host: memos.shivpatel.xyz
+
+storage:
+  id: minio-attachments
+  bucket: memos-attachments
+  endpoint: http://minio.minio.svc.cluster.local:9000
+  region: us-east-1
+  uploadSizeLimitMb: 30

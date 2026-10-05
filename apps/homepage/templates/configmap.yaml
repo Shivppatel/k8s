@@ -217,6 +217,10 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gitlab.png
             href: https://gitlab.shivpatel.xyz
             description: Git repository
+        - Memos:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/memos.png
+            href: https://memos.shivpatel.xyz/
+            description: Notes and attachments
         - MinIO:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/minio.png
             href: https://minio.shivpatel.xyz/
