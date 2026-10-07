@@ -1,6 +1,6 @@
 dependencies:
 - name: argo-rollouts
   repository: https://argoproj.github.io/argo-helm
-  version: 2.43.5
-digest: sha256:50f60580ac20117697da6da464967e60ac6729d63926784c99b1b2d6cf65e378
-generated: "2026-10-03T17:24:57.602321661Z"
+  version: 2.43.6
+digest: sha256:727bf55d5f6a7d68ea2d78c48a86bbd3bb41c347fd30d4cd1b4c9b841cdf522b
+generated: "2026-10-07T07:26:59.021125413Z"
