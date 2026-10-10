@@ -6,6 +6,7 @@ argo-cd:
       otlp.insecure: "true"
       controller.profile.enabled: "true"
       server.profile.enabled: "true"
+      reposerver.profile.enabled: "true"
       applicationsetcontroller.profile.enabled: "true"
     cm:
       accounts.readonly: apiKey
@@ -197,6 +198,18 @@ argo-cd:
       serviceMonitor:
         enabled: true
   repoServer:
+    # Argo CD 3.5 reads this file for each profiler request.
+    volumes:
+      - name: profiler-config
+        configMap:
+          name: argocd-cmd-params-cm
+          items:
+            - key: reposerver.profile.enabled
+              path: profiler.enabled
+    volumeMounts:
+      - name: profiler-config
+        mountPath: /home/argocd/params
+        readOnly: true
     podAnnotations:
       ad.datadoghq.com/repo-server.checks: |
         {

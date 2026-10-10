@@ -25,6 +25,16 @@ longhorn:
     defaultClassReplicaCount: 2
   preUpgradeChecker:
     jobEnabled: true
+  networkPolicies:
+    # TCP/9500 also serves the manager API. Require both scraper identities.
+    metricsScrapeSources:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: "observability"
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: "prometheus"
+            prometheus: "kube-prometheus-stack-prometheus"
   metrics:
     serviceMonitor:
       enabled: true
