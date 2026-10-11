@@ -1,0 +1,53 @@
+# Sherlock's external bootstrap reader. Normal in-cluster deployments should use
+# projected short-lived tokens; this identity grants observation only.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sherlock-reader
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: sherlock-reader
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sherlock-reader
+rules:
+  - apiGroups: [""]
+    resources:
+      - namespaces
+      - nodes
+      - pods
+      - services
+      - persistentvolumeclaims
+      - events
+    verbs: [get, list]
+  - apiGroups: [apps]
+    resources: [deployments, replicasets, statefulsets, daemonsets]
+    verbs: [get, list]
+  - apiGroups: [batch]
+    resources: [jobs, cronjobs]
+    verbs: [get, list]
+  - apiGroups: [discovery.k8s.io]
+    resources: [endpointslices]
+    verbs: [get, list]
+  - apiGroups: [events.k8s.io]
+    resources: [events]
+    verbs: [get, list]
+  - apiGroups: [argoproj.io]
+    resources: [applications, applicationsets]
+    verbs: [get, list]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: sherlock-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: sherlock-reader
+subjects:
+  - kind: ServiceAccount
+    name: sherlock-reader
+    namespace: {{ .Release.Namespace }}
