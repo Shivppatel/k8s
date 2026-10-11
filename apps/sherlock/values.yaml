@@ -1,0 +1,392 @@
+sherlock:
+  config:
+    version: sherlock/v1alpha1
+    installation: homelab
+    listen: 0.0.0.0:8080
+    database:
+      file: /run/database/database_url
+    datadog:
+    - id: us5
+      site: us5.datadoghq.com
+      webhook_token:
+        file: /run/source/webhook_token
+      api_key:
+        file: /run/source/datadog_api_key
+      application_key:
+        file: /run/source/datadog_app_key
+      notebook_ids: []
+    slack:
+      enabled: true
+      mode: incoming_webhook
+      channel: C0C95F0RPB2
+      webhook_url:
+        file: /run/source/slack_webhook_url
+    kubernetes:
+      id: homelab
+      server: https://kubernetes.default.svc
+      ca_certificate:
+        file: /run/kubernetes/ca.crt
+      token:
+        file: /run/kubernetes/token
+    github:
+      id: homelab
+      app_id: '5268741'
+      installation_id: 170114481
+      private_key:
+        file: /run/source/github_private_key
+      repositories:
+        Shivppatel/k8s: 1075053423
+        Shivppatel/k8s-private: 1179592605
+      content_prefixes:
+        Shivppatel/k8s:
+        - apps
+        Shivppatel/k8s-private:
+        - apps
+      source_files:
+        Shivppatel/k8s:
+        - apps/argocd/Chart.yaml
+    runtime:
+      enabled: false
+      endpoint: http://sherlock-runtime:8090
+      token:
+        file: /run/runtime/runtime_token
+      model: gpt-6.1-sol
+    discovery:
+      enabled: true
+      datadog_connections:
+      - us5
+      argo_namespace: argocd
+      interval_seconds: 300
+      max_age_seconds: 600
+      max_resources: 1000
+    mappings: []
+    repeated_alerts: separate_incident
+    recovery: all_in_episode
+  runtime:
+    version: sherlock/runtime/v1alpha1
+    model: gpt-6.1-sol
+    deadline_seconds: 120
+    max_concurrent: 1
+    max_input_bytes: 100000
+app-template:
+  global:
+    createDefaultServiceAccount: false
+  serviceAccount:
+    app:
+      forceRename: sherlock
+      automountServiceAccountToken: false
+    runtime:
+      forceRename: sherlock-runtime
+      automountServiceAccountToken: false
+    egress:
+      forceRename: sherlock-egress
+      automountServiceAccountToken: false
+  controllers:
+    main:
+      replicas: 1
+      strategy: Recreate
+      serviceAccount:
+        identifier: app
+      pod:
+        labels:
+          sherlock-role: app
+        automountServiceAccountToken: false
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65532
+          runAsGroup: 65532
+          fsGroup: 65532
+          seccompProfile:
+            type: RuntimeDefault
+      annotations:
+        secret.reloader.stakater.com/reload: sherlock-source-secret,sherlock-db-secret,sherlock-runtime-secret
+        configmap.reloader.stakater.com/reload: sherlock-config
+      containers:
+        main:
+          image:
+            repository: ghcr.io/shivppatel/sherlock
+            tag: 0.1.0-dev
+          args:
+          - -config
+          - /config/config.yaml
+          securityContext: &id001
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          probes:
+            startup:
+              enabled: true
+              custom: true
+              spec:
+                httpGet:
+                  path: /healthz
+                  port: 8080
+                failureThreshold: 60
+                periodSeconds: 5
+            liveness:
+              enabled: true
+              custom: true
+              spec:
+                httpGet:
+                  path: /healthz
+                  port: 8080
+            readiness:
+              enabled: true
+              custom: true
+              spec:
+                httpGet:
+                  path: /readyz
+                  port: 8080
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+      forceRename: sherlock
+    runtime:
+      enabled: true
+      replicas: 0
+      strategy: Recreate
+      serviceAccount:
+        identifier: runtime
+      pod:
+        labels:
+          sherlock-role: runtime
+        automountServiceAccountToken: false
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          fsGroup: 1000
+          seccompProfile:
+            type: RuntimeDefault
+      annotations:
+        secret.reloader.stakater.com/reload: sherlock-runtime-secret
+        configmap.reloader.stakater.com/reload: sherlock-runtime-config
+      containers:
+        main:
+          image:
+            repository: ghcr.io/shivppatel/sherlock-runtime
+            tag: 0.1.0-dev
+          env:
+            HTTPS_PROXY: http://egress:3128
+          securityContext: *id001
+          probes:
+            liveness:
+              enabled: true
+              custom: true
+              spec:
+                tcpSocket:
+                  port: 8090
+            readiness:
+              enabled: true
+              custom: true
+              spec:
+                tcpSocket:
+                  port: 8090
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: '1'
+              memory: 512Mi
+      forceRename: sherlock-runtime
+    egress:
+      enabled: true
+      replicas: 1
+      strategy: Recreate
+      serviceAccount:
+        identifier: egress
+      pod:
+        labels:
+          sherlock-role: egress
+        automountServiceAccountToken: false
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65532
+          runAsGroup: 65532
+          seccompProfile:
+            type: RuntimeDefault
+      containers:
+        main:
+          image:
+            repository: ghcr.io/shivppatel/sherlock-egress
+            tag: 0.1.0-dev
+          securityContext: *id001
+          probes:
+            liveness:
+              enabled: true
+              custom: true
+              spec:
+                tcpSocket:
+                  port: 3128
+            readiness:
+              enabled: true
+              custom: true
+              spec:
+                tcpSocket:
+                  port: 3128
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 64Mi
+      forceRename: sherlock-egress
+  service:
+    main:
+      forceRename: sherlock
+      controller: main
+      ports:
+        http:
+          port: 8080
+    runtime:
+      enabled: true
+      forceRename: sherlock-runtime
+      controller: runtime
+      ports:
+        http:
+          port: 8090
+    egress:
+      enabled: true
+      forceRename: egress
+      controller: egress
+      ports:
+        proxy:
+          port: 3128
+  persistence:
+    configuration:
+      type: configMap
+      name: sherlock-config
+      defaultMode: 288
+      advancedMounts:
+        main:
+          main:
+          - path: /config
+            readOnly: true
+    source:
+      type: secret
+      name: sherlock-source-secret
+      defaultMode: 288
+      advancedMounts:
+        main:
+          main:
+          - path: /run/source
+            readOnly: true
+    database:
+      type: secret
+      name: sherlock-db-secret
+      defaultMode: 288
+      advancedMounts:
+        main:
+          main:
+          - path: /run/database
+            readOnly: true
+    projected-reader:
+      enabled: true
+      type: projected
+      defaultMode: 288
+      sources:
+      - serviceAccountToken:
+          path: token
+          expirationSeconds: 3600
+      - configMap:
+          name: kube-root-ca.crt
+          items:
+          - key: ca.crt
+            path: ca.crt
+      advancedMounts:
+        main:
+          main:
+          - path: /run/kubernetes
+            readOnly: true
+    runtime-api-for-app:
+      enabled: true
+      type: secret
+      name: sherlock-runtime-secret
+      defaultMode: 288
+      items:
+      - key: runtime_token
+        path: runtime_token
+      advancedMounts:
+        main:
+          main:
+          - path: /run/runtime
+            readOnly: true
+    runtime-configuration:
+      enabled: true
+      type: configMap
+      name: sherlock-runtime-config
+      defaultMode: 288
+      advancedMounts:
+        runtime:
+          main:
+          - path: /config
+            readOnly: true
+    runtime-api:
+      enabled: true
+      type: secret
+      name: sherlock-runtime-secret
+      defaultMode: 288
+      items:
+      - key: runtime_token
+        path: runtime_token
+      advancedMounts:
+        runtime:
+          main:
+          - path: /run/secrets
+            readOnly: true
+    auth:
+      enabled: true
+      type: persistentVolumeClaim
+      forceRename: sherlock-codex-auth
+      accessMode: ReadWriteOnce
+      size: 1Gi
+      retain: true
+      advancedMounts:
+        runtime:
+          main:
+          - path: /auth
+      storageClass: longhorn
+    evidence:
+      enabled: true
+      type: emptyDir
+      medium: Memory
+      sizeLimit: 16Mi
+      advancedMounts:
+        runtime:
+          main:
+          - path: /evidence
+    runtime-tmp:
+      enabled: true
+      type: emptyDir
+      medium: Memory
+      sizeLimit: 16Mi
+      advancedMounts:
+        runtime:
+          main:
+          - path: /tmp
+  defaultPodOptions:
+    imagePullSecrets:
+    - name: sherlock-registry-secret
+ingress:
+  host: sherlock.shivpatel.xyz
+  enabled: false
+networkPolicy:
+  enabled: true
+  apiAddresses:
+  - 10.96.0.1/32
+  - 192.168.20.10/32
+  - 192.168.20.11/32
+  - 192.168.20.12/32
+  ingressNamespace: traefik
+  databaseNamespace: postgresql
+  databaseCluster: postgresql
+runtimeLogin:
+  enabled: false

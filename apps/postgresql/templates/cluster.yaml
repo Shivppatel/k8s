@@ -74,6 +74,7 @@ spec:
         - CREATE USER datadog WITH PASSWORD 'temp'
         - CREATE USER lnd WITH PASSWORD 'temp'
         - CREATE USER memos WITH PASSWORD 'temp'
+        - CREATE USER sherlock WITH PASSWORD NULL
         # Create databases with correct ownership
         - CREATE DATABASE terraform OWNER terraform
         - CREATE DATABASE immich OWNER immich
@@ -84,9 +85,22 @@ spec:
         - CREATE DATABASE datadog OWNER datadog
         - CREATE DATABASE lnd OWNER lnd
         - CREATE DATABASE memos OWNER memos
+        - CREATE DATABASE sherlock OWNER sherlock
 
   managed:
     roles:
+      - name: sherlock
+        ensure: present
+        connectionLimit: 16
+        inherit: false
+        login: true
+        superuser: false
+        createdb: false
+        createrole: false
+        replication: false
+        bypassrls: false
+        passwordSecret:
+          name: sherlock-db-secret
       - name: memos
         ensure: present
         connectionLimit: -1

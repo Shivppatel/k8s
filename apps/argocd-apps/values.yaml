@@ -834,6 +834,27 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
+    sherlock:
+      name: sherlock
+      namespace: argocd
+      destination:
+        namespace: sherlock
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/sherlock
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+        helm:
+          valueFiles: [values.yaml]
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+
     memos:
       name: memos
       namespace: argocd

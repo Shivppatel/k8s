@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sherlock-runtime-config
+data:
+  runtime.yaml: |
+{{ .Values.sherlock.runtime | toYaml | indent 4 }}
