@@ -54,19 +54,21 @@ runs. Check the exact Synced revision, healthy existing Deployments and Ready
 observer Pod during the experiment; confirm Synced/Healthy after Job completion
 or reviewed cleanup. Its health is not suppressed.
 
-The separate Datadog integration/hidden variable, token distribution, deployment
-and metadata policy require concrete owner review. Source monitor activation is
+The owner-approved probe field and Datadog integration/hidden variable are prepared
+and readback verified. Deployment still requires concrete owner review. Source monitor activation is
 a separate step after private-network/auth/method/body/monitor rejection checks.
 Only this monitor's threshold/message may change for the two-episode experiment;
 existing monitors and notification rules must remain untouched. Stop on an
 unexpected destination, identity mismatch, quota or deadline. A test result may
 be inconclusive and does not guarantee vendor delivery semantics.
 
-Proposed metadata handling remains pending approval: one owner-readable sample of
-at most 32 records, local sample deletion after aggregate results, and removal
-of the experiment resources. Existing centralized/container logs and backups
-follow their current policies; removal does not prove their deletion. Sherlock
-report/evidence retention remains undecided with cleanup disabled.
+The owner approved one owner-readable sample of at most 32 hashed identity
+metadata records, with local sample deletion after aggregate results. No raw
+request bodies/headers, prompts or model output are collected by the observer.
+Experiment resource cleanup requires its own reviewed changes. Existing
+centralized/container logs and backups follow their current policies; resource
+removal does not prove their deletion. Sherlock report/evidence retention remains
+undecided with cleanup disabled.
 
 Preparation requires Helm dependency build/lint/render, YAML lint, secret scan,
 server dry-run and a check that existing rendered objects retain identical specs.
