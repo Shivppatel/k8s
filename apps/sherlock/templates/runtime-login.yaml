@@ -11,7 +11,8 @@ metadata:
 spec:
   backoffLimit: 0
   activeDeadlineSeconds: 900
-  ttlSecondsAfterFinished: 600
+  # Keep the finished Job while desired: TTL deletion plus Argo self-heal
+  # would recreate it and issue unbounded device-login attempts.
   template:
     metadata:
       labels:

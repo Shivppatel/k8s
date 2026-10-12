@@ -105,7 +105,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: 0.1.0-dev
+            tag: sha-36b8433988345b04c57cf54f56f65a0f641338c3@sha256:a39f29c2e98988e346698207a326a6e1c658bcb79f6159ad6b05b73a0c7a01be
           args:
           - -config
           - /config/config.yaml
@@ -171,7 +171,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock-runtime
-            tag: 0.1.0-dev
+            tag: sha-36b8433988345b04c57cf54f56f65a0f641338c3@sha256:b5bd61f63e0a77795c48411bece03787b2c79271fcbbd2e248d73138c45bf00e
           env:
             HTTPS_PROXY: http://egress:3128
           securityContext: *id001
@@ -216,7 +216,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock-egress
-            tag: 0.1.0-dev
+            tag: sha-36b8433988345b04c57cf54f56f65a0f641338c3@sha256:ff5e4f3c599d4ceba6383ac0be79e16f3493e121878fda175a29ef7b0ad542c1
           securityContext: *id001
           probes:
             liveness:
@@ -389,4 +389,4 @@ networkPolicy:
   databaseNamespace: postgresql
   databaseCluster: postgresql
 runtimeLogin:
-  enabled: false
+  enabled: true
