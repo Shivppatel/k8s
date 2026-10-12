@@ -1,0 +1,58 @@
+{{- if .Values.runtimeLogin.enabled }}
+{{- if ne (int (index .Values "app-template" "controllers" "runtime" "replicas")) 0 }}
+{{- fail "Stop the runtime through GitOps (replicas=0) before enabling the single-writer device login Job" }}
+{{- end }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sherlock-runtime-login
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 900
+  # Keep the finished Job while desired: TTL deletion plus Argo self-heal
+  # would recreate it and issue unbounded device-login attempts.
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+        sherlock-role: auth
+    spec:
+      serviceAccountName: sherlock-runtime
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      {{- with index .Values "app-template" "defaultPodOptions" "imagePullSecrets" }}
+      imagePullSecrets:
+{{ . | toYaml | indent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: login
+          image: "{{ index .Values "app-template" "controllers" "runtime" "containers" "main" "image" "repository" }}:{{ index .Values "app-template" "controllers" "runtime" "containers" "main" "image" "tag" }}"
+          command: [/usr/local/bin/codex]
+          args: [-c, 'cli_auth_credentials_store="file"', login, --device-auth]
+          env:
+            - {name: HTTPS_PROXY, value: "http://egress:3128"}
+            - {name: HTTP_PROXY, value: "http://egress:3128"}
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: "1", memory: 512Mi}
+          volumeMounts:
+            - {name: auth, mountPath: /auth}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: auth
+          persistentVolumeClaim: {claimName: sherlock-codex-auth}
+        - name: tmp
+          emptyDir: {medium: Memory, sizeLimit: 16Mi}
+{{- end }}

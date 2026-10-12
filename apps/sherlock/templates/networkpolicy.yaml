@@ -1,0 +1,111 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: sherlock-default-deny}
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/instance: "{{ .Release.Name }}"}
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: sherlock-app}
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/instance: "{{ .Release.Name }}", sherlock-role: app}
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: "{{ .Values.networkPolicy.ingressNamespace }}"}
+          podSelector:
+            matchLabels: {app.kubernetes.io/name: traefik}
+      ports: [{protocol: TCP, port: 8080}]
+  egress:
+    - to:
+        - namespaceSelector: {matchLabels: {kubernetes.io/metadata.name: kube-system}}
+          podSelector: {matchLabels: {k8s-app: kube-dns}}
+      ports: [{protocol: UDP, port: 53}, {protocol: TCP, port: 53}]
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: "{{ .Values.networkPolicy.databaseNamespace }}"}
+          podSelector:
+            matchLabels: {cnpg.io/cluster: "{{ .Values.networkPolicy.databaseCluster }}"}
+      ports: [{protocol: TCP, port: 5432}]
+    - to:
+        - podSelector: {matchLabels: {app.kubernetes.io/instance: "{{ .Release.Name }}", sherlock-role: runtime}}
+      ports: [{protocol: TCP, port: 8090}]
+    {{- if .Values.networkPolicy.apiAddresses }}
+    - to:
+      {{- range .Values.networkPolicy.apiAddresses }}
+        - ipBlock: {cidr: {{ . | quote }}}
+      {{- end }}
+      ports: [{protocol: TCP, port: 443}, {protocol: TCP, port: 6443}]
+    {{- end }}
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [0.0.0.0/8, 10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.168.0.0/16, 224.0.0.0/4, 240.0.0.0/4]
+      ports: [{protocol: TCP, port: 443}]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: sherlock-runtime}
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/instance: "{{ .Release.Name }}", sherlock-role: runtime}
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - podSelector: {matchLabels: {app.kubernetes.io/instance: "{{ .Release.Name }}", sherlock-role: app}}
+      ports: [{protocol: TCP, port: 8090}]
+  egress:
+    - to:
+        - namespaceSelector: {matchLabels: {kubernetes.io/metadata.name: kube-system}}
+          podSelector: {matchLabels: {k8s-app: kube-dns}}
+      ports: [{protocol: UDP, port: 53}, {protocol: TCP, port: 53}]
+    - to:
+        - podSelector: {matchLabels: {app.kubernetes.io/instance: "{{ .Release.Name }}", sherlock-role: egress}}
+      ports: [{protocol: TCP, port: 3128}]
+---
+# A dedicated login pod is permitted only provider egress, never source access.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: sherlock-auth-egress}
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/instance: "{{ .Release.Name }}", sherlock-role: auth}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: {matchLabels: {kubernetes.io/metadata.name: kube-system}}
+          podSelector: {matchLabels: {k8s-app: kube-dns}}
+      ports: [{protocol: UDP, port: 53}, {protocol: TCP, port: 53}]
+    - to:
+        - podSelector: {matchLabels: {app.kubernetes.io/instance: "{{ .Release.Name }}", sherlock-role: egress}}
+      ports: [{protocol: TCP, port: 3128}]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: sherlock-egress}
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/instance: "{{ .Release.Name }}", sherlock-role: egress}
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels: {app.kubernetes.io/instance: "{{ .Release.Name }}"}
+            matchExpressions: [{key: sherlock-role, operator: In, values: [runtime, auth]}]
+      ports: [{protocol: TCP, port: 3128}]
+  egress:
+    - to:
+        - namespaceSelector: {matchLabels: {kubernetes.io/metadata.name: kube-system}}
+          podSelector: {matchLabels: {k8s-app: kube-dns}}
+      ports: [{protocol: UDP, port: 53}, {protocol: TCP, port: 53}]
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [0.0.0.0/8, 10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.168.0.0/16, 224.0.0.0/4, 240.0.0.0/4]
+      ports: [{protocol: TCP, port: 443}]
+{{- end }}

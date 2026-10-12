@@ -1,0 +1,10 @@
+apiVersion: v2
+name: sherlock
+description: Sherlock incident review service - initial testing milestone
+type: application
+version: 0.1.0
+appVersion: "0.1.0-dev"
+dependencies:
+  - name: app-template
+    version: 5.2.1
+    repository: https://bjw-s-labs.github.io/helm-charts/

@@ -40,9 +40,13 @@ spec:
               done
 
               # Ensure all users and databases exist (non-destructive)
-              for app in immich n8n terraform teslamate authentik gitlab datadog lnd memos; do
+              for app in immich n8n terraform teslamate authentik gitlab datadog lnd memos sherlock; do
                 echo "Ensuring $app user and database exist..."
-                psql -c "DO \$\$ BEGIN CREATE USER $app WITH PASSWORD 'temp'; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$;"                
+                if [ "$app" = "sherlock" ]; then
+                  psql -c "DO \$\$ BEGIN CREATE USER sherlock WITH PASSWORD NULL; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$;"
+                else
+                  psql -c "DO \$\$ BEGIN CREATE USER $app WITH PASSWORD 'temp'; EXCEPTION WHEN duplicate_object THEN NULL; END \$\$;"
+                fi
                 # Check if database exists, but don't recreate it if it has data
                 DB_EXISTS=$(psql -tAc "SELECT 1 FROM pg_database WHERE datname='$app'" 2>/dev/null || echo "")
                 if [ -z "$DB_EXISTS" ]; then
@@ -72,11 +76,10 @@ spec:
               psql -d terraform -c "GRANT ALL ON SCHEMA public TO terraform;"
 
               echo "Setting up teslamate database..."
-              # TeslaMate migrations drop/recreate geo extensions; do it here with superuser
-              psql -d teslamate -c "DROP EXTENSION IF EXISTS earthdistance CASCADE;"
-              psql -d teslamate -c "DROP EXTENSION IF EXISTS cube CASCADE;"
-              psql -d teslamate -c "CREATE EXTENSION cube WITH SCHEMA public;"
-              psql -d teslamate -c "CREATE EXTENSION earthdistance WITH SCHEMA public;"
+              # Preserve dependent objects during unrelated application setup.
+              # Extension removal belongs in an explicit, reviewed migration.
+              psql -d teslamate -c "CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA public;"
+              psql -d teslamate -c "CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA public;"
               # Ensure extension is on latest version for TeslaMate migrations
               psql -d teslamate -c "ALTER EXTENSION earthdistance UPDATE;"
               # Give the application user ownership so future migrations can modify objects
@@ -101,6 +104,11 @@ spec:
               psql -d lnd -c "ALTER SCHEMA public OWNER TO lnd;"
               psql -d lnd -c "GRANT ALL ON SCHEMA public TO lnd;"
 
+              echo "Setting up sherlock database..."
+              psql -d sherlock -c "ALTER SCHEMA public OWNER TO sherlock;"
+              psql -d sherlock -c "REVOKE ALL ON SCHEMA public FROM PUBLIC;"
+              psql -d sherlock -c "GRANT ALL ON SCHEMA public TO sherlock;"
+
               echo "Setting up memos database..."
               psql -d memos -c "ALTER SCHEMA public OWNER TO memos;"
               psql -d memos -c "GRANT ALL ON SCHEMA public TO memos;"
@@ -110,26 +118,26 @@ spec:
               # Do NOT create/drop it here - CNPG handles CREATE/DROP EXTENSION in all databases
 
               # Setup datadog schema and functions in ALL databases for DBM
-              for db in postgres immich n8n terraform teslamate authentik gitlab datadog lnd memos; do
+              for db in postgres immich n8n terraform teslamate authentik gitlab datadog lnd memos sherlock; do
                 echo "Setting up Datadog monitoring in $db database..."
-                
+
                 # Create datadog schema
                 psql -d $db -c "CREATE SCHEMA IF NOT EXISTS datadog;"
                 psql -d $db -c "GRANT USAGE ON SCHEMA datadog TO datadog;"
                 psql -d $db -c "GRANT USAGE ON SCHEMA public TO datadog;"
-                
+
                 # Create function to read pg_stat_activity
                 psql -d $db -c "CREATE OR REPLACE FUNCTION datadog.pg_stat_activity()
                   RETURNS SETOF pg_stat_activity AS \$\$
                     SELECT * FROM pg_catalog.pg_stat_activity;
                   \$\$ LANGUAGE sql SECURITY DEFINER;"
-                
+
                 # Create function to read pg_stat_statements
                 psql -d $db -c "CREATE OR REPLACE FUNCTION datadog.pg_stat_statements()
                   RETURNS SETOF pg_stat_statements AS \$\$
                     SELECT * FROM pg_stat_statements;
                   \$\$ LANGUAGE sql SECURITY DEFINER;"
-                
+
                 # Create function for explain plans
                 psql -d $db -c "CREATE OR REPLACE FUNCTION datadog.explain_statement(
                     l_query TEXT,

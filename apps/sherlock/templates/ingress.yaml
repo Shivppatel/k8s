@@ -1,0 +1,54 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sherlock-request-bounds
+spec:
+  chain:
+    middlewares:
+      - name: sherlock-rate-limit
+      - name: sherlock-body-limit
+      - name: sherlock-headers
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sherlock-rate-limit
+spec:
+  rateLimit: {average: 10, burst: 20}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sherlock-body-limit
+spec:
+  buffering: {maxRequestBodyBytes: 8192, memRequestBodyBytes: 8192}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sherlock-headers
+spec:
+  headers:
+    stsSeconds: 31536000
+    stsIncludeSubdomains: false
+    contentTypeNosniff: true
+    referrerPolicy: no-referrer
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sherlock
+spec:
+  entryPoints: [websecure]
+  routes:
+    - match: Host(`{{ .Values.ingress.host }}`) && Method(`GET`) && (Path(`/`) || Path(`/healthz`) || Path(`/api/v1/incidents`) || PathRegexp(`^/(incidents|api/v1/incidents)/[a-f0-9]{32}$`))
+      kind: Rule
+      middlewares: [{name: sherlock-request-bounds}]
+      services: [{name: sherlock, port: 8080}]
+    - match: Host(`{{ .Values.ingress.host }}`) && Method(`POST`) && Path(`/webhooks/datadog/us5`)
+      kind: Rule
+      middlewares: [{name: sherlock-request-bounds}]
+      services: [{name: sherlock, port: 8080}]
+  tls: {}
+{{- end }}
