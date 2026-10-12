@@ -291,7 +291,7 @@ localstack:
     # or tag is needed for an environment
     image:
       repository: amazon/aws-cli
-      tag: "latest@sha256:ce44b800602264c12298bbf3399055a4cefdb9ed4a098abe564afe26e7071bce"
+      tag: "latest@sha256:d32864c20087d486f5988c3e70817d67a73f584a47535cada9ad97e0ea1e5196"
 
   # @param volumeMounts Extra volumes to mount
   volumeMounts: []
