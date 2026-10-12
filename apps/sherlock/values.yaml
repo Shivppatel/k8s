@@ -149,7 +149,7 @@ app-template:
       forceRename: sherlock
     runtime:
       enabled: true
-      replicas: 0
+      replicas: 1
       strategy: Recreate
       serviceAccount:
         identifier: runtime
@@ -389,4 +389,4 @@ networkPolicy:
   databaseNamespace: postgresql
   databaseCluster: postgresql
 runtimeLogin:
-  enabled: true
+  enabled: false
