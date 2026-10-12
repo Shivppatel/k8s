@@ -81,6 +81,9 @@ app-template:
     egress:
       forceRename: sherlock-egress
       automountServiceAccountToken: false
+    identity-probe:
+      forceRename: sherlock-identity-probe
+      automountServiceAccountToken: false
   controllers:
     main:
       replicas: 1
@@ -239,6 +242,57 @@ app-template:
               cpu: 250m
               memory: 64Mi
       forceRename: sherlock-egress
+    identity-probe:
+      type: job
+      forceRename: sherlock-identity-probe
+      job:
+        activeDeadlineSeconds: 2700
+        backoffLimit: 0
+      serviceAccount:
+        identifier: identity-probe
+      pod:
+        labels:
+          sherlock-role: identity-probe
+        automountServiceAccountToken: false
+        restartPolicy: Never
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65532
+          runAsGroup: 65532
+          fsGroup: 65532
+          seccompProfile:
+            type: RuntimeDefault
+      containers:
+        observer:
+          image:
+            repository: ghcr.io/shivppatel/sherlock-identity-probe
+            tag: sha-c131b018433ac719038457b41733e454d8e8886f@sha256:23e046bbf64ca7113e0099c5d2cae92b143dbe7ddba9bd644070b4f901ba6f95
+          args:
+          - -listen
+          - 0.0.0.0:8091
+          - -monitor-id
+          - "23061575"
+          - -token-file
+          - /run/probe/token
+          - -max-receipts
+          - "32"
+          - -deadline
+          - 44m
+          - -reject-first
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          probes:
+            readiness:
+              enabled: true
+              custom: true
+              spec:
+                httpGet: {path: /healthz, port: 8091}
+          resources:
+            requests: {cpu: 25m, memory: 32Mi}
+            limits: {cpu: 100m, memory: 64Mi}
   service:
     main:
       forceRename: sherlock
@@ -260,6 +314,12 @@ app-template:
       ports:
         proxy:
           port: 3128
+    identity-probe:
+      forceRename: sherlock-identity-probe
+      controller: identity-probe
+      ports:
+        http:
+          port: 8091
   persistence:
     configuration:
       type: configMap
@@ -372,6 +432,15 @@ app-template:
         runtime:
           main:
           - path: /tmp
+    identity-probe-token:
+      type: secret
+      name: sherlock-identity-probe-token
+      defaultMode: 288
+      advancedMounts:
+        identity-probe:
+          observer:
+          - path: /run/probe
+            readOnly: true
   defaultPodOptions:
     imagePullSecrets:
     - name: sherlock-registry-secret
