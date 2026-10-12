@@ -49,6 +49,11 @@ identity metadata receipts. One initial 503 deliberately exercises Datadog's
 retry; no valid local canary may consume it before the real experiment. This
 binary has no database, source connector, provider or Slack client.
 
+The finite Job can keep Argo's aggregate Application health Progressing while it
+runs. Check the exact Synced revision, healthy existing Deployments and Ready
+observer Pod during the experiment; confirm Synced/Healthy after Job completion
+or reviewed cleanup. Its health is not suppressed.
+
 The separate Datadog integration/hidden variable, token distribution, deployment
 and metadata policy require concrete owner review. Source monitor activation is
 a separate step after private-network/auth/method/body/monitor rejection checks.
