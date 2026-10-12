@@ -46,7 +46,7 @@ sherlock:
         Shivppatel/k8s:
         - apps/argocd/Chart.yaml
     runtime:
-      enabled: false
+      enabled: true
       endpoint: http://sherlock-runtime:8090
       token:
         file: /run/runtime/runtime_token
@@ -377,7 +377,7 @@ app-template:
     - name: sherlock-registry-secret
 ingress:
   host: sherlock.shivpatel.xyz
-  enabled: false
+  enabled: true
 networkPolicy:
   enabled: true
   apiAddresses:
