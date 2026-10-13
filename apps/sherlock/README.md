@@ -60,26 +60,33 @@ observer Pod during the experiment; confirm Synced/Healthy after Job completion
 or reviewed cleanup. Its health is not suppressed.
 
 The owner-approved probe field and Datadog integration/hidden variable are prepared
-and readback verified. Two earlier finite Jobs remain unchanged and retained:
-`sherlock-identity-probe` and `sherlock-identity-probe-20261013`. In the last
-native transport attempt, two Datadog POSTs reached the receiver but returned
-HTTP 415, with zero valid receipts. The experiment stopped before renotification
-or a second alert episode. The captured evidence did not include native request
-headers, so it does not establish why the receiver rejected those requests.
+and readback verified. Three previous finite Jobs are retained:
+`sherlock-identity-probe`, `sherlock-identity-probe-20261013`, and
+`sherlock-identity-probe-20261013-json`. In the prior native attempt using the
+older image, two Datadog POSTs reached the receiver but returned HTTP 415, with
+zero valid receipts. The experiment stopped before renotification or a second
+alert episode. Native request headers were not captured, so the rejection cause
+is unknown.
 
 The corrected probe-only image parses JSON media types with parameters, and the
-existing Datadog webhook now sends `Content-Type: application/json`. This proposal
-adds `sherlock-identity-probe-20261013-json` using that immutable image, unchanged
-44-minute/32-record limits and the existing read-only probe-token mount. The stable
-receiver Service selects only this new controller. Both completed Jobs and Pods
-remain untouched. Any future capture must target the new exact Job and validate
-its Pod owner UID, image and zero restart count, rather than selecting every Pod
-with the shared observer role label.
+existing Datadog webhook declares `Content-Type: application/json`. A corrected-
+image listener was deployed, but its safe 34-minute experiment start margin
+expired during preflight. The monitor remained safe and no valid native event was
+sent. Five invalid-input boundaries and fresh positive uptime coverage passed.
 
-Merging this GitOps change would start the new finite Job and can temporarily make
-the Argo Application Progressing. It does not activate the Datadog monitor or send
-an experiment notification. Any new native delivery experiment requires separate
-review after the receiver and input-boundary checks pass.
+This proposal adds a fresh fourth Job,
+`sherlock-identity-probe-20261013-json-retry`, with that same immutable image,
+44-minute/32-record limits and the existing read-only probe-token mount. The
+stable receiver Service selects only the new controller. All prior Jobs and Pods
+remain untouched. Wait for the currently running corrected-image Job to complete
+naturally before merging this next Job. Any future capture must target the new
+exact Job and validate its Pod owner UID, image and zero restart count, rather
+than selecting every Pod with the shared observer role label.
+
+Merging this GitOps change starts the new finite Job and can temporarily make the
+Argo Application Progressing. It does not activate the Datadog monitor or send an
+experiment notification. Any native delivery experiment requires separate review
+after live receiver, policy and input-boundary checks pass.
 
 The probe-only Cloudflare Access application for
 `sherlock.shivpatel.xyz/identity/datadog` has an owner-reviewed dedicated Bypass
