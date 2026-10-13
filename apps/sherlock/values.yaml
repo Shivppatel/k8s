@@ -3,6 +3,7 @@ sherlock:
     version: sherlock/v1alpha1
     installation: homelab
     listen: 0.0.0.0:8080
+    dashboard_url: https://sherlock.shivpatel.xyz
     database:
       file: /run/database/database_url
     datadog:
@@ -108,7 +109,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: sha-3160a76115bb5fde56e7892661c4cd95ef4b5a61@sha256:885e673029a46a2da27ccbc9e08816273846dbcf2e0fc222dac10b75d8f4705f
+            tag: sha-bd76ff4652aeea986b3f27d74e8200e9ce854eb7@sha256:df651b115231bfe1298656d9089bbbe6a14b8f20b0cb8b6d4ed88c60e811f5a4
           args:
           - -config
           - /config/config.yaml
