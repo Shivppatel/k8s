@@ -264,7 +264,7 @@ app-template:
           seccompProfile:
             type: RuntimeDefault
       containers:
-        observer:
+        observer: &identity-probe-observer
           image:
             repository: ghcr.io/shivppatel/sherlock-identity-probe
             tag: sha-c131b018433ac719038457b41733e454d8e8886f@sha256:23e046bbf64ca7113e0099c5d2cae92b143dbe7ddba9bd644070b4f901ba6f95
@@ -297,6 +297,15 @@ app-template:
     identity-probe-rerun:
       <<: *identity-probe-controller
       forceRename: sherlock-identity-probe-20261013
+    identity-probe-contenttype-rerun:
+      <<: *identity-probe-controller
+      forceRename: sherlock-identity-probe-20261013-json
+      containers:
+        observer:
+          <<: *identity-probe-observer
+          image:
+            repository: ghcr.io/shivppatel/sherlock-identity-probe
+            tag: sha-903b491a17fc1aa97af7d2f75f7bb6b7791f5c9a@sha256:18cdeeb6d9dabf1d0d22adc5cf3cd5cf7e2d4809cb53cf23be6121838c7aded0
   service:
     main:
       forceRename: sherlock
@@ -320,7 +329,7 @@ app-template:
           port: 3128
     identity-probe:
       forceRename: sherlock-identity-probe
-      controller: identity-probe-rerun
+      controller: identity-probe-contenttype-rerun
       ports:
         http:
           port: 8091
@@ -446,6 +455,10 @@ app-template:
           - path: /run/probe
             readOnly: true
         identity-probe-rerun:
+          observer:
+          - path: /run/probe
+            readOnly: true
+        identity-probe-contenttype-rerun:
           observer:
           - path: /run/probe
             readOnly: true
