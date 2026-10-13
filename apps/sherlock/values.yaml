@@ -109,7 +109,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: sha-bffc7d28a24d39e93c42084ea2f535927c35a6ab@sha256:13ffc596e3a67b87b6be6c7c6422911d65c2bb82b12e1fb79da4c5fecdf862ad
+            tag: sha-8c512c2a6b1434508dda4a842380ba322b9635ef@sha256:263ec3c9f4c34a41280d794f9918d04248c494c50700ca93b1d5351520da1236
           args:
           - -config
           - /config/config.yaml
