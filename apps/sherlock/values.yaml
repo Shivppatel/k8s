@@ -306,6 +306,15 @@ app-template:
           image:
             repository: ghcr.io/shivppatel/sherlock-identity-probe
             tag: sha-903b491a17fc1aa97af7d2f75f7bb6b7791f5c9a@sha256:18cdeeb6d9dabf1d0d22adc5cf3cd5cf7e2d4809cb53cf23be6121838c7aded0
+    identity-probe-contenttype-retry:
+      <<: *identity-probe-controller
+      forceRename: sherlock-identity-probe-20261013-json-retry
+      containers:
+        observer:
+          <<: *identity-probe-observer
+          image:
+            repository: ghcr.io/shivppatel/sherlock-identity-probe
+            tag: sha-903b491a17fc1aa97af7d2f75f7bb6b7791f5c9a@sha256:18cdeeb6d9dabf1d0d22adc5cf3cd5cf7e2d4809cb53cf23be6121838c7aded0
   service:
     main:
       forceRename: sherlock
@@ -329,7 +338,7 @@ app-template:
           port: 3128
     identity-probe:
       forceRename: sherlock-identity-probe
-      controller: identity-probe-contenttype-rerun
+      controller: identity-probe-contenttype-retry
       ports:
         http:
           port: 8091
@@ -459,6 +468,10 @@ app-template:
           - path: /run/probe
             readOnly: true
         identity-probe-contenttype-rerun:
+          observer:
+          - path: /run/probe
+            readOnly: true
+        identity-probe-contenttype-retry:
           observer:
           - path: /run/probe
             readOnly: true
