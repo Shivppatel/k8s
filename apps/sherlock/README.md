@@ -27,16 +27,19 @@ The identity-probe Jobs accept only Datadog monitor `23061575`, initially OK for
 The grouped one-minute uptime query retains per-host native multi-alert behavior;
 the redundant `notify_by: [host]` option was rejected by Datadog and omitted.
 
-The image is private and pinned to the digest published from reviewed Sherlock
-source PR #5. The existing service/runtime/proxy images, auth PVC, reader binding,
-database and incident model settings retain their previous desired state.
+The original probe image is private and pinned to the digest published from
+reviewed Sherlock source PR #5. Sherlock source PR #8 published a corrected,
+probe-only image using MIME media-type parsing for the native webhook's JSON
+Content-Type. This proposal pins that image by immutable digest. The service,
+runtime and proxy images, auth PVC, reader binding, database and incident model
+settings retain their previous desired state.
 
 `sherlock-identity-probe-token` selects only field `identity_probe_token` at the
 existing allowed Vault KV-v2 path `secret/Agents/sherlock/webhook`. The existing
-service selects only its separate `token` field. The new field must be prepared
-with CAS before merge; no new controller permission or Terraform resource is
-required. The shared registry pull Secret is used by the kubelet and is not
-mounted into the Job. No PVC is created.
+service selects only its separate `token` field. The owner-prepared probe field
+uses CAS; no new controller permission or Terraform resource is required. The
+shared registry pull Secret is used by the kubelet and is not mounted into the
+Job. No PVC is created.
 
 Each Job uses app-template 5.3.0, an unbound ServiceAccount, no API token or reader
 binding, one read-only probe-token mount and no egress. Ingress is limited to
@@ -57,12 +60,26 @@ observer Pod during the experiment; confirm Synced/Healthy after Job completion
 or reviewed cleanup. Its health is not suppressed.
 
 The owner-approved probe field and Datadog integration/hidden variable are prepared
-and readback verified. The original finite Job is retained unchanged. A second
-controller creates `sherlock-identity-probe-20261013` with the same immutable image,
-limits and probe-token mount. The stable receiver Service selects only the new
-controller; the old Job/Pod is neither restarted nor removed. Capture must select
-the new exact Job and validate its Pod owner UID, image and zero restart count,
-rather than selecting every Pod with the shared observer role label.
+and readback verified. Two earlier finite Jobs remain unchanged and retained:
+`sherlock-identity-probe` and `sherlock-identity-probe-20261013`. In the last
+native transport attempt, two Datadog POSTs reached the receiver but returned
+HTTP 415, with zero valid receipts. The experiment stopped before renotification
+or a second alert episode. The captured evidence did not include native request
+headers, so it does not establish why the receiver rejected those requests.
+
+The corrected probe-only image parses JSON media types with parameters, and the
+existing Datadog webhook now sends `Content-Type: application/json`. This proposal
+adds `sherlock-identity-probe-20261013-json` using that immutable image, unchanged
+44-minute/32-record limits and the existing read-only probe-token mount. The stable
+receiver Service selects only this new controller. Both completed Jobs and Pods
+remain untouched. Any future capture must target the new exact Job and validate
+its Pod owner UID, image and zero restart count, rather than selecting every Pod
+with the shared observer role label.
+
+Merging this GitOps change would start the new finite Job and can temporarily make
+the Argo Application Progressing. It does not activate the Datadog monitor or send
+an experiment notification. Any new native delivery experiment requires separate
+review after the receiver and input-boundary checks pass.
 
 The probe-only Cloudflare Access application for
 `sherlock.shivpatel.xyz/identity/datadog` has an owner-reviewed dedicated Bypass
