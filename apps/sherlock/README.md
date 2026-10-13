@@ -22,7 +22,7 @@ The initial presentation release introduced `dashboard_url`; a rollback to the p
 
 ## Isolated Datadog identity receiver
 
-The identity-probe Job accepts only Datadog monitor `23061575`, initially OK for
+The identity-probe Jobs accept only Datadog monitor `23061575`, initially OK for
 `host:node0-homelab` and `host:node1-homelab` with no notification recipients.
 The grouped one-minute uptime query retains per-host native multi-alert behavior;
 the redundant `notify_by: [host]` option was rejected by Datadog and omitted.
@@ -38,7 +38,7 @@ with CAS before merge; no new controller permission or Terraform resource is
 required. The shared registry pull Secret is used by the kubelet and is not
 mounted into the Job. No PVC is created.
 
-The Job uses app-template 5.3.0, an unbound ServiceAccount, no API token or reader
+Each Job uses app-template 5.3.0, an unbound ServiceAccount, no API token or reader
 binding, one read-only probe-token mount and no egress. Ingress is limited to
 Traefik on port 8091. The exact public POST `/identity/datadog` requires the probe
 bearer token and is limited to 8 KB and two requests/second, burst four. There is
@@ -57,8 +57,26 @@ observer Pod during the experiment; confirm Synced/Healthy after Job completion
 or reviewed cleanup. Its health is not suppressed.
 
 The owner-approved probe field and Datadog integration/hidden variable are prepared
-and readback verified. Deployment still requires concrete owner review. Source monitor activation is
-a separate step after private-network/auth/method/body/monitor rejection checks.
+and readback verified. The original finite Job is retained unchanged. A second
+controller creates `sherlock-identity-probe-20261013` with the same immutable image,
+limits and probe-token mount. The stable receiver Service selects only the new
+controller; the old Job/Pod is neither restarted nor removed. Capture must select
+the new exact Job and validate its Pod owner UID, image and zero restart count,
+rather than selecting every Pod with the shared observer role label.
+
+The probe-only Cloudflare Access application for
+`sherlock.shivpatel.xyz/identity/datadog` has an owner-reviewed dedicated Bypass
+for the published US5 webhook source ranges and the existing home-network Bypass.
+The original wildcard application and home policy are preserved. Source ranges
+are shared provider infrastructure, not tenant authentication; the independent
+receiver bearer token remains mandatory. Recheck the Access destination,
+attachments and published ranges before activation. The dashboard and normal
+incident webhook still fall under the wildcard Access application; successful
+home-network checks do not prove anonymous external access. This probe rerun
+does not change their Access boundary.
+
+Deployment and source monitor activation require concrete owner review after
+private-network/auth/method/body/monitor rejection checks.
 Only this monitor's threshold/message may change for the two-episode experiment;
 existing monitors and notification rules must remain untouched. Stop on an
 unexpected destination, identity mismatch, quota or deadline. A test result may

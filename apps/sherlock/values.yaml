@@ -243,7 +243,7 @@ app-template:
               cpu: 250m
               memory: 64Mi
       forceRename: sherlock-egress
-    identity-probe:
+    identity-probe: &identity-probe-controller
       type: job
       forceRename: sherlock-identity-probe
       job:
@@ -294,6 +294,9 @@ app-template:
           resources:
             requests: {cpu: 25m, memory: 32Mi}
             limits: {cpu: 100m, memory: 64Mi}
+    identity-probe-rerun:
+      <<: *identity-probe-controller
+      forceRename: sherlock-identity-probe-20261013
   service:
     main:
       forceRename: sherlock
@@ -317,7 +320,7 @@ app-template:
           port: 3128
     identity-probe:
       forceRename: sherlock-identity-probe
-      controller: identity-probe
+      controller: identity-probe-rerun
       ports:
         http:
           port: 8091
@@ -439,6 +442,10 @@ app-template:
       defaultMode: 288
       advancedMounts:
         identity-probe:
+          observer:
+          - path: /run/probe
+            readOnly: true
+        identity-probe-rerun:
           observer:
           - path: /run/probe
             readOnly: true
