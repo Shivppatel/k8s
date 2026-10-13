@@ -1,6 +1,6 @@
 # Sherlock deployment declaration
 
-App-template 5.3.0 wrapper for private Sherlock images. The service uses the dashboard and compact Slack presentation release from source commit `bffc7d28a24d39e93c42084ea2f535927c35a6ab`; runtime/egress retain the verified `36b8433988345b04c57cf54f56f65a0f641338c3` release. Images are pinned by immutable digest and support AMD64/ARM64. The kubelet uses the Vault-held read:packages credential. [Presentation release publication](https://github.com/Shivppatel/sherlock/actions/runs/38329864769) and [initial publication](https://github.com/Shivppatel/sherlock/actions/runs/38186192394) provide build provenance. Bootstrap/private runtime/testing prerequisites are [#728](https://github.com/Shivppatel/k8s/pull/728), [#730](https://github.com/Shivppatel/k8s/pull/730) and [#731](https://github.com/Shivppatel/k8s/pull/731).
+App-template 5.3.0 wrapper for private Sherlock images. The service combines the dashboard/compact Slack presentation and JSON media-type compatibility fix from source commit `8c512c2a6b1434508dda4a842380ba322b9635ef`; runtime/egress retain the verified `36b8433988345b04c57cf54f56f65a0f641338c3` release. Images are pinned by immutable digest and support AMD64/ARM64. The kubelet uses the Vault-held read:packages credential. [Native-contract release publication](https://github.com/Shivppatel/sherlock/actions/runs/38428733752), [presentation release publication](https://github.com/Shivppatel/sherlock/actions/runs/38329864769) and [initial publication](https://github.com/Shivppatel/sherlock/actions/runs/38186192394) provide build provenance. Bootstrap/private runtime/testing prerequisites are [#728](https://github.com/Shivppatel/k8s/pull/728), [#730](https://github.com/Shivppatel/k8s/pull/730) and [#731](https://github.com/Shivppatel/k8s/pull/731).
 
 Terraform prerequisites: [#13](https://github.com/Shivppatel/tf/pull/13) and [#14](https://github.com/Shivppatel/tf/pull/14) are applied and merged. Vault `secret/Agents/sherlock` supplies Datadog/Slack, while `secret/Agents/sherlock/webhook` supplies the inbound token through explicit field references. Registry fields in `secret/Agents/sherlock` feed only the kubelet image-pull Secret. GitHub signing key lives in `secret/Agents/sherlock/github`; database role credentials in `secret/Agents/sherlock/database`; public CA in `secret/Agents/sherlock/database-ca`; runtime API token in `secret/Agents/sherlock/runtime`. No values belong in Git.
 
@@ -14,11 +14,20 @@ The enabled testing ingress is sherlock.shivpatel.xyz on Traefik websecure with 
 
 Definition of deployment completion: published immutable private image digests, registry access, all ExternalSecrets ready, exact Argo revisions/Synced/Healthy, database migrations/persistence, CA mirroring, provider credentials and network boundaries, scoped synthetic alert/ack/evidence/report/recovery, and public TLS/authentication boundary. Helm render/server dry-run does not establish any of those live outcomes.
 
-This is a HomeLab testing deployment. Real Datadog retry/renotification/episode identity must be verified before wiring unattended monitor traffic; complete notebook, spans and RUM coverage is not established. Empty or unavailable evidence remains an explicit coverage gap. Private synthetic provider success does not establish root-cause calibration. Production retention and spending policies remain undecided.
+This is a HomeLab testing deployment. The isolated native probe verified retry/renotification/episode identity for the tested US5 configuration; unattended incident traffic still needs a reviewed integration and Access configuration. Complete notebook, spans and RUM coverage is not established. Empty or unavailable evidence remains an explicit coverage gap. Private synthetic provider success does not establish root-cause calibration. Production retention and spending policies remain undecided.
 
 The overview shows compact incident summaries and page-scoped filters/counts; each investigation separates findings, suggested checks, coverage gaps, timeline and expandable evidence. Slack uses short Block Kit summaries and a trusted **View investigation** link from `dashboard_url: https://sherlock.shivpatel.xyz`. Dynamic source/model text stays plain text; only the application-generated review link uses Slack markup. A normal link needs no interactive App callback. Full reports and action prerequisites/risk/verification/rollback remain on the dashboard. Incoming-webhook mode still appends and delivery/retry handling is retained.
 
-The initial presentation release introduced `dashboard_url`; a rollback to the pre-presentation binary must remove that field as well. The overview correction is an image-only update from the compatible presentation release: it uses actual list metadata for page counts and leaves cause/coverage assessments on the detail page. An image-only rollback to the previous presentation digest keeps the existing URL setting. The release also includes the previously merged exact-group Datadog evidence read from source PR #4; current snapshots are not alert-episode history and do not auto-resolve incidents. Unattended monitor wiring remains deferred pending native delivery-identity verification. Runtime/proxy images, auth PVC, database, source scopes, credential paths, public routes and testing limits retain their existing desired state.
+The initial presentation release introduced `dashboard_url`; a rollback to the pre-presentation binary must remove that field as well. The overview correction is an image-only update from the compatible presentation release: it uses actual list metadata for page counts and leaves cause/coverage assessments on the detail page. An image-only rollback to the previous presentation digest keeps the existing URL setting. The release also includes the previously merged exact-group Datadog evidence read from source PR #4; current snapshots are not alert-episode history and do not auto-resolve incidents. The bounded native identity exercise verified retry/group/cycle behavior for its specific US5 configuration. Unattended incident monitor wiring remains deferred pending a reviewed normal-webhook integration and Access configuration. Runtime/proxy images, auth PVC, database, source scopes, credential paths, public routes and testing limits retain their existing desired state.
+
+The current service release parses valid JSON media-type parameters, such as
+`application/json; charset=utf-8`, while retaining authentication, schema/body
+bounds and the existing durable identity/recovery contract. Unsupported or
+malformed media types still return 415. This is an image-only update; an
+image-only rollback to the preceding presentation digest retains the current
+configuration/schema. Runtime/proxy images and the auth PVC stay unchanged.
+The [source review](https://github.com/Shivppatel/sherlock/pull/9) records native
+observer evidence separately from synthetic HTTP/PostgreSQL regression results.
 
 ## Isolated Datadog identity receiver
 
@@ -30,9 +39,10 @@ the redundant `notify_by: [host]` option was rejected by Datadog and omitted.
 The original probe image is private and pinned to the digest published from
 reviewed Sherlock source PR #5. Sherlock source PR #8 published a corrected,
 probe-only image using MIME media-type parsing for the native webhook's JSON
-Content-Type. This proposal pins that image by immutable digest. The service,
-runtime and proxy images, auth PVC, reader binding, database and incident model
-settings retain their previous desired state.
+Content-Type. The retained Jobs pin that image by immutable digest. The probe
+image remains independent of the normal-service release above; runtime and proxy
+images, auth PVC, reader binding, database and incident model settings retain
+their previous desired state.
 
 `sherlock-identity-probe-token` selects only field `identity_probe_token` at the
 existing allowed Vault KV-v2 path `secret/Agents/sherlock/webhook`. The existing
@@ -74,19 +84,23 @@ image listener was deployed, but its safe 34-minute experiment start margin
 expired during preflight. The monitor remained safe and no valid native event was
 sent. Five invalid-input boundaries and fresh positive uptime coverage passed.
 
-This proposal adds a fresh fourth Job,
-`sherlock-identity-probe-20261013-json-retry`, with that same immutable image,
-44-minute/32-record limits and the existing read-only probe-token mount. The
-stable receiver Service selects only the new controller. All prior Jobs and Pods
-remain untouched. Wait for the currently running corrected-image Job to complete
-naturally before merging this next Job. Any future capture must target the new
-exact Job and validate its Pod owner UID, image and zero restart count, rather
-than selecting every Pod with the shared observer role label.
+The retained fourth Job, `sherlock-identity-probe-20261013-json-retry`, uses
+that same immutable probe image, 44-minute/32-record limits and existing
+read-only token mount. The stable receiver Service selects only that controller;
+all prior Jobs and Pods remain declared. The owner-reviewed two-episode native
+exercise completed on 2026-10-13 at GitOps revision
+`290f0125d0c0337be421469db80991d6787a5e5a`. Thirteen hashed receipts included
+one deliberate 503 and its exact accepted retry, four actual `Re-Triggered`
+renotifications, and four complete group/cycle combinations. The sole approved
+local sample was assessed and deleted. The monitor returned to its safe threshold
+and original recipient-free message, with both host groups OK and no matching
+notification rules. No incident endpoint, AI, Slack or workload fault was used.
 
-Merging this GitOps change starts the new finite Job and can temporarily make the
-Argo Application Progressing. It does not activate the Datadog monitor or send an
-experiment notification. Any native delivery experiment requires separate review
-after live receiver, policy and input-boundary checks pass.
+The finite Job exited successfully, so its Service has no ready receiver
+endpoint. Updating only the normal service image does not change or restart
+these Jobs, activate the source monitor, or collect another sample. Resource,
+credential and Access cleanup remain separately reviewed. These observations
+support this account/configuration only, not a universal delivery guarantee.
 
 The probe-only Cloudflare Access application for
 `sherlock.shivpatel.xyz/identity/datadog` has an owner-reviewed dedicated Bypass
