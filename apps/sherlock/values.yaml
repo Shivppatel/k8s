@@ -61,6 +61,9 @@ sherlock:
       max_age_seconds: 600
       max_resources: 1000
     mappings: []
+    model_budget:
+      daily_attempt_limit: 8
+      time_zone: America/New_York
     repeated_alerts: separate_incident
     recovery: all_in_episode
   runtime:
@@ -109,7 +112,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: sha-8c512c2a6b1434508dda4a842380ba322b9635ef@sha256:263ec3c9f4c34a41280d794f9918d04248c494c50700ca93b1d5351520da1236
+            tag: sha-811be5c10939352511f73512ed12065fe48dd6ba@sha256:87c3dc836d14eddef705099e6c3ec994d89725d3e9ce2731a1c0e440a00311d4
           args:
           - -config
           - /config/config.yaml
