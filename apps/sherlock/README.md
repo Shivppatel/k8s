@@ -1,12 +1,12 @@
 # Sherlock deployment declaration
 
-App-template 5.3.0 wrapper for private Sherlock images. The service includes the verified dashboard/compact Slack presentation, citation readability, MIME compatibility and optional durable daily-model budget from source commit `811be5c10939352511f73512ed12065fe48dd6ba`; runtime/egress retain the verified `36b8433988345b04c57cf54f56f65a0f641338c3` release. Images are pinned by immutable digest and support AMD64/ARM64. The kubelet uses the Vault-held read:packages credential. [Budget/citation release publication](https://github.com/Shivppatel/sherlock/actions/runs/38484595434), [native-contract release publication](https://github.com/Shivppatel/sherlock/actions/runs/38428733752), [presentation release publication](https://github.com/Shivppatel/sherlock/actions/runs/38329864769) and [initial publication](https://github.com/Shivppatel/sherlock/actions/runs/38186192394) provide build provenance. Bootstrap/private runtime/testing prerequisites are [#728](https://github.com/Shivppatel/k8s/pull/728), [#730](https://github.com/Shivppatel/k8s/pull/730) and [#731](https://github.com/Shivppatel/k8s/pull/731).
+App-template 5.3.0 wrapper for private Sherlock images. Service/runtime use the verified `662ccf0dda28c3478ebfde0fbd9c811eb909bbb9` release with saved monitor names, readable briefings, System/Light/Dark and versioned operator context, together with the existing MIME compatibility and durable daily-model budget. Egress retains the verified `36b8433988345b04c57cf54f56f65a0f641338c3` release. Images are pinned by immutable digest and support AMD64/ARM64. The kubelet uses the Vault-held read:packages credential. [Responder/context publication](https://github.com/Shivppatel/sherlock/actions/runs/38516592291), [budget/citation release publication](https://github.com/Shivppatel/sherlock/actions/runs/38484595434), [native-contract release publication](https://github.com/Shivppatel/sherlock/actions/runs/38428733752), [presentation release publication](https://github.com/Shivppatel/sherlock/actions/runs/38329864769) and [initial publication](https://github.com/Shivppatel/sherlock/actions/runs/38186192394) provide build provenance. Bootstrap/private runtime/testing prerequisites are [#728](https://github.com/Shivppatel/k8s/pull/728), [#730](https://github.com/Shivppatel/k8s/pull/730) and [#731](https://github.com/Shivppatel/k8s/pull/731).
 
 ## Daily analysis budget and schema compatibility
 
 The service configuration sets eight service-managed provider-analysis attempts per America/New_York calendar day across all connections/workers. Successes, failures and retries consume durable permits. Exhausted incidents retain evidence and an explicit unknown-cause budget-limited report; they are not automatically analyzed tomorrow. This does not cap incident storage, source reads, Slack posts or account-wide/token usage. Retention remains undecided and cleanup disabled.
 
-Service startup migrates schema 4 to 5: one durable job-denial flag, one reservation table and its installation/day index. No historical requests are invented and no incident/report data is deleted. The Recreate strategy stops old workers before starting the new service. Require an empty investigation queue before the rollout and verify schema 5 afterward, without valid alerts or model/Slack calls. Older schema-4 executables refuse schema 5 on startup; an image-only rollback to the old service is unsupported. Use a separately reviewed compatible forward fix or restore. Runtime/egress pins, auth PVC, credentials/scopes/routes and completed probe Jobs remain intact.
+The earlier budget release requires schema 5; installations upgrading from schema 4 migrate at service startup: one durable job-denial flag, one reservation table and its installation/day index. No historical requests are invented and no incident/report data is deleted. The Recreate strategy stops old workers before starting the new service. Require an empty investigation queue before the rollout and verify schema 5 afterward, without valid alerts or model/Slack calls. Older schema-4 executables refuse schema 5 on startup; an image-only rollback to the old service is unsupported. Use a separately reviewed compatible forward fix or restore. The context release adds no schema migration. Both service/runtime pins and their ConfigMaps change together; egress, auth PVC, credentials/scopes/routes and completed probe Jobs remain intact.
 
 The normal US5 webhook integration/Service Auth setup and bounded native trigger/ten-minute-renotify/recovery workflow are verified. Real monitor wiring remains a separate review after budget activation; adding this configuration does not activate monitor notifications.
 
@@ -116,10 +116,10 @@ for the published US5 webhook source ranges and the existing home-network Bypass
 The original wildcard application and home policy are preserved. Source ranges
 are shared provider infrastructure, not tenant authentication; the independent
 receiver bearer token remains mandatory. Recheck the Access destination,
-attachments and published ranges before activation. The dashboard and normal
-incident webhook still fall under the wildcard Access application; successful
-home-network checks do not prove anonymous external access. This probe rerun
-does not change their Access boundary.
+attachments and published ranges before activation. The probe rerun preserved the dashboard/wildcard Access boundary. The normal
+incident webhook later received its separately reviewed exact-path Service Auth
+application and still requires its independent receiver bearer. Successful
+home-network checks alone do not prove anonymous external dashboard access.
 
 Deployment and source monitor activation require concrete owner review after
 private-network/auth/method/body/monitor rejection checks.
@@ -141,3 +141,9 @@ server dry-run and a check that existing rendered objects retain identical specs
 These checks do not establish live deployment. After an approved merge, verify
 the exact Argo revision, Secret readiness, actual Pod mounts/RBAC/network boundary
 and authenticated public receiver before sending real Datadog notifications.
+
+## Responder experience and operator context
+
+The editable model lives once at `sherlock.config.runtime.model` beside the daily budget in values.yaml; the runtime template derives the same model. The `ai/` directory contains the response prompt, installation AGENTS.md and telemetry/GitOps skill guidance. The templates inject their exact profile digest into both ConfigMaps. See [AI context editing](ai/README.md). No source allowlist, credential, RBAC, public route or budget limit expands through these files.
+
+The pinned service/runtime digests come from the reviewed private v4 source release (PR #12, publication run 38516592291), with matching AMD64/ARM64 source labels and registry/artifact digests. Both processes must agree on prompt/model/profile before analysis; require a quiescent queue and a separately reviewed GitOps rollout. Existing reports are preserved, and no fresh semantic model accuracy result is claimed. The rollout checks only rejected inputs; valid model testing remains a separate bounded review. The auth PVC and egress remain unchanged. No schema migration is introduced by this context release. Feedback remains a prepared authenticated next milestone, not a public write form.
