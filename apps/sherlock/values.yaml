@@ -112,7 +112,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: sha-811be5c10939352511f73512ed12065fe48dd6ba@sha256:87c3dc836d14eddef705099e6c3ec994d89725d3e9ce2731a1c0e440a00311d4
+            tag: sha-662ccf0dda28c3478ebfde0fbd9c811eb909bbb9@sha256:f89f02fb7088d219a8189b63523d14a25aa00860109214ce5a22376c30c8883f
           args:
           - -config
           - /config/config.yaml
@@ -178,7 +178,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock-runtime
-            tag: sha-36b8433988345b04c57cf54f56f65a0f641338c3@sha256:b5bd61f63e0a77795c48411bece03787b2c79271fcbbd2e248d73138c45bf00e
+            tag: sha-662ccf0dda28c3478ebfde0fbd9c811eb909bbb9@sha256:c6efb65decb20f7a020981e785ee92d719f4a3fd6d464b4705ab71fd95fac03a
           env:
             HTTPS_PROXY: http://egress:3128
           securityContext: *id001
