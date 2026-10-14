@@ -51,6 +51,7 @@ sherlock:
       endpoint: http://sherlock-runtime:8090
       token:
         file: /run/runtime/runtime_token
+      # One model selector; runtime-configmap uses this same value.
       model: gpt-6.1-sol
     discovery:
       enabled: true
@@ -68,7 +69,6 @@ sherlock:
     recovery: all_in_episode
   runtime:
     version: sherlock/runtime/v1alpha1
-    model: gpt-6.1-sol
     deadline_seconds: 120
     max_concurrent: 1
     max_input_bytes: 100000

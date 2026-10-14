@@ -1,0 +1,11 @@
+# Investigation configuration
+
+Edit the model once at sherlock.config.runtime.model in ../values.yaml. Both service and runtime YAML use it; no model switch is applied without a reviewed image/config rollout. Model availability depends on the dedicated Codex account and pinned CLI; there is no automatic model or API-billed fallback.
+
+Edit response.md for report style and reasoning priorities, AGENTS.md for installation background, and skills/*/SKILL.md for telemetry/repository interpretation. templates/_ai.tpl loads this explicit ordered set; files mount as explicit /config/instructions-<alias> keys; it does not scan arbitrary repository AGENTS files or invoke skill scripts. Adding a document requires adding it to that explicit set. This evidence-only runtime eagerly injects these selected skill bodies because its shell tools remain disabled.
+
+The runtime starts with compiled immutable evidence/credential/tool boundaries. guardrails-reference.md is the public review copy of those boundaries, not an editable permission switch: changes require a corresponding source release. Templates hash the complete profile and inject the same hash into service/runtime config. Runtime startup and service responses fail closed on a mismatch. Editing a response/context file changes the ConfigMap/reloader hash and requires a reviewed rollout.
+
+Boundaries: at most eight files, each 16 KB, combined profile 24 KB and total model input (profile + citation IDs + envelope) 100 KB. Files contain no credentials, private excerpts or unverified installation facts. Public k8s contains only generic context about private repositories. No source scopes, GitHub App permissions or Kubernetes RBAC change through these files. tf/ and helm/ are documented ownership background only; current source access covers the two configured GitOps repositories.
+
+Feedback is a separate next milestone: authenticated submission bound to report revision and digest, with accurate/partly accurate/inaccurate/insufficient evidence plus optional correction. The current public GET dashboard does not collect votes or corrections. Feedback will be kept separate from generated reports and will not automatically train or alter the model.

@@ -1,7 +1,9 @@
+{{- $config := deepCopy .Values.sherlock.config -}}
+{{- $_ := set $config.runtime "prompt_profile" (include "sherlock.ai.profile" .) -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: sherlock-config
 data:
   config.yaml: |
-{{ .Values.sherlock.config | toYaml | indent 4 }}
+{{ $config | toYaml | indent 4 }}

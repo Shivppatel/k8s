@@ -1,7 +1,18 @@
+{{- $runtime := deepCopy .Values.sherlock.runtime -}}
+{{- $_ := set $runtime "model" .Values.sherlock.config.runtime.model -}}
+{{- $_ := set $runtime "prompt_profile" (include "sherlock.ai.profile" .) -}}
+{{- $paths := list -}}
+{{- range $doc := (include "sherlock.ai.documents" . | fromJsonArray) -}}
+{{- $paths = append $paths (printf "/config/instructions-%s" $doc.name) -}}
+{{- end -}}
+{{- $_ := set $runtime "instruction_files" $paths -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: sherlock-runtime-config
 data:
   runtime.yaml: |
-{{ .Values.sherlock.runtime | toYaml | indent 4 }}
+{{ $runtime | toYaml | indent 4 }}
+{{ range $doc := (include "sherlock.ai.documents" . | fromJsonArray) }}
+  instructions-{{ $doc.name }}: {{ $.Files.Get $doc.path | toJson }}
+{{ end }}

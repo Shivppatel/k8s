@@ -141,3 +141,9 @@ server dry-run and a check that existing rendered objects retain identical specs
 These checks do not establish live deployment. After an approved merge, verify
 the exact Argo revision, Secret readiness, actual Pod mounts/RBAC/network boundary
 and authenticated public receiver before sending real Datadog notifications.
+
+## Prepared responder/context release
+
+The editable model lives once at `sherlock.config.runtime.model` beside the daily budget in values.yaml; the runtime template derives the same model. The `ai/` directory contains the response prompt, installation AGENTS.md and telemetry/GitOps skill guidance. The templates inject their exact profile digest into both ConfigMaps. See [AI context editing](ai/README.md). No source allowlist, credential, RBAC, public route or budget limit expands through these files.
+
+This branch is a draft integration review and must not merge with the old service/runtime image pins. It depends on the matching private Sherlock v4 source release and verified service/runtime digests. Both processes must agree on prompt/model/profile before analysis; require a quiescent queue and a separately reviewed GitOps rollout. The auth PVC and egress remain unchanged. No schema migration is introduced by this context release. Feedback remains a prepared authenticated next milestone, not a public write form.
