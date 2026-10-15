@@ -4,6 +4,13 @@ sherlock:
     installation: homelab
     listen: 0.0.0.0:8080
     dashboard_url: https://sherlock.shivpatel.xyz
+    feedback:
+      enabled: true
+      issuer: https://shivppatel.cloudflareaccess.com
+      audience: e2f0a6566722fc9026e207a8337c488124d9e2520c43eaa34e45c2ee594c74b8
+      allowed_emails:
+        file: /run/feedback/allowed_emails
+      comments_enabled: false
     database:
       file: /run/database/database_url
     datadog:
@@ -106,13 +113,13 @@ app-template:
           seccompProfile:
             type: RuntimeDefault
       annotations:
-        secret.reloader.stakater.com/reload: sherlock-source-secret,sherlock-db-secret,sherlock-runtime-secret
+        secret.reloader.stakater.com/reload: sherlock-source-secret,sherlock-db-secret,sherlock-runtime-secret,sherlock-feedback-secret
         configmap.reloader.stakater.com/reload: sherlock-config
       containers:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: sha-662ccf0dda28c3478ebfde0fbd9c811eb909bbb9@sha256:f89f02fb7088d219a8189b63523d14a25aa00860109214ce5a22376c30c8883f
+            tag: sha-5cf54d863a3e4f038770bc2aa7b0a3f17974d997@sha256:5d06776fbb3634012fe416bfc2505d40ae38caa8259807bd6cab0672f620f544
           args:
           - -config
           - /config/config.yaml
@@ -346,6 +353,18 @@ app-template:
         http:
           port: 8091
   persistence:
+    feedback:
+      type: secret
+      name: sherlock-feedback-secret
+      defaultMode: 288
+      items:
+      - key: allowed_emails
+        path: allowed_emails
+      advancedMounts:
+        main:
+          main:
+          - path: /run/feedback
+            readOnly: true
     configuration:
       type: configMap
       name: sherlock-config
