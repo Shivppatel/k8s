@@ -1,4 +1,16 @@
 kube-prometheus-stack:
+  # Opt-in only after the Sherlock service rollout and private intake checks.
+  sherlockReceiver:
+    enabled: false
+    # A narrow pilot can deliver only to Sherlock; normal mirroring stays true.
+    mirrorToExistingSlack: true
+    # Empty inherits existing group_wait/group_interval/repeat_interval.
+    routeTiming: {}
+    url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-alerts
+    # Narrow these during a reviewed pilot; disabling leaves Slack unchanged.
+    matchers:
+      - 'severity=~critical|warning'
+      - 'namespace!=""'
   # Disable monitoring for components that don't expose metrics
   kubeEtcd:
     enabled: false
@@ -145,6 +157,27 @@ kube-prometheus-stack:
           minStep: 15s
 
   alertmanager:
+    # Keep the existing Slack/inhibition config as the single source of truth.
+    # The optional child groups by every label so webhook groups never truncate.
+    tplConfig: true
+    stringConfig: |-
+      {{- $cfg := deepCopy .Values.alertmanager.config -}}
+      {{- if .Values.sherlockReceiver.enabled -}}
+      {{- $receiver := dict "name" "sherlock" "webhook_configs" (list (dict "url" .Values.sherlockReceiver.url "send_resolved" true "max_alerts" 16 "timeout" "10s" "http_config" (dict "authorization" (dict "type" "Bearer" "credentials_file" "/etc/alertmanager/sherlock-webhook/webhook_token")))) -}}
+      {{- $_ := set $cfg "receivers" (append $cfg.receivers $receiver) -}}
+      {{- $routes := $cfg.route.routes -}}
+      {{- $route := dict "receiver" "sherlock" "matchers" .Values.sherlockReceiver.matchers "group_by" (list "...") "continue" .Values.sherlockReceiver.mirrorToExistingSlack -}}
+      {{- range $key, $duration := .Values.sherlockReceiver.routeTiming -}}
+      {{- if not (has $key (list "group_wait" "group_interval" "repeat_interval")) -}}{{- fail "Unsupported Sherlock route timing field" -}}{{- end -}}
+      {{- $_ := set $route $key $duration -}}
+      {{- end -}}
+      {{- $routes = append $routes $route -}}
+      {{- if .Values.sherlockReceiver.mirrorToExistingSlack -}}
+      {{- $routes = append $routes (dict "receiver" $cfg.route.receiver) -}}
+      {{- end -}}
+      {{- $_ := set $cfg.route "routes" $routes -}}
+      {{- end -}}
+      {{ $cfg | toYaml }}
     config:
       global:
         resolve_timeout: 5m
@@ -202,6 +235,20 @@ kube-prometheus-stack:
       templates:
         - /etc/alertmanager/config/*.tmpl
     alertmanagerSpec:
+      # These conditional fields are rendered by the upstream chart's tpl hook.
+      # Existing Slack secret mounts remain unchanged in either mode.
+      additionalConfigString: |
+        {{- if .Values.sherlockReceiver.enabled }}
+        volumes:
+          - name: sherlock-webhook
+            secret:
+              secretName: alertmanager-sherlock-webhook
+              defaultMode: 288
+        volumeMounts:
+          - name: sherlock-webhook
+            mountPath: /etc/alertmanager/sherlock-webhook
+            readOnly: true
+        {{- end }}
       retention: 120h
       secrets:
         - alertmanager-slack-webhook

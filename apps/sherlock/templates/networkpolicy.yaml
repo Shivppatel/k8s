@@ -21,6 +21,20 @@ spec:
           podSelector:
             matchLabels: {app.kubernetes.io/name: traefik}
       ports: [{protocol: TCP, port: 8080}]
+    {{- $alerts := include "sherlock.telemetry.alerts" . | fromJson }}
+    {{- range $peer := .Values.networkPolicy.alertmanagerPeers }}
+    {{- if not (hasKey $alerts $peer.connection) }}{{ fail "Alertmanager peer must name a configured intake" }}{{ end }}
+    {{- if (get $alerts $peer.connection).enabled }}
+    {{- if or (not $peer.namespace) (not $peer.podSelector) }}{{ fail "Alertmanager peer requires namespace and nonempty pod selector" }}{{ end }}
+    - from:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: {{ $peer.namespace | quote }}}
+          podSelector:
+            matchLabels:
+{{ $peer.podSelector | toYaml | indent 14 }}
+      ports: [{protocol: TCP, port: 8080}]
+    {{- end }}
+    {{- end }}
   egress:
     - to:
         - namespaceSelector: {matchLabels: {kubernetes.io/metadata.name: kube-system}}
@@ -41,6 +55,28 @@ spec:
         - ipBlock: {cidr: {{ . | quote }}}
       {{- end }}
       ports: [{protocol: TCP, port: 443}, {protocol: TCP, port: 6443}]
+    {{- end }}
+    {{- $sources := include "sherlock.telemetry.sources" . | fromJson }}
+    {{- range $peer := .Values.networkPolicy.telemetryPeers }}
+    {{- if not (hasKey $sources $peer.connection) }}{{ fail "Telemetry peer must name a configured integration" }}{{ end }}
+    {{- if (get $sources $peer.connection).enabled }}
+    {{- if or (not $peer.port) (lt (int $peer.port) 1) (gt (int $peer.port) 65535) }}{{ fail "Telemetry peer requires an explicit destination pod/endpoint port" }}{{ end }}
+    {{- if and $peer.cidrs (or $peer.namespace $peer.podSelector) }}{{ fail "Choose CIDRs or namespace/pod selector for a telemetry peer" }}{{ end }}
+    {{- if and (not $peer.cidrs) (or (not $peer.namespace) (not $peer.podSelector)) }}{{ fail "Telemetry peer requires explicit CIDRs or namespace and nonempty pod selector" }}{{ end }}
+    - to:
+      {{- if $peer.cidrs }}
+      {{- range $cidr := $peer.cidrs }}
+        - ipBlock: {cidr: {{ $cidr | quote }}}
+      {{- end }}
+      {{- else }}
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: {{ $peer.namespace | quote }}}
+          podSelector:
+            matchLabels:
+{{ $peer.podSelector | toYaml | indent 14 }}
+      {{- end }}
+      ports: [{protocol: TCP, port: {{ $peer.port }}}]
+    {{- end }}
     {{- end }}
     - to:
         - ipBlock:

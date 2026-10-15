@@ -1,149 +1,43 @@
 # Sherlock deployment declaration
 
-App-template 5.3.0 wrapper for private Sherlock images. Service/runtime use the verified `662ccf0dda28c3478ebfde0fbd9c811eb909bbb9` release with saved monitor names, readable briefings, System/Light/Dark and versioned operator context, together with the existing MIME compatibility and durable daily-model budget. Egress retains the verified `36b8433988345b04c57cf54f56f65a0f641338c3` release. Images are pinned by immutable digest and support AMD64/ARM64. The kubelet uses the Vault-held read:packages credential. [Responder/context publication](https://github.com/Shivppatel/sherlock/actions/runs/38516592291), [budget/citation release publication](https://github.com/Shivppatel/sherlock/actions/runs/38484595434), [native-contract release publication](https://github.com/Shivppatel/sherlock/actions/runs/38428733752), [presentation release publication](https://github.com/Shivppatel/sherlock/actions/runs/38329864769) and [initial publication](https://github.com/Shivppatel/sherlock/actions/runs/38186192394) provide build provenance. Bootstrap/private runtime/testing prerequisites are [#728](https://github.com/Shivppatel/k8s/pull/728), [#730](https://github.com/Shivppatel/k8s/pull/730) and [#731](https://github.com/Shivppatel/k8s/pull/731).
+Private Sherlock images run through the existing app-template 5.3.0 wrapper. `values.yaml` is the source of truth for immutable service/runtime/egress image digests, source switches, model, daily budget and endpoint/secret references. The service/runtime pins come from [reviewed source PR #16](https://github.com/Shivppatel/sherlock/pull/16), merge 2be4bbc442fa91c464fe7c6598a8e84cb2a45a70 and [private publication 38782443416](https://github.com/Shivppatel/sherlock/actions/runs/38782443416). Egress keeps its existing 36b8433988345b04c57cf54f56f65a0f641338c3 digest. Runtime and source credentials are separate; the model receives bounded evidence from Go collectors and has no source access or infrastructure execution tools.
 
-## Daily analysis budget and schema compatibility
+## Incident response and telemetry
 
-The service configuration sets eight service-managed provider-analysis attempts per America/New_York calendar day across all connections/workers. Successes, failures and retries consume durable permits. Exhausted incidents retain evidence and an explicit unknown-cause budget-limited report; they are not automatically analyzed tomorrow. This does not cap incident storage, source reads, Slack posts or account-wide/token usage. Retention remains undecided and cleanup disabled.
+The dashboard uses saved monitor/alert names, readable briefings and System/Light/Dark appearance. Compact Slack updates link to the full investigation. Alerts resolve only from their originating source's recovery; recovery is not proof of an RCA or application repair.
 
-The earlier budget release requires schema 5; installations upgrading from schema 4 migrate at service startup: one durable job-denial flag, one reservation table and its installation/day index. No historical requests are invented and no incident/report data is deleted. The Recreate strategy stops old workers before starting the new service. Require an empty investigation queue before the rollout and verify schema 5 afterward, without valid alerts or model/Slack calls. Older schema-4 executables refuse schema 5 on startup; an image-only rollback to the old service is unsupported. Use a separately reviewed compatible forward fix or restore. The context release adds no schema migration. Both service/runtime pins and their ConfigMaps change together; egress, auth PVC, credentials/scopes/routes and completed probe Jobs remain intact.
+Each Datadog, Alertmanager, Prometheus, Loki, Tempo, Grafana and Pyroscope connection has an independent `enabled` switch under `sherlock.config`. Datadog-only, native Prometheus-stack-only and mixed installations are supported by the matching source release. [Observability configuration](observability/README.md) describes the exact endpoints, scope bindings, secret fields, transport and sender activation boundary.
 
-The normal US5 webhook integration/Service Auth setup and bounded native trigger/ten-minute-renotify/recovery workflow are verified. Real monitor wiring remains a separate review after budget activation; adding this configuration does not activate monitor notifications.
+Prometheus metrics, Loki logs, Tempo search matches and Pyroscope CPU/memory profile summaries are queried directly. Grafana supplies only the configured dashboard/panel definitions and links. Queries are operator-owned templates with literal scope placeholders; missing scope produces an explicit coverage gap. Current definitions/state, empty results and sampled profiles do not establish incident-time health or causality. Duplicate data across providers is not independent corroboration.
 
-Terraform prerequisites: [#13](https://github.com/Shivppatel/tf/pull/13) and [#14](https://github.com/Shivppatel/tf/pull/14) are applied and merged. Vault `secret/Agents/sherlock` supplies Datadog/Slack, while `secret/Agents/sherlock/webhook` supplies the inbound token through explicit field references. Registry fields in `secret/Agents/sherlock` feed only the kubelet image-pull Secret. GitHub signing key lives in `secret/Agents/sherlock/github`; database role credentials in `secret/Agents/sherlock/database`; public CA in `secret/Agents/sherlock/database-ca`; runtime API token in `secret/Agents/sherlock/runtime`. No values belong in Git.
+Kubernetes/Argo discovery uses validated namespace/workload UIDs and tracking ownership before repository fan-out. The GitHub App can read only the configured k8s and k8s-private repositories. tf/ and helm/ ownership appears in the editable context but does not grant additional source access. Datadog notebook retrieval is supported; no IDs are configured. No Kubernetes audit or retained Argo log source is configured.
 
-`ExternalSecret/sherlock-db-secret` in `postgresql` supplies the CNPG managed role. The existing bootstrap/setup resources create only the Sherlock database/schema ownership. The shared setup correction replaces repeated TeslaMate DROP EXTENSION CASCADE operations with CREATE EXTENSION IF NOT EXISTS and existing updates. A dependent table and row survived two runs in disposable PostgreSQL. Only Sherlock's public-schema defaults change. The app uses full database TLS/hostname verification and its own migrations. `PushSecret/sherlock-database-ca` mirrors only ca.crt into the dedicated public-certificate path; private key material is not mirrored or mounted by Sherlock.
+The model is selected once at `sherlock.config.runtime.model`; runtime configuration derives that value. [AI context](ai/README.md) exposes the response prompt, installation AGENTS and telemetry/GitOps skills next to the app spec. Service and runtime must agree on the compiled profile digest. Editing context changes both ConfigMaps and requires a reviewed rollout; it does not change tools, credentials, source scope or budgets. No fresh semantic accuracy claim follows from adding connectors.
 
-In namespace sherlock, ExternalSecrets create sherlock-source-secret, sherlock-db-secret, sherlock-runtime-secret and sherlock-registry-secret. Source secrets/database/projected Kubernetes token mount only in the app. Its ServiceAccount binds the existing GET/LIST sherlock-reader ClusterRole with no new API scopes. Runtime/egress accounts have no bindings or automatic tokens. Registry credentials are not container mounts. NetworkPolicies require an enforcing CNI (Calico is present), and runtime/auth egress is DNS/provider-proxy only; the private-runtime checks verified blocked database/API/source/direct-internet paths against a reachable source-policy baseline, allowed provider CONNECT and rejected unapproved/private destinations. Temporary probes mounted no credentials or auth PVC and were removed.
+## Budget, feedback and persistence
 
-The retained 1 GiB Longhorn PVC sherlock-codex-auth belongs only to the single-writer native runtime/auth phase. This testing activation declares one runtime replica, leaves the login Job disabled, and enables incident model calls through the private runtime. The owner completed the dedicated Kubernetes login; the completed Job was removed with the PVC preserved. A single 453-byte synthetic provider request returned a validated structured report with unknown cause and known citations in 12.7 seconds; unauthenticated calls returned 401 and invalid envelopes returned 400. No raw report was retained. Runtime limits are one request at a time, a 120-second deadline and 100 KB input; collection lookback is 15 minutes. There is no API-billed fallback. Docker/desktop caches are not copied. Rendering rejects concurrent login/runtime writers.
+The service allows eight service-managed AI attempts per America/New_York calendar day across all workers/connections. Failures and retries consume durable permits. Overflow incidents retain evidence and an explicit unknown-cause limit report; they are not automatically analyzed tomorrow. This cap does not limit incident storage, source reads, Slack posts or account-wide use. Runtime limits remain one request, 120 seconds and 100 KB input; incident lookback is 15 minutes. There is no API-billed fallback.
 
-The enabled testing ingress is sherlock.shivpatel.xyz on Traefik websecure with approved GET review routes and authenticated POST /webhooks/datadog/us5, bounded requests/rate and HTTPS headers. The additional identity-observer POST route is described below. No public readiness, metrics, model, config/admin or mutation routes are declared. Existing wildcard TLS, allowed routes, blocked routes and webhook authentication require an endpoint smoke test after activation. Incident retention remains undecided; no automatic cleanup is applied.
+[Authenticated feedback](feedback/README.md) uses the existing three-identity Homelab Lockdown human Allow list, a dedicated Access application/audience and backend signed identity verification. The public dashboard exposes no feedback rows or author fields. Assessments have an explicit retention hold, optional corrections are disabled, and no assessment automatically trains or changes the model. Owner UI-test ratings are not accuracy ground truth.
 
-Definition of deployment completion: published immutable private image digests, registry access, all ExternalSecrets ready, exact Argo revisions/Synced/Healthy, database migrations/persistence, CA mirroring, provider credentials and network boundaries, scoped synthetic alert/ack/evidence/report/recovery, and public TLS/authentication boundary. Helm render/server dry-run does not establish any of those live outcomes.
+The service uses schema 6, introduced by the feedback release. This telemetry release adds no migration. Earlier schema-5 images cannot restart against schema 6; any recovery needs a reviewed compatible forward fix or Sherlock-only restore. Retention remains undecided and automatic cleanup disabled. A previously verified encrypted pre-migration Sherlock-only backup/key is held privately pending owner disposition; the recovery-key path must never be added to External Secrets access. No shared PostgreSQL backup is claimed.
 
-This is a HomeLab testing deployment. The isolated native probe verified retry/renotification/episode identity for the tested US5 configuration; unattended incident traffic still needs a reviewed integration and Access configuration. Complete notebook, spans and RUM coverage is not established. Empty or unavailable evidence remains an explicit coverage gap. Private synthetic provider success does not establish root-cause calibration. Production retention and spending policies remain undecided.
+Shared PostgreSQL role/bootstrap/database ownership and public CA mirroring remain in apps/postgresql. Sherlock runs its own migrations and verifies database TLS/hostname with the mirrored public certificate. The existing database, runtime, egress, reader scope, auth PVC and completed probe Jobs are preserved.
 
-The overview shows compact incident summaries and page-scoped filters/counts; each investigation separates findings, suggested checks, coverage gaps, timeline and expandable evidence. Slack uses short Block Kit summaries and a trusted **View investigation** link from `dashboard_url: https://sherlock.shivpatel.xyz`. Dynamic source/model text stays plain text; only the application-generated review link uses Slack markup. A normal link needs no interactive App callback. Full reports and action prerequisites/risk/verification/rollback remain on the dashboard. Incoming-webhook mode still appends and delivery/retry handling is retained.
+## Secret and network boundaries
 
-The initial presentation release introduced `dashboard_url`; a rollback to the pre-presentation binary must remove that field as well. The overview correction is an image-only update from the compatible presentation release: it uses actual list metadata for page counts and leaves cause/coverage assessments on the detail page. An image-only rollback to the previous presentation digest keeps the existing URL setting. The release also includes the previously merged exact-group Datadog evidence read from source PR #4; current snapshots are not alert-episode history and do not auto-resolve incidents. The bounded native identity exercise verified retry/group/cycle behavior for its specific US5 configuration. Unattended incident monitor wiring remains deferred pending a reviewed normal-webhook integration and Access configuration. Runtime/proxy images, auth PVC, database, source scopes, credential paths, public routes and testing limits retain their existing desired state.
+Vault KV v2 under secret/Agents/sherlock supplies the existing Datadog/Slack, GitHub, database/public CA, runtime, registry and feedback fields through explicit ExternalSecrets. The new observability path supplies only the dedicated Grafana Viewer token and Alertmanager bearer. The exact observability read prerequisite in [Terraform PR #16](https://github.com/Shivppatel/tf/pull/16) was applied and merged before this consumer PR. The migration-backup key remains excluded. The Grafana administrator password is never mounted in Sherlock; an OSS Viewer credential has broader organization/data-source read/query rights than the collector's fixed dashboard GET allowlist.
 
-The current service release parses valid JSON media-type parameters, such as
-`application/json; charset=utf-8`, while retaining authentication, schema/body
-bounds and the existing durable identity/recovery contract. Unsupported or
-malformed media types still return 415. This is an image-only update; an
-image-only rollback to the preceding presentation digest retains the current
-configuration/schema. Runtime/proxy images and the auth PVC stay unchanged.
-The [source review](https://github.com/Shivppatel/sherlock/pull/9) records native
-observer evidence separately from synthetic HTTP/PostgreSQL regression results.
+Source, database, feedback and projected Kubernetes reader credentials mount only in the service. Runtime/auth pods use the retained dedicated Codex login PVC with a single writer and provider-proxy-only egress. Runtime/egress accounts have no reader bindings or automatic API tokens. Registry credentials are kubelet-only. The reader grants GET/LIST without Secrets, exec, logs or writes.
 
-## Isolated Datadog identity receiver
+Connection-bound NetworkPolicy peers grant only service egress to the configured telemetry pods and Alertmanager ingress to the service. Disabling a connection removes its added peer grants. Private HTTP is explicitly opted into with exact Service-IP CIDRs; it is unencrypted inside the cluster. Grafana and Alertmanager bearer transport need that explicit review. Calico enforcement and actual positive/negative connectivity must be verified after an approved rollout; manifests alone are not isolation proof.
 
-The identity-probe Jobs accept only Datadog monitor `23061575`, initially OK for
-`host:node0-homelab` and `host:node1-homelab` with no notification recipients.
-The grouped one-minute uptime query retains per-host native multi-alert behavior;
-the redundant `notify_by: [host]` option was rejected by Datadog and omitted.
+Public Traefik routes remain restricted to approved GET review paths, authenticated US5 Datadog intake and the separately protected feedback form. Alertmanager uses only the internal Service URL and its own bearer; no public Alertmanager route or Cloudflare exception is added. Model/config/admin/metrics/readiness routes stay private.
 
-The original probe image is private and pinned to the digest published from
-reviewed Sherlock source PR #5. Sherlock source PR #8 published a corrected,
-probe-only image using MIME media-type parsing for the native webhook's JSON
-Content-Type. The retained Jobs pin that image by immutable digest. The probe
-image remains independent of the normal-service release above; runtime and proxy
-images, auth PVC, reader binding, database and incident model settings retain
-their previous desired state.
+## Prior isolated identity experiment
 
-`sherlock-identity-probe-token` selects only field `identity_probe_token` at the
-existing allowed Vault KV-v2 path `secret/Agents/sherlock/webhook`. The existing
-service selects only its separate `token` field. The owner-prepared probe field
-uses CAS; no new controller permission or Terraform resource is required. The
-shared registry pull Secret is used by the kubelet and is not mounted into the
-Job. No PVC is created.
+The owner-requested US5 test monitor 23061575, Sherlock identity probe 2026-10-12, was deleted on 2026-10-15 and verified absent through API 404 and the owner UI. Retained incident reports, four completed finite probe Jobs, probe credentials/integration and Access configuration are preserved; deleting the monitor did not authorize their cleanup.
 
-Each Job uses app-template 5.3.0, an unbound ServiceAccount, no API token or reader
-binding, one read-only probe-token mount and no egress. Ingress is limited to
-Traefik on port 8091. The exact public POST `/identity/datadog` requires the probe
-bearer token and is limited to 8 KB and two requests/second, burst four. There is
-no public receiver GET/data/configuration route. Disabling the existing public
-ingress also removes this route; disabling NetworkPolicy fails rendering.
+The earlier bounded native probe verified one forced retry and two episodes per host group for the tested US5 configuration. Its thirteen hashed metadata receipts were assessed and the single local sample deleted. No universal vendor-delivery guarantee follows. The completed receiver has no ready listener; these values do not restart it.
 
-The process stops after 44 minutes, allowing graceful exit before the independent
-45-minute Job deadline. It never restarts/retries and records at most 32 hashed
-identity metadata receipts. One initial 503 deliberately exercises Datadog's
-retry; no valid local canary may consume it before the real experiment. This
-binary has no database, source connector, provider or Slack client.
-
-The finite Job can keep Argo's aggregate Application health Progressing while it
-runs. Check the exact Synced revision, healthy existing Deployments and Ready
-observer Pod during the experiment; confirm Synced/Healthy after Job completion
-or reviewed cleanup. Its health is not suppressed.
-
-The owner-approved probe field and Datadog integration/hidden variable are prepared
-and readback verified. Three previous finite Jobs are retained:
-`sherlock-identity-probe`, `sherlock-identity-probe-20261013`, and
-`sherlock-identity-probe-20261013-json`. In the prior native attempt using the
-older image, two Datadog POSTs reached the receiver but returned HTTP 415, with
-zero valid receipts. The experiment stopped before renotification or a second
-alert episode. Native request headers were not captured, so the rejection cause
-is unknown.
-
-The corrected probe-only image parses JSON media types with parameters, and the
-existing Datadog webhook declares `Content-Type: application/json`. A corrected-
-image listener was deployed, but its safe 34-minute experiment start margin
-expired during preflight. The monitor remained safe and no valid native event was
-sent. Five invalid-input boundaries and fresh positive uptime coverage passed.
-
-The retained fourth Job, `sherlock-identity-probe-20261013-json-retry`, uses
-that same immutable probe image, 44-minute/32-record limits and existing
-read-only token mount. The stable receiver Service selects only that controller;
-all prior Jobs and Pods remain declared. The owner-reviewed two-episode native
-exercise completed on 2026-10-13 at GitOps revision
-`290f0125d0c0337be421469db80991d6787a5e5a`. Thirteen hashed receipts included
-one deliberate 503 and its exact accepted retry, four actual `Re-Triggered`
-renotifications, and four complete group/cycle combinations. The sole approved
-local sample was assessed and deleted. The monitor returned to its safe threshold
-and original recipient-free message, with both host groups OK and no matching
-notification rules. No incident endpoint, AI, Slack or workload fault was used.
-
-The finite Job exited successfully, so its Service has no ready receiver
-endpoint. Updating only the normal service image does not change or restart
-these Jobs, activate the source monitor, or collect another sample. Resource,
-credential and Access cleanup remain separately reviewed. These observations
-support this account/configuration only, not a universal delivery guarantee.
-
-The probe-only Cloudflare Access application for
-`sherlock.shivpatel.xyz/identity/datadog` has an owner-reviewed dedicated Bypass
-for the published US5 webhook source ranges and the existing home-network Bypass.
-The original wildcard application and home policy are preserved. Source ranges
-are shared provider infrastructure, not tenant authentication; the independent
-receiver bearer token remains mandatory. Recheck the Access destination,
-attachments and published ranges before activation. The probe rerun preserved the dashboard/wildcard Access boundary. The normal
-incident webhook later received its separately reviewed exact-path Service Auth
-application and still requires its independent receiver bearer. Successful
-home-network checks alone do not prove anonymous external dashboard access.
-
-Deployment and source monitor activation require concrete owner review after
-private-network/auth/method/body/monitor rejection checks.
-Only this monitor's threshold/message may change for the two-episode experiment;
-existing monitors and notification rules must remain untouched. Stop on an
-unexpected destination, identity mismatch, quota or deadline. A test result may
-be inconclusive and does not guarantee vendor delivery semantics.
-
-The owner approved one owner-readable sample of at most 32 hashed identity
-metadata records, with local sample deletion after aggregate results. No raw
-request bodies/headers, prompts or model output are collected by the observer.
-Experiment resource cleanup requires its own reviewed changes. Existing
-centralized/container logs and backups follow their current policies; resource
-removal does not prove their deletion. Sherlock report/evidence retention remains
-undecided with cleanup disabled.
-
-Preparation requires Helm dependency build/lint/render, YAML lint, secret scan,
-server dry-run and a check that existing rendered objects retain identical specs.
-These checks do not establish live deployment. After an approved merge, verify
-the exact Argo revision, Secret readiness, actual Pod mounts/RBAC/network boundary
-and authenticated public receiver before sending real Datadog notifications.
-
-## Responder experience and operator context
-
-The editable model lives once at `sherlock.config.runtime.model` beside the daily budget in values.yaml; the runtime template derives the same model. The `ai/` directory contains the response prompt, installation AGENTS.md and telemetry/GitOps skill guidance. The templates inject their exact profile digest into both ConfigMaps. See [AI context editing](ai/README.md). No source allowlist, credential, RBAC, public route or budget limit expands through these files.
-
-The pinned service/runtime digests come from the reviewed private v4 source release (PR #12, publication run 38516592291), with matching AMD64/ARM64 source labels and registry/artifact digests. Both processes must agree on prompt/model/profile before analysis; require a quiescent queue and a separately reviewed GitOps rollout. Existing reports are preserved, and no fresh semantic model accuracy result is claimed. The rollout checks only rejected inputs; valid model testing remains a separate bounded review. The auth PVC and egress remain unchanged. No schema migration is introduced by this context release. Feedback remains a prepared authenticated next milestone, not a public write form.
+Deployment requires exact reviewed image/config changes, green CI, successful Terraform prerequisites, exact Argo revision/Synced/Healthy, ExternalSecret readiness, preserved database/reports/PVC/Jobs, actual backend/auth/network checks and separately reviewed native alert/report/recovery verification. Do not call an implementation or Helm render a verified live integration. This remains a HomeLab public testing deployment, not a confidential-company production-readiness claim.
