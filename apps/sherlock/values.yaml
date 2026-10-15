@@ -15,6 +15,7 @@ sherlock:
       file: /run/database/database_url
     datadog:
     - id: us5
+      enabled: true
       site: us5.datadoghq.com
       webhook_token:
         file: /run/source/webhook_token
@@ -23,6 +24,59 @@ sherlock:
       application_key:
         file: /run/source/datadog_app_key
       notebook_ids: []
+    # Each integration is independent. Disable one without removing its mapping.
+    alertmanager:
+    - id: homelab-alerts
+      enabled: true
+      webhook_token: {file: /run/observability/alertmanager_webhook_token}
+      repeat_policy: same_incident
+      datadog_evidence_connections: [us5]
+    prometheus:
+    - id: homelab-metrics
+      enabled: true
+      url: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090
+      allow_plaintext: true
+      allowed_cidrs: [10.100.152.57/32]
+      query_templates:
+      - 'sum by (pod, container) (increase(kube_pod_container_status_restarts_total{namespace={{namespace}}}[5m]))'
+      - 'max_over_time(kube_pod_status_ready{namespace={{namespace}},condition="false"}[5m])'
+      - 'sum by (pod, container) (rate(container_cpu_usage_seconds_total{namespace={{namespace}},pod={{pod}},container!=""}[5m]))'
+    loki:
+    - id: homelab-logs
+      enabled: true
+      url: http://loki-gateway.observability.svc.cluster.local
+      allow_plaintext: true
+      allowed_cidrs: [10.111.210.174/32]
+      tenant_id: '1'
+      query_templates:
+      - '{namespace={{namespace}}}'
+      - '{namespace={{namespace}},pod={{pod}}}'
+    tempo:
+    - id: homelab-traces
+      enabled: true
+      url: http://tempo-distributed-query-frontend.tempo-distributed.svc.cluster.local:3200
+      allow_plaintext: true
+      allowed_cidrs: [10.97.216.10/32]
+      query_templates:
+      - '{ resource.k8s.namespace.name = {{namespace}} }'
+    grafana:
+    - id: homelab-dashboards
+      enabled: true
+      url: http://kube-prometheus-stack-grafana.observability.svc.cluster.local
+      external_url: https://grafana.shivpatel.xyz
+      allow_plaintext: true
+      allowed_cidrs: [10.108.123.115/32]
+      bearer_token: {file: /run/observability/grafana_token}
+      dashboard_uids: [homelab-observability]
+    pyroscope:
+    - id: homelab-profiles
+      enabled: true
+      url: http://pyroscope.observability.svc.cluster.local:4040
+      allow_plaintext: true
+      allowed_cidrs: [10.106.140.45/32]
+      query_templates:
+      - 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{namespace={{namespace}}}'
+      - 'memory:inuse_space:bytes:space:bytes{namespace={{namespace}}}'
     slack:
       enabled: true
       mode: incoming_webhook
@@ -64,6 +118,8 @@ sherlock:
       enabled: true
       datadog_connections:
       - us5
+      alertmanager_connections:
+      - homelab-alerts
       argo_namespace: argocd
       interval_seconds: 300
       max_age_seconds: 600
@@ -113,13 +169,13 @@ app-template:
           seccompProfile:
             type: RuntimeDefault
       annotations:
-        secret.reloader.stakater.com/reload: sherlock-source-secret,sherlock-db-secret,sherlock-runtime-secret,sherlock-feedback-secret
+        secret.reloader.stakater.com/reload: sherlock-source-secret,sherlock-db-secret,sherlock-runtime-secret,sherlock-feedback-secret,sherlock-observability-secret
         configmap.reloader.stakater.com/reload: sherlock-config
       containers:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: sha-5cf54d863a3e4f038770bc2aa7b0a3f17974d997@sha256:5d06776fbb3634012fe416bfc2505d40ae38caa8259807bd6cab0672f620f544
+            tag: sha-2be4bbc442fa91c464fe7c6598a8e84cb2a45a70@sha256:4215c1f13c948ef26cbc318bed2c4347ea484c9f3c7332bee98585f353ac7229
           args:
           - -config
           - /config/config.yaml
@@ -185,7 +241,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock-runtime
-            tag: sha-662ccf0dda28c3478ebfde0fbd9c811eb909bbb9@sha256:c6efb65decb20f7a020981e785ee92d719f4a3fd6d464b4705ab71fd95fac03a
+            tag: sha-2be4bbc442fa91c464fe7c6598a8e84cb2a45a70@sha256:ae07d0ccb0ecaec0265a0388d70f3d72635abafd99b3c8fae89458c031239ed8
           env:
             HTTPS_PROXY: http://egress:3128
           securityContext: *id001
@@ -353,6 +409,19 @@ app-template:
         http:
           port: 8091
   persistence:
+    observability:
+      # Optional projection permits all integrations to be disabled independently.
+      type: projected
+      defaultMode: 288
+      sources:
+      - secret:
+          name: sherlock-observability-secret
+          optional: true
+      advancedMounts:
+        main:
+          main:
+          - path: /run/observability
+            readOnly: true
     feedback:
       type: secret
       name: sherlock-feedback-secret
@@ -505,6 +574,46 @@ ingress:
   enabled: true
 networkPolicy:
   enabled: true
+  telemetryPeers:
+  - connection: homelab-metrics
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/name: prometheus
+      operator.prometheus.io/name: kube-prometheus-stack-prometheus
+    port: 9090
+  - connection: homelab-logs
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/component: gateway
+      app.kubernetes.io/instance: loki
+      app.kubernetes.io/name: loki
+    port: 8080
+  - connection: homelab-traces
+    namespace: tempo-distributed
+    podSelector:
+      app.kubernetes.io/component: query-frontend
+      app.kubernetes.io/instance: tempo-distributed
+      app.kubernetes.io/name: tempo
+    port: 3200
+  - connection: homelab-dashboards
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/instance: kube-prometheus-stack
+      app.kubernetes.io/name: grafana
+    port: 3000
+  - connection: homelab-profiles
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/component: all
+      app.kubernetes.io/instance: pyroscope
+      app.kubernetes.io/name: pyroscope
+    port: 4040
+  alertmanagerPeers:
+  - connection: homelab-alerts
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/name: alertmanager
+      alertmanager: kube-prometheus-stack-alertmanager
   apiAddresses:
   - 10.96.0.1/32
   - 192.168.20.10/32

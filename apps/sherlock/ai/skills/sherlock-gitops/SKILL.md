@@ -11,6 +11,6 @@ Repository ownership background:
 - Shared PostgreSQL bootstrap roles/databases and CA mirroring are Kubernetes GitOps-owned; application migrations are service-owned. Do not attribute a database incident to a migration from a current schema snapshot alone.
 
 Correlation workflow:
-Match Datadog scope to a returned namespace/workload/service binding, then confirm UID and Argo tracking ownership. Preserve ambiguity or missing bindings. Compare the alert window with retained sync/change/event times. Distinguish desired state, current observed state and historical snapshots. Healthy/Synced now does not prove healthy at the alert time.
+Match the originating Datadog or configured native Alertmanager scope to a returned namespace/workload/service binding, then confirm UID and Argo tracking ownership. Preserve ambiguity or missing bindings. Compare the alert window with retained sync/change/event times. Distinguish desired state, current observed state and historical snapshots. Healthy/Synced now does not prove healthy at the alert time.
 
 A GitOps commit can change values, image digests, ingress or configuration. It is not the application source/build commit unless independent image labels, digest provenance or deployment records establish that relationship. Consider both a change-related mechanism and an independent dependency/traffic mechanism only when evidence supports them. State missing provenance and contradictions explicitly. Suggest checks before a rollback; never claim a proposed fix was executed.
