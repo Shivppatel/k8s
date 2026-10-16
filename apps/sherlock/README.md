@@ -16,7 +16,7 @@ The model is selected once at `sherlock.config.runtime.model`; runtime configura
 
 ## Budget, feedback and persistence
 
-The service allows eight service-managed AI attempts per America/New_York calendar day across all workers/connections. Failures and retries consume durable permits. Overflow incidents retain evidence and an explicit unknown-cause limit report; they are not automatically analyzed tomorrow. This cap does not limit incident storage, source reads, Slack posts or account-wide use. Runtime limits remain one request, 120 seconds and 100 KB input; incident lookback is 15 minutes. There is no API-billed fallback.
+The service allows 50 service-managed AI attempts per America/New_York calendar day across all workers/connections. Failures and retries consume durable permits. Raising the limit does not reset permits already used that day or replay terminal overflow reports. Overflow incidents retain evidence and an explicit unknown-cause limit report; they are not automatically analyzed tomorrow. This cap does not limit incident storage, source reads, Slack posts or account-wide use. Runtime limits remain one request, 120 seconds and 100 KB input; incident lookback is 15 minutes. There is no API-billed fallback.
 
 [Authenticated feedback](feedback/README.md) uses the existing three-identity Homelab Lockdown human Allow list, a dedicated Access application/audience and backend signed identity verification. The public dashboard exposes no feedback rows or author fields. Assessments have an explicit retention hold, optional corrections are disabled, and no assessment automatically trains or changes the model. Owner UI-test ratings are not accuracy ground truth.
 

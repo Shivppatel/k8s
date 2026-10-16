@@ -219,7 +219,7 @@ sherlock:
       application_namespace: argocd
       application: trivy
     model_budget:
-      daily_attempt_limit: 8
+      daily_attempt_limit: 50
       time_zone: America/New_York
     repeated_alerts: separate_incident
     recovery: all_in_episode
