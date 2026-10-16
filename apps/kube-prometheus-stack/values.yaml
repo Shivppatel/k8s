@@ -1,21 +1,48 @@
 kube-prometheus-stack:
-  # Opt-in only after the Sherlock service rollout and private intake checks.
+  # Consumer readiness is required before this all-namespace pilot is activated.
   sherlockReceiver:
-    # Optional child profiles share this receiver origin and credential boundary.
-    profiles: []
+    # Scope profiles share one existing Alertmanager bearer; IDs stay stable per episode.
     enabled: true
-    # Only the uniquely labelled integration test reaches Sherlock during this pilot.
-    mirrorToExistingSlack: false
-    routeTiming:
-      group_wait: 5s
-      group_interval: 30s
-      repeat_interval: 1m
-    url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-alerts
-    # All three must match; real alerts keep their existing Slack route.
+    mirrorToExistingSlack: true
+    routeTiming: {}
+    url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-unbound-alerts
     matchers:
-      - 'alertname="SherlockObservabilityIntegrationTest"'
-      - 'sherlock_probe="9fcacfa27f81f459e44376a6"'
-      - 'namespace="observability"'
+    - severity=~"critical|warning"
+    - namespace!=""
+    profiles:
+    - name: sherlock-test
+      url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-alerts
+      matchers:
+      - alertname="SherlockObservabilityIntegrationTest"
+      - sherlock_probe="9fcacfa27f81f459e44376a6"
+      - namespace="observability"
+    - name: sherlock-node
+      url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-node-alerts
+      matchers:
+      - job="kube-state-metrics"
+      - alertname=~"KubeNode.+"
+      - node!=""
+    - name: sherlock-pod
+      url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-pod-alerts
+      matchers:
+      - job="kube-state-metrics"
+      - alertname=~"Kube(Pod|Container).+"
+      - pod!=""
+    - name: sherlock-workload
+      url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-workload-alerts
+      matchers:
+      - job="kube-state-metrics"
+      - alertname=~"Kube(Deployment|StatefulSet|DaemonSet).+"
+    - name: sherlock-namespace
+      url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-namespace-alerts
+      matchers:
+      - job="kube-state-metrics"
+      - alertname=~"KubePdb.+"
+    - name: sherlock-target
+      url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-target-alerts
+      matchers:
+      - alertname="TargetDown"
+      - service!=""
   # Disable monitoring for components that don't expose metrics
   kubeEtcd:
     enabled: false
