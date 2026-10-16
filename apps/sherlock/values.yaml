@@ -93,6 +93,8 @@ sherlock:
       - 'sum by (pod, container) (increase(kube_pod_container_status_restarts_total{namespace={{namespace}}}[5m]))'
       - 'max_over_time(kube_pod_status_ready{namespace={{namespace}},condition="false"}[5m])'
       - 'sum by (pod, container) (rate(container_cpu_usage_seconds_total{namespace={{namespace}},pod={{pod}},container!=""}[5m]))'
+      # Requires the reviewed compatible service image; a missing Service binding skips the query.
+      - 'up{namespace={{namespace}},service={{kubernetes_service}}}'
     loki:
     - id: homelab-logs
       enabled: true
@@ -268,7 +270,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: sha-65fbaf3e207ca73723c96dc33b5ec5491a344417@sha256:413d37e638ca670a3cbbfcdf47a1a8bc4652da8a60fcdd8f449d5c794cf94904
+            tag: sha-e67be1316bfbff5a65dc6f96c7a7d7203594d9b6@sha256:757e26a8494fe5cf1544580073ee35b25a0f43113b44df20ea4fb7f8c7b9669c
           args:
           - -config
           - /config/config.yaml
