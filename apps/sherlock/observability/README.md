@@ -4,7 +4,7 @@ Connection lists live in ../values.yaml under `sherlock.config`; every entry has
 
 | Connection | Existing internal endpoint | Scope / evidence |
 | --- | --- | --- |
-| homelab-metrics | kube-prometheus-stack-prometheus.observability:9090 | Namespace/pod-scoped restart/readiness/CPU templates; 25 series and bounded samples |
+| homelab-metrics | kube-prometheus-stack-prometheus.observability:9090 | Namespace/pod restart/readiness/CPU and Service-target scrape templates; 25 series and bounded samples |
 | homelab-logs | loki-gateway.observability:80 | Namespace/pod LogQL, tenant 1; newest 50 entries |
 | homelab-traces | tempo-distributed-query-frontend.tempo-distributed:3200 | Namespace TraceQL; up to 20 matches, not complete traces |
 | homelab-dashboards | kube-prometheus-stack-grafana.observability:80 | Only UID homelab-observability, <=20 panel definitions; public link uses grafana.shivpatel.xyz |
@@ -12,7 +12,7 @@ Connection lists live in ../values.yaml under `sherlock.config`; every entry has
 
 These private HTTP endpoints have explicit plaintext opt-in and exact current Service-IP CIDRs. Recreated Services with different IPs require a reviewed value update; do not widen to the cluster CIDR. NetworkPolicy destination ports are actual pod ports after Service translation: Grafana 3000 and Loki gateway 8080, rather than their Service port 80. All source grants apply only to Sherlock's service, never the model runtime.
 
-Templates accept unquoted `{{namespace}}`, `{{pod}}`, `{{service}}`, `{{workload}}`, `{{host}}`, `{{cluster}}` and `{{environment}}`; the collector supplies literal-quoted safe bindings. Operators choose actual signal names and selectors. Missing pod/namespace attributes skip the query, not the scope check. Native Alertmanager label mappings are explicit configuration, not proof of Argo ownership. Host-only alerts may have no namespace telemetry; do not infer a workload from node scope.
+Templates accept unquoted `{{namespace}}`, `{{pod}}`, `{{service}}`, `{{kubernetes_service}}`, `{{workload}}`, `{{host}}`, `{{cluster}}` and `{{environment}}`; the collector supplies literal-quoted safe bindings. Operators choose actual signal names and selectors. The fourth Prometheus query binds `up` to the native Kubernetes namespace/Service labels. This selector is distinct from the Datadog/telemetry service alias; neither substitutes for the other. A failed scrape is not proof of an application outage or its underlying cause. Missing Service bindings skip that query with a coverage gap. Missing pod/namespace attributes skip the query, not the scope check. Native Alertmanager label mappings are explicit configuration, not proof of Argo ownership. Host-only alerts may have no namespace telemetry; do not infer a workload from node scope.
 
 `secret/Agents/sherlock/observability` contains `grafana_token` and `alertmanager_webhook_token`. The service ExternalSecret selects only active Grafana/intake fields; an optional service-only projection permits both to be disabled. Enabled sources with missing credentials fail startup before database access. The Grafana Viewer account has broader org read/data-source-query privileges than Sherlock's fixed UID adapter. Its prepared token expires 2026-10-22T16:00:52Z and must be renewed for continued reads; no automatic renewal or perpetual access is claimed. Values never belong in Git.
 
