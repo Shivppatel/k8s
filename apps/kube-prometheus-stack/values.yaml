@@ -1,6 +1,8 @@
 kube-prometheus-stack:
   # Opt-in only after the Sherlock service rollout and private intake checks.
   sherlockReceiver:
+    # Optional child profiles share this receiver origin and credential boundary.
+    profiles: []
     enabled: true
     # Only the uniquely labelled integration test reaches Sherlock during this pilot.
     mirrorToExistingSlack: false
@@ -173,6 +175,25 @@ kube-prometheus-stack:
       {{- range $key, $duration := .Values.sherlockReceiver.routeTiming -}}
       {{- if not (has $key (list "group_wait" "group_interval" "repeat_interval")) -}}{{- fail "Unsupported Sherlock route timing field" -}}{{- end -}}
       {{- $_ := set $route $key $duration -}}
+      {{- end -}}
+      {{- $profiles := .Values.sherlockReceiver.profiles | default list -}}
+      {{- if gt (len $profiles) 12 -}}{{- fail "At most twelve Sherlock receiver profiles are supported" -}}{{- end -}}
+      {{- if $profiles -}}
+      {{- $origin := urlParse .Values.sherlockReceiver.url -}}
+      {{- if or (not (has $origin.scheme (list "http" "https"))) $origin.userinfo $origin.query $origin.fragment (not (regexMatch "^/webhooks/alertmanager/[a-z0-9][a-z0-9-]{0,62}$" $origin.path)) -}}{{- fail "Sherlock profile parent URL must be a credential-free native intake URL" -}}{{- end -}}
+      {{- $names := dict -}}
+      {{- range $cfg.receivers -}}{{- $_ := set $names .name true -}}{{- end -}}
+      {{- $children := list -}}
+      {{- range $profile := $profiles -}}
+      {{- if or (not (regexMatch "^sherlock-[a-z0-9-]{1,54}$" $profile.name)) (hasKey $names $profile.name) (not $profile.matchers) -}}{{- fail "Sherlock profiles need unique bounded names and explicit matchers" -}}{{- end -}}
+      {{- $_ := set $names $profile.name true -}}
+      {{- $target := urlParse $profile.url -}}
+      {{- if or (ne $target.scheme $origin.scheme) (ne $target.host $origin.host) $target.userinfo $target.query $target.fragment (not (regexMatch "^/webhooks/alertmanager/[a-z0-9][a-z0-9-]{0,62}$" $target.path)) -}}{{- fail "Sherlock profile URLs must use the parent receiver origin and a native intake path" -}}{{- end -}}
+      {{- $childReceiver := dict "name" $profile.name "webhook_configs" (list (dict "url" $profile.url "send_resolved" true "max_alerts" 16 "timeout" "10s" "http_config" (dict "authorization" (dict "type" "Bearer" "credentials_file" "/etc/alertmanager/sherlock-webhook/webhook_token")))) -}}
+      {{- $_ := set $cfg "receivers" (append $cfg.receivers $childReceiver) -}}
+      {{- $children = append $children (dict "receiver" $profile.name "matchers" $profile.matchers "continue" false) -}}
+      {{- end -}}
+      {{- $_ := set $route "routes" $children -}}
       {{- end -}}
       {{- $routes = append $routes $route -}}
       {{- if .Values.sherlockReceiver.mirrorToExistingSlack -}}
