@@ -22,10 +22,14 @@ spec:
             matchLabels: {app.kubernetes.io/name: traefik}
       ports: [{protocol: TCP, port: 8080}]
     {{- $alerts := include "sherlock.telemetry.alerts" . | fromJson }}
+    {{- $admittedAlertPeers := dict }}
     {{- range $peer := .Values.networkPolicy.alertmanagerPeers }}
     {{- if not (hasKey $alerts $peer.connection) }}{{ fail "Alertmanager peer must name a configured intake" }}{{ end }}
     {{- if (get $alerts $peer.connection).enabled }}
     {{- if or (not $peer.namespace) (not $peer.podSelector) }}{{ fail "Alertmanager peer requires namespace and nonempty pod selector" }}{{ end }}
+    {{- $peerKey := dict "namespace" $peer.namespace "selector" $peer.podSelector | toJson }}
+    {{- if not (hasKey $admittedAlertPeers $peerKey) }}
+    {{- $_ := set $admittedAlertPeers $peerKey true }}
     - from:
         - namespaceSelector:
             matchLabels: {kubernetes.io/metadata.name: {{ $peer.namespace | quote }}}
@@ -33,6 +37,7 @@ spec:
             matchLabels:
 {{ $peer.podSelector | toYaml | indent 14 }}
       ports: [{protocol: TCP, port: 8080}]
+    {{- end }}
     {{- end }}
     {{- end }}
   egress:

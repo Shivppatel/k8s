@@ -31,6 +31,58 @@ sherlock:
       webhook_token: {file: /run/observability/alertmanager_webhook_token}
       repeat_policy: same_incident
       datadog_evidence_connections: [us5]
+    - id: homelab-pod-alerts
+      enabled: true
+      webhook_token: {file: /run/observability/alertmanager_webhook_token}
+      repeat_policy: same_incident
+      datadog_evidence_connections: [us5]
+      label_mapping:
+        kube_namespace: namespace
+        pod_name: pod
+        kube_cluster_name: cluster
+    - id: homelab-workload-alerts
+      enabled: true
+      webhook_token: {file: /run/observability/alertmanager_webhook_token}
+      repeat_policy: same_incident
+      datadog_evidence_connections: [us5]
+      label_mapping:
+        kube_namespace: namespace
+        kube_deployment: deployment
+        kube_stateful_set: statefulset
+        kube_daemon_set: daemonset
+        kube_cluster_name: cluster
+    - id: homelab-namespace-alerts
+      enabled: true
+      webhook_token: {file: /run/observability/alertmanager_webhook_token}
+      repeat_policy: same_incident
+      datadog_evidence_connections: [us5]
+      label_mapping:
+        kube_namespace: namespace
+        kube_cluster_name: cluster
+    - id: homelab-node-alerts
+      enabled: true
+      webhook_token: {file: /run/observability/alertmanager_webhook_token}
+      repeat_policy: same_incident
+      datadog_evidence_connections: [us5]
+      label_mapping:
+        host: node
+        kube_cluster_name: cluster
+    - id: homelab-target-alerts
+      enabled: true
+      webhook_token: {file: /run/observability/alertmanager_webhook_token}
+      repeat_policy: same_incident
+      datadog_evidence_connections: [us5]
+      label_mapping:
+        kube_namespace: namespace
+        kube_service: service
+        kube_cluster_name: cluster
+    - id: homelab-unbound-alerts
+      enabled: true
+      webhook_token: {file: /run/observability/alertmanager_webhook_token}
+      repeat_policy: same_incident
+      datadog_evidence_connections: [us5]
+      label_mapping:
+        kube_cluster_name: cluster
     prometheus:
     - id: homelab-metrics
       enabled: true
@@ -120,11 +172,52 @@ sherlock:
       - us5
       alertmanager_connections:
       - homelab-alerts
+      - homelab-pod-alerts
+      - homelab-workload-alerts
+      - homelab-namespace-alerts
+      - homelab-node-alerts
+      - homelab-target-alerts
+      - homelab-unbound-alerts
       argo_namespace: argocd
       interval_seconds: 300
       max_age_seconds: 600
       max_resources: 1000
-    mappings: []
+    mappings:
+    - alertmanager_connection: homelab-pod-alerts
+      alert_name: KubePodCrashLooping
+      scope_tags: [kube_namespace:kafka, pod_name:kafka-controller-0]
+      application_namespace: argocd
+      application: kafka
+    - alertmanager_connection: homelab-pod-alerts
+      alert_name: KubePodNotReady
+      scope_tags: [kube_namespace:kafka, pod_name:kafka-controller-0]
+      application_namespace: argocd
+      application: kafka
+    - alertmanager_connection: homelab-pod-alerts
+      alert_name: KubePodCrashLooping
+      scope_tags: [kube_namespace:kafka, pod_name:kafka-controller-1]
+      application_namespace: argocd
+      application: kafka
+    - alertmanager_connection: homelab-pod-alerts
+      alert_name: KubePodNotReady
+      scope_tags: [kube_namespace:kafka, pod_name:kafka-controller-1]
+      application_namespace: argocd
+      application: kafka
+    - alertmanager_connection: homelab-pod-alerts
+      alert_name: KubePodCrashLooping
+      scope_tags: [kube_namespace:kafka, pod_name:kafka-controller-2]
+      application_namespace: argocd
+      application: kafka
+    - alertmanager_connection: homelab-pod-alerts
+      alert_name: KubePodNotReady
+      scope_tags: [kube_namespace:kafka, pod_name:kafka-controller-2]
+      application_namespace: argocd
+      application: kafka
+    - alertmanager_connection: homelab-pod-alerts
+      alert_name: KubePodNotReady
+      scope_tags: [kube_namespace:trivy-system, pod_name:trivy-trivy-operator-6d45f4f9f-b6zch]
+      application_namespace: argocd
+      application: trivy
     model_budget:
       daily_attempt_limit: 8
       time_zone: America/New_York
@@ -175,7 +268,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: sha-4f47a192bdcfe2270393d9bbf1f390679e1b2262@sha256:5f454c155cce6af038da68579bf9aa3f57bc1263474cde163ed9c53540da6118
+            tag: sha-65fbaf3e207ca73723c96dc33b5ec5491a344417@sha256:413d37e638ca670a3cbbfcdf47a1a8bc4652da8a60fcdd8f449d5c794cf94904
           args:
           - -config
           - /config/config.yaml
@@ -610,6 +703,36 @@ networkPolicy:
     port: 4040
   alertmanagerPeers:
   - connection: homelab-alerts
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/name: alertmanager
+      alertmanager: kube-prometheus-stack-alertmanager
+  - connection: homelab-pod-alerts
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/name: alertmanager
+      alertmanager: kube-prometheus-stack-alertmanager
+  - connection: homelab-workload-alerts
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/name: alertmanager
+      alertmanager: kube-prometheus-stack-alertmanager
+  - connection: homelab-namespace-alerts
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/name: alertmanager
+      alertmanager: kube-prometheus-stack-alertmanager
+  - connection: homelab-node-alerts
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/name: alertmanager
+      alertmanager: kube-prometheus-stack-alertmanager
+  - connection: homelab-target-alerts
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/name: alertmanager
+      alertmanager: kube-prometheus-stack-alertmanager
+  - connection: homelab-unbound-alerts
     namespace: observability
     podSelector:
       app.kubernetes.io/name: alertmanager
