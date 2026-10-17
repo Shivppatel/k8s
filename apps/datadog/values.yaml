@@ -59,8 +59,8 @@ datadog-operator:
     # datadogAgent.enabled -- Enables Datadog Agent controller
     enabled: true
   datadogAgentInternal:
-    # datadogAgentInternal.enabled -- Enables the Datadog Agent Internal controller
-    enabled: false
+    # Operator 1.30 requires internal-resource RBAC even though its old flag is gone.
+    enabled: true
   datadogDashboard:
     # datadogDashboard.enabled -- Enables the Datadog Dashboard controller
     enabled: false
