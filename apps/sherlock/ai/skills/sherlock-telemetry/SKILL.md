@@ -5,6 +5,8 @@ description: Interpret scoped Datadog, Prometheus-stack and Kubernetes evidence 
 
 Use the alert's exact source/monitor or native alert name, canonical group scope and incident window. The collector uses a 15-minute lookback ending at alert occurrence; later current-state snapshots have a separate collection time. Do not substitute collection time for occurrence/evaluation time.
 
+Keep each timed follow-up query using Sherlock's connectors within 15 minutes. Split longer comparisons into explicit intervals, and distinguish incident-window queries from checks of later snapshots. Broader manual investigation requires appropriate approved scope/access and must be labeled manual; it does not extend Sherlock's original stored incident window. Suggested checks are not collected evidence or executed queries.
+
 Available evidence kinds:
 - monitor: definition, name, query, options and tags. A monitor name can describe intended behavior but does not verify impact. A monitor query must be interpreted with threshold, aggregation, evaluation window and missing-data behavior.
 - monitor_group_state: exact-group snapshot when available. Group state at collection is not an alert-time evaluation history and does not resolve the incident automatically.
