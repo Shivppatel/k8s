@@ -248,7 +248,7 @@ app-template:
       automountServiceAccountToken: false
   controllers:
     main:
-      replicas: 1
+      replicas: 0
       strategy: Recreate
       serviceAccount:
         identifier: app
