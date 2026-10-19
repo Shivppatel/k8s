@@ -315,6 +315,8 @@ jellyfin:
     media:
       # -- set to false to use emptyDir
       enabled: false
+      # The emptyDir parent must allow the runtime to create the nested NFS mountpoints.
+      readOnly: false
       # -- Type of volume for media storage (pvc, hostPath, emptyDir). If 'enabled' is false, 'emptyDir' is used regardless of this setting.
       type: pvc
       # -- Path on the host node for media storage, only used if type is 'hostPath'.
