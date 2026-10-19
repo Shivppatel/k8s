@@ -1,4 +1,8 @@
 metallb:
+  speaker:
+    # All nodes are control-plane nodes that also host workloads.
+    # Allow them to advertise the internal ingress VIP despite kubeadm's label.
+    ignoreExcludeLB: true
   controller:
     enabled: true
     image:
