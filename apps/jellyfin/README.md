@@ -7,3 +7,7 @@ and `persistence.media.readOnly: false`. Keep this temporary parent writable so
 the container runtime can create the nested NFS mountpoints during startup.
 
 The public endpoint is `https://media.shivpatel.xyz`, routed through Traefik.
+The private route uses Traefik's shared `websecure` entrypoint. A separate
+`jellyfin-public` entrypoint and dedicated ingress service provide a
+Jellyfin-only destination for direct external HTTPS forwarding. Both routes
+preserve Jellyfin authentication and use the existing TLS certificate.

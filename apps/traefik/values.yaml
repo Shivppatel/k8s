@@ -16,8 +16,34 @@ traefik:
         defaultMode: drop
 
   service:
-    type: LoadBalancer
-    loadBalancerIP: "192.168.20.20" # Choose an available IP from your MetalLB range
+    spec:
+      type: LoadBalancer
+      loadBalancerIP: "192.168.20.20"
+    additionalServices:
+      jellyfin:
+        spec:
+          type: LoadBalancer
+          loadBalancerIP: "192.168.20.21"
+          externalTrafficPolicy: Local
+
+  ports:
+    # Keep implicit routers on the existing internal entrypoints.
+    web:
+      asDefault: true
+    websecure:
+      asDefault: true
+    jellyfin-public:
+      port: 8444
+      exposedPort: 443
+      protocol: TCP
+      expose:
+        default: false
+        jellyfin: true
+      http:
+        middlewares:
+          - traefik-security-headers@kubernetescrd
+        tls:
+          enabled: true
 
   additionalArguments:
     - --entryPoints.web.http.redirections.entryPoint.to=websecure
