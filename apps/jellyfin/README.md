@@ -11,6 +11,8 @@ The private route uses Traefik's shared `websecure` entrypoint. A separate
 `jellyfin-public` entrypoint and dedicated ingress service provide a
 Jellyfin-only destination for direct external HTTPS forwarding. Both routes
 preserve Jellyfin authentication and use the existing TLS certificate.
+Both ingress routes exclude `/metrics` and its subpaths, including mixed-case
+spellings. Prometheus continues scraping the internal service directly.
 
 ## Streaming quality
 
