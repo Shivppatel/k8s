@@ -487,24 +487,6 @@ argocd-apps:
         syncOptions:
           - CreateNamespace=true
 
-    gpu-device-plugin:
-      name: gpu-device-plugin
-      namespace: argocd
-      destination:
-        namespace: kube-system
-        server: "https://kubernetes.default.svc"
-      project: default
-      source:
-        path: apps/gpu-device-plugin
-        repoURL: "git@github.com:shivppatel/k8s.git"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-
     csi-driver-smb:
       name: csi-driver-smb
       namespace: argocd

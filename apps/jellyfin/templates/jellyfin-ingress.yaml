@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`media.shivpatel.xyz`)
+    - match: Host(`media.shivpatel.xyz`) && !PathRegexp(`(?i)^/metrics(?:/|$)`)
       kind: Rule
       services:
         - name: jellyfin

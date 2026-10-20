@@ -11,6 +11,8 @@ The private route uses Traefik's shared `websecure` entrypoint. A separate
 `jellyfin-public` entrypoint and dedicated ingress service provide a
 Jellyfin-only destination for direct external HTTPS forwarding. Both routes
 preserve Jellyfin authentication and use the existing TLS certificate.
+Both ingress routes exclude `/metrics` and its subpaths, including mixed-case
+spellings. Prometheus continues scraping the internal service directly.
 
 ## Streaming quality
 
@@ -27,17 +29,17 @@ quality; source media and client capabilities still determine the result.
 
 ## Transcoding
 
-Jellyfin requests one `devic.es/dri` resource from the separately managed GPU
-device plugin. Kubernetes allocates `/dev/dri/renderD128`; Jellyfin does not
-mount the host DRM directory and remains non-privileged. The device plugin is
-a deployment prerequisite.
+Hardware acceleration is intentionally disabled. On this hardware, the
+software H.264 path handled the representative 4K HDR/PGS workload faster
+than the integrated GPU's Vulkan tone-mapping/overlay path. FFmpeg's
+software `tonemapx` filter still performs HDR-to-SDR conversion; the disabled
+`EnableTonemapping` option controls the hardware path, not that automatic
+software conversion. HEVC and AV1 encoding remain disabled to avoid costly
+software encoding. Thread counts, presets, and CRF values retain defaults.
 
-The existing init container also persists the verified AMD VA-API profile:
-H.264, HEVC, VP9, and AV1 decoding; H.264/HEVC hardware encoding; 10-bit HEVC
-and VP9 decoding; and HDR-to-SDR tone mapping. AV1 encoding is disabled because
-the installed GPUs do not advertise it. Codec selection remains driven by
-client support. Encoding thread counts, presets, and CRF values retain their
-defaults.
+The unused GPU device plugin and host DRM directory mounts are absent.
+Re-enable acceleration only after representative media tests demonstrate
+sufficient real-time headroom, not merely successful codec capability probes.
 
 Transcoding throttles when sufficiently ahead of playback (180 seconds), and
 old HLS segments are cleaned up with a 720-second retention window. These

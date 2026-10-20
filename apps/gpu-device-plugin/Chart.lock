@@ -1,6 +1,0 @@
-dependencies:
-- name: generic-device-plugin
-  repository: https://squat.github.io/generic-device-plugin
-  version: 0.2.0
-digest: sha256:ecefc6fd5ed1b23972f3d1aa35d2b578599c49fd78b7014631485cfc9a9c8575
-generated: "2026-10-20T03:02:38.32314-04:00"
