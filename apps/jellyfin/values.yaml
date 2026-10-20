@@ -178,9 +178,7 @@ jellyfin:
               value: /
 
   # -- Resource requests and limits for the Jellyfin container.
-  resources:
-    limits:
-      devic.es/dri: 1
+  resources: {}
     # limits:
     #   cpu: 100m
     #   memory: 128Mi
@@ -441,31 +439,17 @@ jellyfin:
             grep -q "<$JF_ENCODING_TAG>$JF_ENCODING_VALUE</$JF_ENCODING_TAG>" "$JF_ENCODING_CONFIG"
           }
 
-          set_encoding_value HardwareAccelerationType vaapi
-          set_encoding_value VaapiDevice /dev/dri/renderD128
-          set_encoding_value EnableHardwareEncoding true
-          set_encoding_value AllowHevcEncoding true
+          # The integrated GPU was slower than software for 4K HDR + PGS.
+          # FFmpeg's software path retains automatic tonemapx HDR conversion.
+          set_encoding_value HardwareAccelerationType none
+          set_encoding_value AllowHevcEncoding false
           set_encoding_value AllowAv1Encoding false
-          set_encoding_value EnableTonemapping true
-          set_encoding_value EnableDecodingColorDepth10Hevc true
-          set_encoding_value EnableDecodingColorDepth10Vp9 true
+          set_encoding_value EnableTonemapping false
           set_encoding_value EnableThrottling true
           set_encoding_value ThrottleDelaySeconds 180
           set_encoding_value EnableSegmentDeletion true
           set_encoding_value SegmentKeepSeconds 720
 
-          awk '
-            /<HardwareDecodingCodecs>/ {
-              print "  <HardwareDecodingCodecs><string>h264</string><string>hevc</string><string>vp9</string><string>av1</string></HardwareDecodingCodecs>"
-              found = 1
-              if ($0 !~ /<\/HardwareDecodingCodecs>/) skip = 1
-              next
-            }
-            skip && /<\/HardwareDecodingCodecs>/ { skip = 0; next }
-            !skip { print }
-            END { if (!found) exit 1 }
-          ' "$JF_ENCODING_CONFIG" > "$JF_ENCODING_CONFIG.tmp"
-          mv "$JF_ENCODING_CONFIG.tmp" "$JF_ENCODING_CONFIG"
       volumeMounts:
         - name: config
           mountPath: /config

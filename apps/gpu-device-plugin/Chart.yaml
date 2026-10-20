@@ -1,9 +1,0 @@
-apiVersion: v2
-name: gpu-device-plugin
-description: Scoped DRM render-device allocation for media workloads
-type: application
-version: 0.1.0
-dependencies:
-  - name: generic-device-plugin
-    version: 0.2.0
-    repository: https://squat.github.io/generic-device-plugin
