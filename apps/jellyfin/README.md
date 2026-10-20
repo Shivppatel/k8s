@@ -24,3 +24,26 @@ per-user override. It does not force all clients to select 40 Mbps, and it
 does not cap local-network playback. Each client controls its own home and
 Internet playback quality. Set those preferences to 40 Mbps to request that
 quality; source media and client capabilities still determine the result.
+
+## Transcoding
+
+Jellyfin requests one `devic.es/dri` resource from the separately managed GPU
+device plugin. Kubernetes allocates `/dev/dri/renderD128`; Jellyfin does not
+mount the host DRM directory and remains non-privileged. The device plugin is
+a deployment prerequisite.
+
+The existing init container also persists the verified AMD VA-API profile:
+H.264, HEVC, VP9, and AV1 decoding; H.264/HEVC hardware encoding; 10-bit HEVC
+and VP9 decoding; and HDR-to-SDR tone mapping. AV1 encoding is disabled because
+the installed GPUs do not advertise it. Codec selection remains driven by
+client support. Encoding thread counts, presets, and CRF values retain their
+defaults.
+
+Transcoding throttles when sufficiently ahead of playback (180 seconds), and
+old HLS segments are cleaned up with a 720-second retention window. These
+server settings do not change the web player's own forward-buffer limits.
+The separate `/cache` PVC holds generated cache/transcode data.
+
+The deployment uses `Recreate` to avoid overlapping SQLite writers and RWO
+configuration-volume attachments during updates. Its service account does
+not mount Kubernetes API credentials.
