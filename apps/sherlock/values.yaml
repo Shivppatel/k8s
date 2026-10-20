@@ -91,8 +91,10 @@ sherlock:
       allowed_cidrs: [10.100.152.57/32]
       query_templates:
       - 'sum by (pod, container) (increase(kube_pod_container_status_restarts_total{namespace={{namespace}}}[5m]))'
-      - 'max_over_time(kube_pod_status_ready{namespace={{namespace}},condition="false"}[5m])'
-      - 'sum by (pod, container) (rate(container_cpu_usage_seconds_total{namespace={{namespace}},pod={{pod}},container!=""}[5m]))'
+      # Working set as a fraction of the container memory limit; skipped without a Pod binding.
+      - 'max by (pod, container) (container_memory_working_set_bytes{namespace={{namespace}},pod={{pod}},container!="",container!="POD"}) / on (pod, container) max by (pod, container) (kube_pod_container_resource_limits{namespace={{namespace}},pod={{pod}},resource="memory"})'
+      # Most recent termination reason (for example OOMKilled) for every container in the namespace.
+      - 'max by (pod, container, reason) (kube_pod_container_status_last_terminated_reason{namespace={{namespace}}})'
       # Requires the reviewed compatible service image; a missing Service binding skips the query.
       - 'up{namespace={{namespace}},service={{kubernetes_service}}}'
     loki:
@@ -215,11 +217,6 @@ sherlock:
       scope_tags: [kube_namespace:kafka, pod_name:kafka-controller-2]
       application_namespace: argocd
       application: kafka
-    - alertmanager_connection: homelab-pod-alerts
-      alert_name: KubePodNotReady
-      scope_tags: [kube_namespace:trivy-system, pod_name:trivy-trivy-operator-6d45f4f9f-b6zch]
-      application_namespace: argocd
-      application: trivy
     model_budget:
       daily_attempt_limit: 50
       time_zone: America/New_York
