@@ -32,7 +32,7 @@ jobs:
         id: changed-charts
         run: |
           # Get list of changed files in PR
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          CHANGED_FILES=$(git diff --diff-filter=d --name-only origin/${{ github.base_ref }}...HEAD)
 
           # Find unique app directories with Chart.yaml changes
           CHART_DIRS=""
