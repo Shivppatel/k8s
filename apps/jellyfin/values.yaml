@@ -393,8 +393,8 @@ jellyfin:
   #     volumeMounts:
   #       - name: config
   #         mountPath: /config
-  # Keep the persisted proxy trust and remote bitrate limit aligned with the
-  # Cloudflare Tunnel path. The image tag must track jellyfin.image.tag.
+  # Persist proxy trust and the 40 Mbps server-wide remote bitrate limit.
+  # The image tag must track jellyfin.image.tag.
   extraInitContainers:
     - name: configure-proxy-streaming
       image: docker.io/jellyfin/jellyfin:12.1.20260915-010956
@@ -430,8 +430,8 @@ jellyfin:
           mv "$JF_NETWORK_TMP" "$JF_NETWORK_CONFIG"
 
           grep -q '<RemoteClientBitrateLimit>' "$JF_SYSTEM_CONFIG"
-          sed -i 's#<RemoteClientBitrateLimit>[^<]*</RemoteClientBitrateLimit>#<RemoteClientBitrateLimit>20000000</RemoteClientBitrateLimit>#' "$JF_SYSTEM_CONFIG"
-          grep -q '<RemoteClientBitrateLimit>20000000</RemoteClientBitrateLimit>' "$JF_SYSTEM_CONFIG"
+          sed -i 's#<RemoteClientBitrateLimit>[^<]*</RemoteClientBitrateLimit>#<RemoteClientBitrateLimit>40000000</RemoteClientBitrateLimit>#' "$JF_SYSTEM_CONFIG"
+          grep -q '<RemoteClientBitrateLimit>40000000</RemoteClientBitrateLimit>' "$JF_SYSTEM_CONFIG"
       volumeMounts:
         - name: config
           mountPath: /config
