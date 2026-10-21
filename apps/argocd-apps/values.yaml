@@ -613,6 +613,25 @@ argocd-apps:
           - CreateNamespace=true
           - ServerSideApply=true
 
+    plugin-barman-cloud:
+      name: plugin-barman-cloud
+      namespace: argocd
+      destination:
+        namespace: cloudnative-pg
+        server: "https://kubernetes.default.svc"
+      project: default
+      source:
+        path: apps/plugin-barman-cloud
+        repoURL: "git@github.com:shivppatel/k8s.git"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+
     postgresql:
       name: postgresql
       namespace: argocd

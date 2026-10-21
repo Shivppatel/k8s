@@ -1,0 +1,14 @@
+apiVersion: v2
+name: plugin-barman-cloud
+description: CloudNativePG Barman Cloud CNPG-I backup plugin
+
+type: application
+
+version: 0.1.0
+
+appVersion: "v0.15.1"
+
+dependencies:
+  - name: plugin-barman-cloud
+    repository: https://cloudnative-pg.io/charts/
+    version: 0.8.1

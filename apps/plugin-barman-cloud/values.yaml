@@ -1,0 +1,6 @@
+# The plugin must run in the same namespace as the CloudNativePG operator
+# (cloudnative-pg). It needs cert-manager for its mTLS certificates.
+plugin-barman-cloud:
+  replicaCount: 1
+  crds:
+    create: true
