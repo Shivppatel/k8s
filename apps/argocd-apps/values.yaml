@@ -666,7 +666,7 @@ argocd-apps:
             - cnpg-controller-manager
           jqPathExpressions:
             - .status
-            - .spec.failoverDelay
+            # failoverDelay is set in Git (60s, #527); it must sync, not be ignored.
             - .spec.logLevel
             - .spec.monitoring
             - .spec.postgresGID
