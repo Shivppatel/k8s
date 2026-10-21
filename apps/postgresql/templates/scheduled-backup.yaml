@@ -1,0 +1,17 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: postgresql-daily
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  # Six-field cron (seconds first): daily at 03:00 UTC.
+  schedule: "0 0 3 * * *"
+  # Take a first backup as soon as the resource is created.
+  immediate: true
+  backupOwnerReference: self
+  method: plugin
+  cluster:
+    name: postgresql
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
