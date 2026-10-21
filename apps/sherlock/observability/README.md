@@ -22,7 +22,7 @@ The sender is independently switched with `kube-prometheus-stack.sherlockReceive
 
 ## Native scope profiles
 
-The service declares six additional independently switchable private intake IDs. All use the same existing Alertmanager bearer and pod peer. They separate evidence scope, not authentication roles. Keep connection IDs and classification rules stable: moving a firing episode between IDs can create another incident because connection identity is part of its key.
+The service declares seven additional independently switchable private intake IDs. All use the same existing Alertmanager bearer and pod peer. They separate evidence scope, not authentication roles. Keep connection IDs and classification rules stable: moving a firing episode between IDs can create another incident because connection identity is part of its key.
 
 | Connection suffix | Canonical input labels | Purpose |
 | --- | --- | --- |
@@ -31,6 +31,7 @@ The service declares six additional independently switchable private intake IDs.
 | homelab-namespace-alerts | namespace, cluster | Namespace-only conditions such as PDB health |
 | homelab-node-alerts | node, cluster | Host context; missing namespace skips namespace queries |
 | homelab-target-alerts | namespace, service, cluster | TargetDown service ownership; no claimed Datadog service alias |
+| homelab-pvc-alerts | namespace, persistentvolumeclaim, cluster | Storage alerts (PVC capacity, inodes, errors). Binds the `persistentvolumeclaim` scope key and `{{persistentvolumeclaim}}` placeholder; adds a PVC snapshot and selects the `pvc-capacity` Prometheus query profile |
 | homelab-unbound-alerts | cluster | Unknown alert families; retain alert metadata and gaps without promoting unknown target labels into query scope |
 
 Seven exact pod/alert-name mappings bind the configured Kafka controller pods and Trivy operator pod to their Argo applications. They were prepared from current controller UIDs, self-referencing tracking annotations and Argo resource membership; they are editable operator assertions, not continuous UID pins. A replacement Trivy pod needs a reviewed mapping update; unmatched pod alerts retain their namespace/pod telemetry but cannot infer Argo ownership from pod name alone. Workload/service profiles use the existing bounded ownership discovery when available. Conflicting or missing relationships remain gaps.
@@ -50,3 +51,24 @@ The sender's `mirrorToExistingSlack` defaults to true, preserving normal Slack d
 The HomeLab sender selects warning/critical alerts with a nonempty namespace and mirrors them to the unchanged canonical Slack route. Known kube-state-metrics pod/container, workload, PDB and TargetDown families select their respective scope profiles. Other eligible families reach the unbound parent. The unique existing synthetic marker has a dedicated child, without a generating rule. Root timings inherit 30-second group wait, 5-minute group interval and 12-hour repeat; one incident per full-label episode persists across repeats. Original startsAt remains authoritative even for old episodes, and real unresolved alerts are not given synthetic recoveries.
 
 Forwarding continues after the initial observed window. To pause only broad forwarding, restore the reviewed test-only matcher/timings and empty profiles while keeping `enabled: true`; that changes the Alertmanager config without removing its bearer mount or ExternalSecret. A full `enabled: false` also removes those resources/mounts and can restart the single replica. Either pause stops real recovery delivery to Sherlock, which may leave incidents open; canonical paging remains intact and Sherlock must not invent resolutions. Configuration changes and source-state reconciliation require review; no cleanup or infrastructure repair is implied.
+
+## PVC alert intake and storage mappings
+
+Alerts that carry a `persistentvolumeclaim` label reach `homelab-pvc-alerts` through the first `sherlockReceiver.profiles` child, `sherlock-pvc`, which matches `persistentvolumeclaim!=""` and stops there. Keep it ahead of the pod, workload and generic profiles or those would claim the alert first. The profile list is capped at twelve children. The connection maps `kube_namespace`, `persistentvolumeclaim` and `kube_cluster_name` to `namespace`, `persistentvolumeclaim` and `cluster`. `homelab-unbound-alerts` also maps `kube_namespace` to `namespace`. `homelab-pvc-alerts` shares the existing Alertmanager NetworkPolicy peer and bearer.
+
+`storageAlertMappings` in `../values.yaml` is expanded by `templates/configmap.yaml` into one mapping per namespace and storage alert name (18 namespaces x 3 alert names = 54). Each selects the Prometheus `pvc-capacity` query profile on `homelab-metrics`. Add a namespace to `storageAlertMappings.applications` (namespace to Argo application), not a hand-written mapping. These are operator assertions about which alerts use the profile, not evidence of capacity trends or root cause.
+
+## Evidence collected per alert
+
+Beyond the telemetry sources above, the pinned service collects: GitOps path history (`github_path_history`) for the bound Argo application path; Kubernetes events for the pod or workload (with a `pre_window_warnings` section for warnings that predate the 15-minute window) and PVC snapshots; compact Prometheus/Loki summaries in place of raw series and repeated lines; and `prior_incidents`, a short history of earlier incidents with the same identity. Quota-limited model attempts are deferred (`model_retry_deferred`) rather than consuming the daily budget. These observations are bounded context, not verified RCA.
+
+## Service metrics
+
+Sherlock serves Prometheus metrics at `GET /metrics` on its main port (8080). Desired state:
+
+- `templates/service-monitor.yaml` scrapes Service `sherlock`, port `http`, path `/metrics`, every 30 seconds (`serviceMonitor.enabled`). The Prometheus `serviceMonitorSelector` is empty, so no extra label is needed.
+- `networkPolicy.metricsScrapers` admits the Prometheus pods (namespace `observability`, labels `app.kubernetes.io/name: prometheus` and `operator.prometheus.io/name: kube-prometheus-stack-prometheus`) to TCP 8080 on the app pod. A scraper that can reach 8080 can also reach the bearer-authenticated webhook routes, but cannot use them without a token.
+- `../../kube-prometheus-stack/templates/sherlock-rules.yaml` holds the `PrometheusRule` (label `release: kube-prometheus-stack`), taken from the Sherlock `docs/OPERATIONS.md`.
+- The public Traefik `IngressRoute` allowlists only `/`, `/healthz`, incident review paths, the Datadog webhook and feedback paths. `/metrics` is not routed publicly; the public host returns 404.
+
+Each finished investigation attempt writes a structured `investigation job finished` log line (`investigation job failed` at WARN on error). No secrets or evidence content are logged.

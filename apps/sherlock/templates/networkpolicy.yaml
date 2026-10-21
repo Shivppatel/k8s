@@ -40,6 +40,16 @@ spec:
     {{- end }}
     {{- end }}
     {{- end }}
+    {{- range $scraper := .Values.networkPolicy.metricsScrapers }}
+    {{- if or (not $scraper.namespace) (not $scraper.podSelector) }}{{ fail "Metrics scraper requires namespace and nonempty pod selector" }}{{ end }}
+    - from:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: {{ $scraper.namespace | quote }}}
+          podSelector:
+            matchLabels:
+{{ $scraper.podSelector | toYaml | indent 14 }}
+      ports: [{protocol: TCP, port: 8080}]
+    {{- end }}
   egress:
     - to:
         - namespaceSelector: {matchLabels: {kubernetes.io/metadata.name: kube-system}}

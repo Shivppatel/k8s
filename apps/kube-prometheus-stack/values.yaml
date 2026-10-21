@@ -16,6 +16,10 @@ kube-prometheus-stack:
       - alertname="SherlockObservabilityIntegrationTest"
       - sherlock_probe="9fcacfa27f81f459e44376a6"
       - namespace="observability"
+    - name: sherlock-pvc
+      url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-pvc-alerts
+      matchers:
+      - persistentvolumeclaim!=""
     - name: sherlock-node
       url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-node-alerts
       matchers:

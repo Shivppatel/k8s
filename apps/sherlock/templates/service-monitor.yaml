@@ -1,0 +1,19 @@
+{{- if .Values.serviceMonitor.enabled }}
+# Prometheus scrapes the main Service on the private listener only. The public
+# Traefik IngressRoute allowlist does not include /metrics.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sherlock
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+      app.kubernetes.io/name: sherlock
+      app.kubernetes.io/service: sherlock
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+{{- end }}
