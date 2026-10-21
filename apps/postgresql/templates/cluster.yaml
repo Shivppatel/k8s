@@ -214,3 +214,8 @@ spec:
       track_activity_query_size: "4096"
       # Enable I/O timing for query analysis
       track_io_timing: "on"
+      # Bound WAL a stalled replica's slot can pin. Past this the slot is
+      # invalidated and the replica must re-clone, instead of every instance
+      # filling its disk (2026-10-21: postgresql-14 stalled at a timeline
+      # switch and pinned 48GB of WAL until the primary failed).
+      max_slot_wal_keep_size: "20GB"
