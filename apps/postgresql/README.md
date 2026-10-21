@@ -17,8 +17,16 @@ tracks the raw manifests in `templates/` (auto-sync, self-heal).
 - On demand: `kubectl -n postgresql create -f` a `Backup` with
   `spec.method: plugin`, `spec.cluster.name: postgresql`,
   `spec.pluginConfiguration.name: barman-cloud.cloudnative-pg.io`.
-- Check: `kubectl -n postgresql get cluster postgresql -o jsonpath='{.status.firstRecoverabilityPoint}'`
-  and `kubectl -n postgresql get backup`.
+- Check: with the plugin, `Cluster.status.firstRecoverabilityPoint` and
+  `lastSuccessfulBackup` stay empty. Read the recovery window from the
+  ObjectStore instead:
+  `kubectl -n postgresql get objectstore postgresql-backups -o jsonpath='{.status.serverRecoveryWindow.postgresql}'`
+  and list backups with `kubectl -n postgresql get backups.postgresql.cnpg.io`
+  (the bare `backup` short name can resolve to another API group).
+- A base backup is only restorable once the WAL segment holding its end LSN is
+  archived, which can take up to `archive_timeout` (5 minutes) on a quiet
+  cluster. A restore started right after a backup may fail once and then
+  succeed on retry.
 
 ### Restore
 
