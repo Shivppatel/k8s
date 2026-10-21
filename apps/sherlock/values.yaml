@@ -787,6 +787,11 @@ networkPolicy:
     podSelector:
       app.kubernetes.io/name: alertmanager
       alertmanager: kube-prometheus-stack-alertmanager
+  metricsScrapers:
+  - namespace: observability
+    podSelector:
+      app.kubernetes.io/name: prometheus
+      operator.prometheus.io/name: kube-prometheus-stack-prometheus
   apiAddresses:
   - 10.96.0.1/32
   - 192.168.20.10/32
@@ -797,3 +802,5 @@ networkPolicy:
   databaseCluster: postgresql
 runtimeLogin:
   enabled: false
+serviceMonitor:
+  enabled: true

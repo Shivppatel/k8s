@@ -1,0 +1,78 @@
+{{- if (index .Values "kube-prometheus-stack").sherlockReceiver.enabled }}
+# Sherlock self-observability rules, from sherlock docs/OPERATIONS.md.
+# SherlockNoSuccessfulInvestigation24h also fires if the model provider is
+# intentionally disabled; remove it for such installations.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: sherlock
+  namespace: observability
+  labels:
+    app: kube-prometheus-stack
+    app.kubernetes.io/instance: kube-prometheus-stack
+    app.kubernetes.io/part-of: kube-prometheus-stack
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: sherlock
+      rules:
+        - alert: SherlockMetricsAbsent
+          expr: absent(sherlock_build_info)
+          for: 15m
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock metrics are not being scraped
+        - alert: SherlockInvestigationJobErrors
+          expr: sum(increase(sherlock_investigations_total{status="job_error"}[30m])) > 0
+          for: 5m
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock investigation jobs are failing before recording a result
+        - alert: SherlockModelAnalysisFailing
+          expr: sum(increase(sherlock_investigations_total{status=~"model_(unavailable|timeout|invalid_report|unsupported_tool|configuration_mismatch|attempts_exhausted)"}[1h])) > 0
+          for: 5m
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock model analysis is failing
+            description: Investigations are finishing with deterministic evidence only. Check the runtime and provider status.
+        - alert: SherlockModelQuotaLimited
+          expr: sum(increase(sherlock_model_attempts_total{result="model_quota_limited"}[1h])) > 0
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock model provider is quota limited
+        - alert: SherlockModelBudgetExhausted
+          expr: (sherlock_model_budget_remaining == 0) or (sum(increase(sherlock_investigations_total{status="model_daily_budget_exhausted"}[1h])) > 0)
+          labels: {severity: info}
+          annotations:
+            summary: Sherlock daily model attempt budget is exhausted
+        - alert: SherlockSlackDeliveryFailing
+          expr: sum by (kind, result) (increase(sherlock_slack_deliveries_total{result=~"failed|ambiguous|job_error"}[30m])) > 0
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock Slack delivery is failing
+            description: "{{ "{{" }} $labels.kind {{ "}}" }} deliveries ended {{ "{{" }} $labels.result {{ "}}" }} in the last 30 minutes."
+        - alert: SherlockNoSuccessfulInvestigation24h
+          expr: max(sherlock_incidents_received_24h) > 0 and max(sherlock_investigations_completed_24h) == 0
+          for: 30m
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock received incidents but completed no model analysis in 24 hours
+        - alert: SherlockQueueBacklog
+          expr: max by (kind) (sherlock_jobs_oldest_pending_age_seconds) > 900
+          for: 10m
+          labels: {severity: warning}
+          annotations:
+            summary: "Sherlock {{ "{{" }} $labels.kind {{ "}}" }} jobs are waiting longer than 15 minutes"
+        - alert: SherlockEvidenceDegraded
+          expr: sum(increase(sherlock_evidence_observations_total{status="unavailable",kind!="coverage_gap"}[6h])) / sum(increase(sherlock_evidence_observations_total{kind!="coverage_gap"}[6h])) > 0.5
+          for: 30m
+          labels: {severity: info}
+          annotations:
+            summary: Most Sherlock evidence sources returned unavailable in the last 6 hours
+        - alert: SherlockOpsSnapshotFailing
+          expr: max(sherlock_ops_snapshot_up) == 0
+          for: 10m
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock cannot read its queue and budget state from the database
+{{- end }}
