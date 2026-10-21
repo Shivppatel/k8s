@@ -76,12 +76,22 @@ sherlock:
         kube_namespace: namespace
         kube_service: service
         kube_cluster_name: cluster
+    - id: homelab-pvc-alerts
+      enabled: true
+      webhook_token: {file: /run/observability/alertmanager_webhook_token}
+      repeat_policy: same_incident
+      datadog_evidence_connections: [us5]
+      label_mapping:
+        kube_namespace: namespace
+        persistentvolumeclaim: persistentvolumeclaim
+        kube_cluster_name: cluster
     - id: homelab-unbound-alerts
       enabled: true
       webhook_token: {file: /run/observability/alertmanager_webhook_token}
       repeat_policy: same_incident
       datadog_evidence_connections: [us5]
       label_mapping:
+        kube_namespace: namespace
         kube_cluster_name: cluster
     prometheus:
     - id: homelab-metrics
@@ -97,6 +107,12 @@ sherlock:
       - 'max by (pod, container, reason) (kube_pod_container_status_last_terminated_reason{namespace={{namespace}}})'
       # Requires the reviewed compatible service image; a missing Service binding skips the query.
       - 'up{namespace={{namespace}},service={{kubernetes_service}}}'
+      query_profiles:
+        pvc-capacity:
+        - 'max by (persistentvolumeclaim) (kubelet_volume_stats_available_bytes{namespace={{namespace}},persistentvolumeclaim={{persistentvolumeclaim}}} / kubelet_volume_stats_capacity_bytes{namespace={{namespace}},persistentvolumeclaim={{persistentvolumeclaim}}})'
+        - 'max by (persistentvolumeclaim) (kubelet_volume_stats_used_bytes{namespace={{namespace}},persistentvolumeclaim={{persistentvolumeclaim}}})'
+        - 'max by (persistentvolumeclaim) (kubelet_volume_stats_inodes_free{namespace={{namespace}},persistentvolumeclaim={{persistentvolumeclaim}}} / kubelet_volume_stats_inodes{namespace={{namespace}},persistentvolumeclaim={{persistentvolumeclaim}}})'
+        - 'sum by (pod, container) (increase(kube_pod_container_status_restarts_total{namespace={{namespace}}}[5m]))'
     loki:
     - id: homelab-logs
       enabled: true
@@ -181,6 +197,7 @@ sherlock:
       - homelab-namespace-alerts
       - homelab-node-alerts
       - homelab-target-alerts
+      - homelab-pvc-alerts
       - homelab-unbound-alerts
       argo_namespace: argocd
       interval_seconds: 300
@@ -661,6 +678,35 @@ app-template:
   defaultPodOptions:
     imagePullSecrets:
     - name: sherlock-registry-secret
+# Generated into sherlock.config.mappings by templates/configmap.yaml: each
+# storage alert in a listed namespace maps to that namespace's sole Argo
+# Application and selects the PVC capacity Prometheus profile.
+storageAlertMappings:
+  connection: homelab-pvc-alerts
+  prometheusProfile: {homelab-metrics: pvc-capacity}
+  alertNames:
+  - KubePersistentVolumeFillingUp
+  - KubePersistentVolumeInodesFillingUp
+  - PersistentVolumeRunningOutOfSpace
+  applications:
+    atlantis: atlantis
+    emqx: emqx
+    gitlab: gitlab
+    home-assistant: home-assistant
+    immich: immich
+    localstack: localstack
+    minio: minio
+    mongodb: mongodb
+    n8n: n8n
+    nextcloud: nextcloud
+    pgadmin4: pgadmin4
+    postgresql: postgresql
+    rabbitmq: rabbitmq
+    radar: radar
+    redis: redis
+    sherlock: sherlock
+    uptime-kuma: uptime-kuma
+    vault: vault
 ingress:
   host: sherlock.shivpatel.xyz
   enabled: true
@@ -727,6 +773,11 @@ networkPolicy:
       app.kubernetes.io/name: alertmanager
       alertmanager: kube-prometheus-stack-alertmanager
   - connection: homelab-target-alerts
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/name: alertmanager
+      alertmanager: kube-prometheus-stack-alertmanager
+  - connection: homelab-pvc-alerts
     namespace: observability
     podSelector:
       app.kubernetes.io/name: alertmanager
