@@ -193,7 +193,7 @@ spec:
           name: lnd-db-secret
 
   storage:
-    size: 50Gi
+    size: 100Gi
 
   # PostgreSQL configuration for Datadog Database Monitoring
   postgresql:
