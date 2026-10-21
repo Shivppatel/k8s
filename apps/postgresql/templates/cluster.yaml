@@ -195,6 +195,14 @@ spec:
   storage:
     size: 100Gi
 
+  # WAL archive and base backups via the Barman Cloud plugin
+  # (apps/plugin-barman-cloud) into MinIO; see backup-object-store.yaml.
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: postgresql-backups
+
   # PostgreSQL configuration for Datadog Database Monitoring
   postgresql:
     # CNPG auto-manages shared_preload_libraries when it sees
