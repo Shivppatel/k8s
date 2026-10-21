@@ -271,7 +271,8 @@ argo-rollouts:
     name: ""
 
   # -- Annotations to be added to all CRDs
-  crdAnnotations: {}
+  crdAnnotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
 
   # -- Annotations for the all deployed pods
   podAnnotations: {}

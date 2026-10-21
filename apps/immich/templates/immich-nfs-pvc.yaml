@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: immich-nfs
   namespace: immich
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
 spec:
   accessModes:
     - ReadWriteMany

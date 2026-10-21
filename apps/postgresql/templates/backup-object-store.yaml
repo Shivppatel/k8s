@@ -6,6 +6,7 @@ metadata:
   name: postgresql-backups
   annotations:
     argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
 spec:
   # Recoverability window; older base backups and WAL are pruned.
   retentionPolicy: "14d"
