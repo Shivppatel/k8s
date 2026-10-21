@@ -199,6 +199,8 @@ spec:
   # (apps/plugin-barman-cloud) into MinIO; see backup-object-store.yaml.
   plugins:
     - name: barman-cloud.cloudnative-pg.io
+      # CNPG defaults this to true; declare it so Argo shows no diff.
+      enabled: true
       isWALArchiver: true
       parameters:
         barmanObjectName: postgresql-backups
