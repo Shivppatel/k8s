@@ -14,6 +14,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -37,6 +38,7 @@ argocd-apps:
             - values.yaml
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -58,6 +60,7 @@ argocd-apps:
             - values.yaml
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -77,6 +80,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -96,6 +100,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -114,6 +119,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -132,6 +138,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -150,6 +157,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -169,6 +177,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -187,6 +196,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -205,6 +215,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -223,6 +234,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -241,6 +253,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -261,6 +274,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -285,6 +299,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -307,6 +322,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -328,6 +344,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -356,6 +373,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -382,6 +400,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -407,6 +426,7 @@ argocd-apps:
             - /metadata/generation
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -428,6 +448,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -446,6 +467,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -464,6 +486,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -482,6 +505,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -500,6 +524,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -518,6 +543,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -536,6 +562,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -554,6 +581,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -572,6 +600,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -590,6 +619,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
 
@@ -607,6 +637,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -626,6 +657,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -645,7 +677,8 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
-          prune: false
+          enabled: true
+          prune: true
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
@@ -717,6 +750,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -735,6 +769,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -753,6 +788,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -771,6 +807,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -789,6 +826,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -812,6 +850,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -831,7 +870,8 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
-          prune: false
+          enabled: true
+          prune: true
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
@@ -854,6 +894,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -872,6 +913,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -892,6 +934,7 @@ argocd-apps:
           valueFiles: [values.yaml]
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -911,6 +954,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -929,6 +973,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -947,6 +992,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -974,6 +1020,7 @@ argocd-apps:
                     listenAddr: "0.0.0.0"
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -992,6 +1039,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -1010,6 +1058,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -1028,6 +1077,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -1052,6 +1102,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -1070,6 +1121,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -1093,7 +1145,8 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
-          prune: false
+          enabled: true
+          prune: true
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
@@ -1117,6 +1170,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -1135,6 +1189,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -1153,6 +1208,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -1171,6 +1227,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:
@@ -1189,6 +1246,7 @@ argocd-apps:
         targetRevision: main
       syncPolicy:
         automated:
+          enabled: true
           prune: true
           selfHeal: true
         syncOptions:

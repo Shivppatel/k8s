@@ -6,7 +6,8 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
     argocd.argoproj.io/sync-options: >-
       PrunePropagationPolicy=foreground,
-      Prune=false
+      Prune=false,
+      Delete=false
     argocd.argoproj.io/compare-options: IgnoreExtraneous
     argocd.argoproj.io/hook-delete-policy: HookFailed
 spec:
