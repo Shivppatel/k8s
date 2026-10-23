@@ -123,6 +123,8 @@ sherlock:
       query_templates:
       - '{namespace={{namespace}}}'
       - '{namespace={{namespace}},pod={{pod}}}'
+      # Error-focused lines across the namespace, so a noisy service cannot crowd out failures.
+      - '{namespace={{namespace}}} |~ "(?i)(error|exception|fatal|panic|refused|timed? ?out|oom|killed|unavailable|denied)"'
     tempo:
     - id: homelab-traces
       enabled: true
@@ -238,6 +240,19 @@ sherlock:
       daily_attempt_limit: 50
       time_zone: America/New_York
     repeated_alerts: separate_incident
+    # Alert storms (5+ incidents in 3 minutes): one Slack summary, a short settle
+    # delay so investigations see their peers, digest findings, and a cap on
+    # model analyses per storm (the rest keep saved evidence).
+    storm:
+      threshold: 5
+      window_seconds: 180
+      settle_seconds: 90
+      slack:
+        summary_delay_seconds: 30
+        findings: digest
+        digest_interval_seconds: 600
+      model:
+        max_analyzed_incidents: 8
     recovery: all_in_episode
   runtime:
     version: sherlock/runtime/v1alpha1
@@ -284,7 +299,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: sha-50337e6daab9bad47dd86b54eceac25844970cf8@sha256:de9c87a511be07fa68464daebe03726f37db6e3df1461b2bde50b48c8deb2e14
+            tag: sha-e5439792500ba9d9efe60b6e7a82ef02c2748c91@sha256:e435acff863911d83eb3e4fb2f282bd9579b844ec85c80ee29200009b1b16938
           args:
           - -config
           - /config/config.yaml

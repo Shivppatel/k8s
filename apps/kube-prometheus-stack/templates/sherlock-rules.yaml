@@ -69,6 +69,12 @@ spec:
           labels: {severity: info}
           annotations:
             summary: Most Sherlock evidence sources returned unavailable in the last 6 hours
+        - alert: SherlockEvidenceSourceAuthFailing
+          expr: sum by (kind) (increase(sherlock_source_failures_total{reason="auth_denied"}[1h])) > 0
+          labels: {severity: warning}
+          annotations:
+            summary: A Sherlock evidence source is denying access
+            description: "{{ "{{" }} $labels.kind {{ "}}" }} queries were denied (HTTP 401/403 or an unreadable credential) in the last hour. Reports mark that source unavailable until its credential is fixed."
         - alert: SherlockOpsSnapshotFailing
           expr: max(sherlock_ops_snapshot_up) == 0
           for: 10m

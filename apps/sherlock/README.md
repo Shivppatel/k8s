@@ -14,6 +14,10 @@ Kubernetes/Argo discovery uses validated namespace/workload UIDs and tracking ow
 
 The model is selected once at `sherlock.config.runtime.model`; runtime configuration derives that value. [AI context](ai/README.md) exposes the response prompt, installation AGENTS and telemetry/GitOps skills next to the app spec. Service and runtime must agree on the compiled profile digest. Editing context changes both ConfigMaps and requires a reviewed rollout; it does not change tools, credentials, source scope or budgets. No fresh semantic accuracy claim follows from adding connectors.
 
+## Evidence and storms (sherlock#29–#31)
+
+Every pod alert collects an identity-verified Pod snapshot and its events, follows UID-verified controller owner references in the same namespace to the owning workload and, when discovery verifies the Argo tracking ID, the Application and its GitOps history. Namespace-scoped alerts get a bounded sample of unhealthy Pods and Warning events; unschedulable Pods add a node summary. Each investigation carries `source_coverage`, `prior_incidents` and `concurrent_incidents`. Alert storms (`storm`: 5 incidents in 180s) post one Slack summary, delay collection up to 90s so peers are visible, fold findings into 10-minute digests and analyze at most 8 incidents per storm; the rest keep saved evidence. `SherlockEvidenceSourceAuthFailing` fires when a source returns 401/403. The operator context in `ai/` includes the shared-dependency map.
+
 ## Budget, feedback and persistence
 
 The service allows 50 service-managed AI attempts per America/New_York calendar day across all workers/connections. Failures and retries consume durable permits. Raising the limit does not reset permits already used that day or replay terminal overflow reports. Overflow incidents retain evidence and an explicit unknown-cause limit report; they are not automatically analyzed tomorrow. This cap does not limit incident storage, source reads, Slack posts or account-wide use. Runtime limits remain one request, 120 seconds and 100 KB input; incident lookback is 15 minutes. There is no API-billed fallback.
