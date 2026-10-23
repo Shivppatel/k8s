@@ -82,7 +82,7 @@ deletions, while retaining `CreateNamespace=true` and `ServerSideApply=true`.
 | Data and storage | A [three-instance CloudNativePG cluster](apps/postgresql/templates/cluster.yaml), Redis, MongoDB, Kafka, RabbitMQ, Longhorn, NAS NFS, and standalone MinIO |
 | Observability | Prometheus, Grafana, Alertmanager, Loki, Tempo, Pyroscope, Alloy, Datadog integrations, and [Radar](apps/radar/) with [Caretta](apps/caretta/) network flows |
 | Policy and scanning | Kyverno, Policy Reporter, and Trivy provide policy and vulnerability-reporting infrastructure; custom policy coverage is still being developed |
-| CI infrastructure | Autoscaling [GitHub Actions runners](apps/github-actions-runners/) and isolated [Docker runners](apps/github-actions-docker-runners/) managed with Actions Runner Controller |
+| CI infrastructure | Autoscaling [GitHub Actions runners](apps/github-actions-runners/), isolated [Docker runners](apps/github-actions-docker-runners/), and repository-scoped [runners for private personal repositories](apps/github-actions-personal-runners/) managed with Actions Runner Controller |
 
 These components provide platform capabilities; their presence does not imply
 that every workload has identical authentication, telemetry, policy, or

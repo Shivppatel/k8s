@@ -1,0 +1,231 @@
+# Repository-scoped ARC runner scale sets for private personal-account
+# repositories. Each top-level scale-set key matches a dependency alias in
+# Chart.yaml. Never add a scale set for a public repository: forked pull
+# requests can then execute code inside the homelab.
+
+# YAML anchors shared by the scale sets below. Helm does not read this key; it
+# only keeps the pod templates in one place so they cannot drift apart.
+shared:
+  controllerServiceAccount: &controllerServiceAccount
+    namespace: actions-runner-system
+    name: actions-runner-controller
+
+  listenerTemplate: &listenerTemplate
+    spec:
+      containers:
+        - name: listener
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+  # Same hardened pod as the shivws-runners scale set: no containerMode, no
+  # service-account token, non-root, all capabilities dropped.
+  runnerTemplate: &runnerTemplate
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: runner
+          image: ghcr.io/actions/actions-runner:latest@sha256:4ffadc0002b2581327e06101fc8c06cd189232baf79fe561fac9caeb76f5e807 # renovate: datasource=docker depName=ghcr.io/actions/actions-runner
+          command: ["/home/runner/run.sh"]
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            capabilities:
+              drop:
+                - ALL
+
+  # Same pod as the shivws-docker-runners scale set (the chart's documented
+  # custom DinD template): privilege is limited to the Docker daemon sidecar.
+  dockerRunnerTemplate: &dockerRunnerTemplate
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      securityContext:
+        supplementalGroups:
+          - 123
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: init-dind-externals
+          image: ghcr.io/actions/actions-runner:latest@sha256:4ffadc0002b2581327e06101fc8c06cd189232baf79fe561fac9caeb76f5e807 # renovate: datasource=docker depName=ghcr.io/actions/actions-runner
+          command: ["cp", "-r", "/home/runner/externals/.", "/home/runner/tmpDir/"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: dind-externals
+              mountPath: /home/runner/tmpDir
+        - name: dind
+          image: docker:29.9.1-dind # renovate: datasource=docker depName=docker
+          args:
+            - dockerd
+            - --host=unix:///var/run/docker.sock
+            - --group=$(DOCKER_GROUP_GID)
+          env:
+            - name: DOCKER_GROUP_GID
+              value: "123"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          securityContext:
+            privileged: true
+            runAsNonRoot: false
+            runAsUser: 0
+          restartPolicy: Always
+          startupProbe:
+            exec:
+              command:
+                - docker
+                - info
+            initialDelaySeconds: 0
+            failureThreshold: 24
+            periodSeconds: 5
+          volumeMounts:
+            - name: work
+              mountPath: /home/runner/_work
+            - name: dind-sock
+              mountPath: /var/run
+            - name: dind-externals
+              mountPath: /home/runner/externals
+            - name: docker-data
+              mountPath: /var/lib/docker
+      containers:
+        - name: runner
+          image: ghcr.io/actions/actions-runner:latest@sha256:4ffadc0002b2581327e06101fc8c06cd189232baf79fe561fac9caeb76f5e807 # renovate: datasource=docker depName=ghcr.io/actions/actions-runner
+          command: ["/home/runner/run.sh"]
+          env:
+            - name: DOCKER_HOST
+              value: unix:///var/run/docker.sock
+            - name: RUNNER_WAIT_FOR_DOCKER_IN_SECONDS
+              value: "120"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          securityContext:
+            allowPrivilegeEscalation: true
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          volumeMounts:
+            - name: work
+              mountPath: /home/runner/_work
+            - name: dind-sock
+              mountPath: /var/run
+      volumes:
+        - name: work
+          emptyDir: {}
+        - name: dind-sock
+          emptyDir: {}
+        - name: dind-externals
+          emptyDir: {}
+        - name: docker-data
+          emptyDir:
+            sizeLimit: 20Gi
+
+# Shivppatel/sherlock: CI builds multi-architecture images with docker buildx,
+# so it needs the Docker-in-Docker pod.
+sherlock:
+  githubConfigUrl: "https://github.com/Shivppatel/sherlock"
+  githubConfigSecret: github-actions-personal-runner-auth
+  runnerScaleSetName: shivppatel-sherlock
+  scaleSetLabels:
+    - homelab
+    - linux
+    - docker
+  minRunners: 0
+  maxRunners: 2
+  controllerServiceAccount: *controllerServiceAccount
+  listenerTemplate: *listenerTemplate
+  template: *dockerRunnerTemplate
+
+# Shivppatel/tf
+tf:
+  githubConfigUrl: "https://github.com/Shivppatel/tf"
+  githubConfigSecret: github-actions-personal-runner-auth
+  runnerScaleSetName: shivppatel-tf
+  scaleSetLabels:
+    - homelab
+    - linux
+  minRunners: 0
+  maxRunners: 2
+  controllerServiceAccount: *controllerServiceAccount
+  listenerTemplate: *listenerTemplate
+  template: *runnerTemplate
+
+# Shivppatel/k8s-private
+k8s-private:
+  githubConfigUrl: "https://github.com/Shivppatel/k8s-private"
+  githubConfigSecret: github-actions-personal-runner-auth
+  runnerScaleSetName: shivppatel-k8s-private
+  scaleSetLabels:
+    - homelab
+    - linux
+  minRunners: 0
+  maxRunners: 2
+  controllerServiceAccount: *controllerServiceAccount
+  listenerTemplate: *listenerTemplate
+  template: *runnerTemplate
+
+# Shivppatel/helm
+helm:
+  githubConfigUrl: "https://github.com/Shivppatel/helm"
+  githubConfigSecret: github-actions-personal-runner-auth
+  runnerScaleSetName: shivppatel-helm
+  scaleSetLabels:
+    - homelab
+    - linux
+  minRunners: 0
+  maxRunners: 2
+  controllerServiceAccount: *controllerServiceAccount
+  listenerTemplate: *listenerTemplate
+  template: *runnerTemplate
+
+network:
+  kubernetesServiceAddress: "10.96.0.1/32"
+  controlPlaneApiEndpoints:
+    - "192.168.20.9/32"
+    - "192.168.20.10/32"
+    - "192.168.20.11/32"
+    - "192.168.20.12/32"
+  # Scale sets whose runner pods may also reach public hosts on TCP 80, like
+  # shivws-docker-runners. Every other pod is limited to TCP 443.
+  httpEgressScaleSets:
+    - shivppatel-sherlock

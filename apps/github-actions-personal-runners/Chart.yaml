@@ -1,0 +1,30 @@
+apiVersion: v2
+name: github-actions-personal-runners
+description: Repository-scoped GitHub Actions runner scale sets for private personal-account repositories
+
+type: application
+
+version: 0.1.0
+
+appVersion: "0.15.0"
+
+# One alias per repository. The chart derives every resource name from
+# runnerScaleSetName, so the aliases share a release and namespace without
+# colliding.
+dependencies:
+  - name: gha-runner-scale-set
+    alias: sherlock
+    repository: oci://ghcr.io/actions/actions-runner-controller-charts
+    version: 0.15.0
+  - name: gha-runner-scale-set
+    alias: tf
+    repository: oci://ghcr.io/actions/actions-runner-controller-charts
+    version: 0.15.0
+  - name: gha-runner-scale-set
+    alias: k8s-private
+    repository: oci://ghcr.io/actions/actions-runner-controller-charts
+    version: 0.15.0
+  - name: gha-runner-scale-set
+    alias: helm
+    repository: oci://ghcr.io/actions/actions-runner-controller-charts
+    version: 0.15.0
