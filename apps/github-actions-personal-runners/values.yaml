@@ -34,7 +34,7 @@ shared:
           type: RuntimeDefault
       containers:
         - name: runner
-          image: ghcr.io/actions/actions-runner:latest@sha256:4ffadc0002b2581327e06101fc8c06cd189232baf79fe561fac9caeb76f5e807 # renovate: datasource=docker depName=ghcr.io/actions/actions-runner
+          image: ghcr.io/actions/actions-runner:latest@sha256:e275409999c37162649aa050ca573f03eab2eabcb3a1e7fcc47548de6b4f9690 # renovate: datasource=docker depName=ghcr.io/actions/actions-runner
           command: ["/home/runner/run.sh"]
           resources:
             requests:
@@ -65,7 +65,7 @@ shared:
           type: RuntimeDefault
       initContainers:
         - name: init-dind-externals
-          image: ghcr.io/actions/actions-runner:latest@sha256:4ffadc0002b2581327e06101fc8c06cd189232baf79fe561fac9caeb76f5e807 # renovate: datasource=docker depName=ghcr.io/actions/actions-runner
+          image: ghcr.io/actions/actions-runner:latest@sha256:e275409999c37162649aa050ca573f03eab2eabcb3a1e7fcc47548de6b4f9690 # renovate: datasource=docker depName=ghcr.io/actions/actions-runner
           command: ["cp", "-r", "/home/runner/externals/.", "/home/runner/tmpDir/"]
           resources:
             requests:
@@ -86,7 +86,7 @@ shared:
             - name: dind-externals
               mountPath: /home/runner/tmpDir
         - name: dind
-          image: docker:29.9.1-dind # renovate: datasource=docker depName=docker
+          image: docker:29.9.2-dind # renovate: datasource=docker depName=docker
           args:
             - dockerd
             - --host=unix:///var/run/docker.sock
@@ -125,7 +125,7 @@ shared:
               mountPath: /var/lib/docker
       containers:
         - name: runner
-          image: ghcr.io/actions/actions-runner:latest@sha256:4ffadc0002b2581327e06101fc8c06cd189232baf79fe561fac9caeb76f5e807 # renovate: datasource=docker depName=ghcr.io/actions/actions-runner
+          image: ghcr.io/actions/actions-runner:latest@sha256:e275409999c37162649aa050ca573f03eab2eabcb3a1e7fcc47548de6b4f9690 # renovate: datasource=docker depName=ghcr.io/actions/actions-runner
           command: ["/home/runner/run.sh"]
           env:
             - name: DOCKER_HOST
