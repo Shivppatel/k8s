@@ -24,6 +24,28 @@ sherlock:
       application_key:
         file: /run/source/datadog_app_key
       notebook_ids: []
+      # Scoped Datadog metrics for native alerts (logs/traces stay in Loki/Tempo).
+      # Fixed operator templates; only literal tag values are substituted.
+      metric_templates:
+      - 'max:kubernetes.memory.working_set{kube_namespace:{{namespace}}} by {pod_name,kube_container_name} / max:kubernetes.memory.limits{kube_namespace:{{namespace}}} by {pod_name,kube_container_name}'
+      - 'sum:kubernetes.containers.restarts{kube_namespace:{{namespace}}} by {pod_name}'
+      - 'sum:kubernetes_state.container.status_report.count.terminated{kube_namespace:{{namespace}}} by {pod_name,reason}'
+      - 'sum:kubernetes.cpu.cfs.throttled.periods{kube_namespace:{{namespace}}} by {pod_name} / sum:kubernetes.cpu.cfs.periods{kube_namespace:{{namespace}}} by {pod_name}'
+      metric_profiles:
+        pvc:
+          lookback: 72h
+          queries:
+          - 'max:kubernetes.kubelet.volume.stats.used_bytes{kube_namespace:{{namespace}},persistentvolumeclaim:{{persistentvolumeclaim}}} by {persistentvolumeclaim}'
+          - 'max:kubernetes.kubelet.volume.stats.used_bytes{kube_namespace:{{namespace}},persistentvolumeclaim:{{persistentvolumeclaim}}} by {persistentvolumeclaim} / max:kubernetes.kubelet.volume.stats.capacity_bytes{kube_namespace:{{namespace}},persistentvolumeclaim:{{persistentvolumeclaim}}} by {persistentvolumeclaim}'
+          - 'max:kubernetes.kubelet.volume.stats.inodes_used{kube_namespace:{{namespace}},persistentvolumeclaim:{{persistentvolumeclaim}}} by {persistentvolumeclaim} / max:kubernetes.kubelet.volume.stats.inodes{kube_namespace:{{namespace}},persistentvolumeclaim:{{persistentvolumeclaim}}} by {persistentvolumeclaim}'
+          - 'sum:kubernetes.containers.restarts{kube_namespace:{{namespace}}} by {pod_name}'
+        shared-postgresql:
+          lookback: 7d
+          queries:
+          - 'max:postgresql.replication_slot.restart_delay_bytes{kube_namespace:postgresql} by {slot_name}'
+          - 'max:postgresql.wal_size{kube_namespace:postgresql}'
+          - 'max:postgresql.percent_usage_connections{kube_namespace:postgresql}'
+          - 'max:kubernetes.kubelet.volume.stats.used_bytes{kube_namespace:postgresql} by {persistentvolumeclaim} / max:kubernetes.kubelet.volume.stats.capacity_bytes{kube_namespace:postgresql} by {persistentvolumeclaim}'
     # Each integration is independent. Disable one without removing its mapping.
     alertmanager:
     - id: homelab-alerts
@@ -236,6 +258,11 @@ sherlock:
       scope_tags: [kube_namespace:kafka, pod_name:kafka-controller-2]
       application_namespace: argocd
       application: kafka
+    # Shared PostgreSQL health attached to incidents in the apps that depend on it.
+    dependency_profiles:
+    - name: shared-postgresql
+      namespaces: [authentik, coder, datadog, gitlab, immich, memos, n8n, postgresql, sherlock, teslamate]
+      datadog: {connection: us5, profile: shared-postgresql}
     model_budget:
       daily_attempt_limit: 50
       time_zone: America/New_York
@@ -299,7 +326,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: sha-e5439792500ba9d9efe60b6e7a82ef02c2748c91@sha256:e435acff863911d83eb3e4fb2f282bd9579b844ec85c80ee29200009b1b16938
+            tag: sha-523ec3823e0aee4687a777479201b913596ee609@sha256:efba86c20ed2156513dc877a041bcb37cfad7e4d86a290230e8d2b1a6e34597d
           args:
           - -config
           - /config/config.yaml
@@ -699,6 +726,7 @@ app-template:
 storageAlertMappings:
   connection: homelab-pvc-alerts
   prometheusProfile: {homelab-metrics: pvc-capacity}
+  datadogProfile: {us5: pvc}
   alertNames:
   - KubePersistentVolumeFillingUp
   - KubePersistentVolumeInodesFillingUp

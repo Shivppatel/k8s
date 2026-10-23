@@ -5,7 +5,7 @@
 {{- range $namespace, $application := .applications }}
 {{- if not (regexMatch "^[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?$" $namespace) }}{{ fail "storage alert namespace invalid" }}{{ end }}
 {{- range $alert := $.Values.storageAlertMappings.alertNames }}
-{{- $mappings = append $mappings (dict "alertmanager_connection" $.Values.storageAlertMappings.connection "alert_name" $alert "scope_tags" (list (printf "kube_namespace:%s" $namespace)) "application_namespace" "argocd" "application" $application "prometheus_query_profiles" $.Values.storageAlertMappings.prometheusProfile) }}
+{{- $mappings = append $mappings (dict "alertmanager_connection" $.Values.storageAlertMappings.connection "alert_name" $alert "scope_tags" (list (printf "kube_namespace:%s" $namespace)) "application_namespace" "argocd" "application" $application "prometheus_query_profiles" $.Values.storageAlertMappings.prometheusProfile "datadog_metric_profiles" $.Values.storageAlertMappings.datadogProfile) }}
 {{- end }}
 {{- end }}
 {{- $_ := set $config "mappings" $mappings }}
