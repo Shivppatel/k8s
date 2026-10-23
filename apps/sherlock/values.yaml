@@ -123,6 +123,8 @@ sherlock:
       query_templates:
       - '{namespace={{namespace}}}'
       - '{namespace={{namespace}},pod={{pod}}}'
+      # Error-focused lines across the namespace, so a noisy service cannot crowd out failures.
+      - '{namespace={{namespace}}} |~ "(?i)(error|exception|fatal|panic|refused|timed? ?out|oom|killed|unavailable|denied)"'
     tempo:
     - id: homelab-traces
       enabled: true
