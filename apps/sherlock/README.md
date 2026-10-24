@@ -22,6 +22,10 @@ Every pod alert collects an identity-verified Pod snapshot and its events, follo
 
 Datadog US5 supplies scoped metrics for native alerts (logs and traces stay in Loki/Tempo): per-namespace memory working set against limits, restarts, terminations by reason and CPU throttling (`metric_templates`); a `pvc` profile (72h) for the generated storage mappings; and the `shared-postgresql` dependency profile (7d: replication slot lag, WAL size, connection saturation, PVC usage) attached to incidents in authentik, coder, datadog, gitlab, immich, memos, n8n, postgresql, sherlock and teslamate. Templates are fixed; only validated literal tag values are substituted. Unmapped workload-scoped alerts collect the workload, its owner-verified Pods and the Deployment rollout state.
 
+## Correlation (sherlock#35)
+
+`concurrent_incidents` lists peers that alerted in the same window, incidents still open from up to 12h earlier (`correlation.ongoing_lookback_hours`, for slow cascades) and alerts received within 120s (redelivery bursts), each tagged with why it was included.
+
 ## Budget, feedback and persistence
 
 The service allows 50 service-managed AI attempts per America/New_York calendar day across all workers/connections. Failures and retries consume durable permits. Raising the limit does not reset permits already used that day or replay terminal overflow reports. Overflow incidents retain evidence and an explicit unknown-cause limit report; they are not automatically analyzed tomorrow. This cap does not limit incident storage, source reads, Slack posts or account-wide use. Runtime limits remain one request, 120 seconds and 100 KB input; incident lookback is 15 minutes. There is no API-billed fallback.
