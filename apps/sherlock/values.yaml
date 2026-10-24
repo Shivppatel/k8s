@@ -267,6 +267,11 @@ sherlock:
       daily_attempt_limit: 50
       time_zone: America/New_York
     repeated_alerts: separate_incident
+    # Correlation peers: same-window alerts, incidents still open from up to
+    # 12h earlier (slow cascades), and alerts received within 2 minutes.
+    correlation:
+      ongoing_lookback_hours: 12
+      received_window_seconds: 120
     # Alert storms (5+ incidents in 3 minutes): one Slack summary, a short settle
     # delay so investigations see their peers, digest findings, and a cap on
     # model analyses per storm (the rest keep saved evidence).
@@ -326,7 +331,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: sha-523ec3823e0aee4687a777479201b913596ee609@sha256:efba86c20ed2156513dc877a041bcb37cfad7e4d86a290230e8d2b1a6e34597d
+            tag: sha-76bd68d23418b778f2eda82787363847380fdcd9@sha256:ad86a7a3b2249706532c82d216684158ec2f3728aa4411b81b649561a3bd3036
           args:
           - -config
           - /config/config.yaml
