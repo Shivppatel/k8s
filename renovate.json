@@ -58,6 +58,48 @@
       "automerge": false
     },
     {
+      "description": "Pre-1.0 images can break on a minor bump (Atlantis 0.49 dropped its bundled terraform, 2026-10-26): give each its own PR",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchCurrentVersion": "/^v?0\\./",
+      "matchUpdateTypes": [
+        "minor",
+        "major"
+      ],
+      "groupName": null,
+      "groupSlug": null,
+      "automerge": false,
+      "addLabels": [
+        "review-release-notes"
+      ],
+      "prBodyNotes": [
+        "This is a pre-1.0 minor/major image update and is split out of the grouped image PR. Read the release notes for removed features or changed defaults before merging, and watch the app's pods after Argo syncs."
+      ]
+    },
+    {
+      "description": "Platform-critical images get their own PR for every update",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/runatlantis/atlantis",
+        "/^quay\\.io/argoproj//",
+        "/(^|/)hashicorp/vault$/",
+        "/^ghcr\\.io/cloudnative-pg//",
+        "/^longhornio//"
+      ],
+      "groupName": null,
+      "groupSlug": null,
+      "automerge": false,
+      "addLabels": [
+        "platform-critical"
+      ],
+      "prBodyNotes": [
+        "Platform-critical image: review release notes and confirm the workload is Healthy in Argo CD after sync."
+      ]
+    },
+    {
       "description": "Freeze EMQX chart and image until clustered deployment licensing is resolved",
       "matchPackageNames": [
         "emqx",
