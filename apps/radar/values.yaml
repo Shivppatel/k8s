@@ -59,7 +59,10 @@ radar:
     enabled: true
     storageClassName: longhorn
     accessMode: ReadWriteOnce
-    size: 1Gi
+    # SQLite VACUUM needs free space about equal to the database, so the
+    # volume must hold timeline.maxSize (800Mi) twice. At 1Gi it filled to
+    # 98% for ~10h on 2026-10-23/24 when cleanup could not complete.
+    size: 2Gi
 
   traffic:
     prometheusUrl: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090
