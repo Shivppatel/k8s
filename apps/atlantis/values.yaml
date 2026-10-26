@@ -164,7 +164,9 @@ atlantis:
 
   # -- Sets the default terraform version to be used in atlantis server.
   # Check values.yaml for examples.
-  defaultTFVersion: ""
+  # Atlantis v0.49 images ship no terraform binary; the server needs a default
+  # version at startup. Keep in step with required_version in the tf repo.
+  defaultTFVersion: "1.15.5"
   # Example: "0.12.0".
 
   # -- Disables running `atlantis apply` regardless of which flags are sent with it.
