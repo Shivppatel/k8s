@@ -1,6 +1,6 @@
 dependencies:
 - name: radar
   repository: https://skyhook-io.github.io/helm-charts
-  version: 1.18.1
-digest: sha256:a560e098401e2cbe64b6229035cf357c0e43ea8d784795568112ae68d6f9386b
-generated: "2026-10-26T05:11:23.677109407Z"
+  version: 1.18.2
+digest: sha256:0401904065cfbb0047ce6ee27d7024a9efd23785bc147a37ff306b25f0006a59
+generated: "2026-10-26T21:32:15.560262768Z"
