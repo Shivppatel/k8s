@@ -109,7 +109,10 @@ spec:
             summary: Pod is CrashLoopBackOff in a critical namespace
             description: Container {{ "{{" }} $labels.container {{ "}}" }} in pod {{ "{{" }} $labels.namespace {{ "}}" }}/{{ "{{" }} $labels.pod {{ "}}" }} has been crash-looping for more than 10 minutes.
         - alert: PendingPodCriticalNamespace
-          expr: sum by (namespace, pod) (max_over_time(kube_pod_status_phase{phase="Pending",namespace=~"argocd|observability|longhorn-system|traefik|vault"}[15m])) > 0
+          # Fire only for pods Pending continuously for 15m. The previous
+          # max_over_time[15m] turned seconds-long Pending during rollouts into
+          # alerts (7-alert storm after Renovate merges on 2026-10-26 13:48).
+          expr: sum by (namespace, pod) (kube_pod_status_phase{phase="Pending",namespace=~"argocd|observability|longhorn-system|traefik|vault"}) > 0
           for: 15m
           labels:
             severity: warning
