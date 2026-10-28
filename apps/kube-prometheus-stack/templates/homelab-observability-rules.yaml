@@ -21,7 +21,9 @@ spec:
             summary: Argo CD application is out of sync
             description: Argo CD application {{ "{{" }} $labels.name {{ "}}" }} in project {{ "{{" }} $labels.project {{ "}}" }} is {{ "{{" }} $labels.sync_status {{ "}}" }} for more than 10 minutes.
         - alert: ArgoAppDegraded
-          expr: max by (name, project, dest_namespace, health_status) (argocd_app_info{health_status!="Healthy"}) > 0
+          # Copy dest_namespace into namespace so the alert reaches Sherlock's
+          # namespace-scoped route and namespace health evidence.
+          expr: label_replace(max by (name, project, dest_namespace, health_status) (argocd_app_info{health_status!="Healthy"}), "namespace", "$1", "dest_namespace", "(.+)") > 0
           for: 10m
           labels:
             severity: critical
