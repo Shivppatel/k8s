@@ -28,3 +28,15 @@ longhorn:
   metrics:
     serviceMonitor:
       enabled: true
+  # Chart 1.12+ renders restrictInternalTraffic policies by default; without an
+  # explicit scrape source Prometheus is dropped on TCP/9500 (also the manager
+  # REST API), so admit only the kube-prometheus-stack Prometheus pods.
+  networkPolicies:
+    metricsScrapeSources:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: observability
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: kube-prometheus-stack-prometheus
