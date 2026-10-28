@@ -30,6 +30,10 @@ Datadog US5 supplies scoped metrics for native alerts (logs and traces stay in L
 
 Each investigation carries a derived `recent_changes` observation: image tag/digest, chart version and resource changes parsed from the Application path's GitOps history, plus rollout image changes from Kubernetes snapshots, ordered by minutes before the incident. It makes no extra requests and is a candidate list, not proof of cause.
 
+## Scrape-target health (sherlock#41)
+
+Scrape-style alerts (TargetDown, TargetMissing, InstanceDown, Scrape* names) add a `prometheus_targets` observation from one fixed read of `/api/v1/targets?state=active`, filtered to the incident namespace and the alert's service, job and pod: health, redacted `last_error`, scrape age, duration and timeout for up to 12 targets. It is on by default; `target_health: false` on a Prometheus source disables it.
+
 ## Budget, feedback and persistence
 
 The service allows 50 service-managed AI attempts per America/New_York calendar day across all workers/connections. Failures and retries consume durable permits. Raising the limit does not reset permits already used that day or replay terminal overflow reports. Overflow incidents retain evidence and an explicit unknown-cause limit report; they are not automatically analyzed tomorrow. This cap does not limit incident storage, source reads, Slack posts or account-wide use. Runtime limits remain one request, 120 seconds and 100 KB input; incident lookback is 15 minutes. There is no API-billed fallback.
