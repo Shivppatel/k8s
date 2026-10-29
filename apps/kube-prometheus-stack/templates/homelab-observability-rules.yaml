@@ -68,13 +68,22 @@ spec:
             summary: Loki ingestion is dropping log lines
             description: Alloy has dropped log entries while sending data to Loki during the last 5 minutes.
         - alert: TempoIngestErrors
-          expr: sum by (namespace) (increase(tempo_distributor_ingester_append_failures_total[5m])) > 0
+          # With replication_factor 3 the distributor returns once two ingesters
+          # ack and cancels the slower cross-node append, which is counted as an
+          # append failure (~15-23% steady, 0 spans discarded). Fire only on real
+          # loss or when more than a third of appends fail, which can break the
+          # 2-of-3 write quorum.
+          expr: |-
+            (sum by (namespace) (increase(tempo_discarded_spans_total[5m])) > 0)
+            or
+            (sum by (namespace) (rate(tempo_distributor_ingester_append_failures_total[5m]))
+              / sum by (namespace) (rate(tempo_distributor_ingester_appends_total[5m])) > 0.34)
           for: 5m
           labels:
             severity: warning
           annotations:
-            summary: Tempo is failing to append traces
-            description: Tempo distributor append failures have been observed during the last 5 minutes.
+            summary: Tempo is dropping or failing to replicate traces
+            description: Tempo discarded spans, or more than a third of distributor appends to ingesters failed, during the last 5 minutes.
     - name: homelab.storage
       rules:
         - alert: PersistentVolumeRunningOutOfSpace
