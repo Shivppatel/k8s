@@ -58,8 +58,10 @@ redis:
         ]
     persistence:
       enabled: true
-    updateStrategy:
-      type: OnDelete
+    # Chart default RollingUpdate (OrderedReady): one replica at a time, gated
+    # by a readiness probe that also checks the master. OnDelete (Dec 2025
+    # build-out) left replicas on stale revisions after every chart bump and
+    # kept KubeStatefulSetUpdateNotRolledOut firing.
   metrics:
     enabled: true
     serviceMonitor:
