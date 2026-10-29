@@ -115,6 +115,19 @@ sherlock:
       label_mapping:
         kube_namespace: namespace
         kube_cluster_name: cluster
+    # Closes open Alertmanager incidents whose alert vanished without a resolve
+    # (inhibited warnings, lost deliveries): absent >=10m over two reads, never
+    # on an empty listing or a freshly restarted Alertmanager (sherlock#46).
+    alertmanager_reconcile:
+      id: homelab-alertmanager
+      enabled: true
+      url: http://kube-prometheus-stack-alertmanager.observability.svc.cluster.local:9093
+      allow_plaintext: true
+      allowed_cidrs: [10.106.14.228/32]
+      connections: [homelab-alerts, homelab-pod-alerts, homelab-workload-alerts, homelab-namespace-alerts, homelab-node-alerts, homelab-target-alerts, homelab-pvc-alerts, homelab-unbound-alerts]
+      interval_seconds: 120
+      grace_seconds: 600
+      max_closes_per_pass: 10
     prometheus:
     - id: homelab-metrics
       enabled: true
@@ -761,6 +774,12 @@ ingress:
 networkPolicy:
   enabled: true
   telemetryPeers:
+  - connection: homelab-alertmanager
+    namespace: observability
+    podSelector:
+      app.kubernetes.io/name: alertmanager
+      alertmanager: kube-prometheus-stack-alertmanager
+    port: 9093
   - connection: homelab-metrics
     namespace: observability
     podSelector:
