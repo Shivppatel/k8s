@@ -31,9 +31,12 @@ spec:
             summary: Argo CD application is degraded
             description: Argo CD application {{ "{{" }} $labels.name {{ "}}" }} in project {{ "{{" }} $labels.project {{ "}}" }} is reporting {{ "{{" }} $labels.health_status {{ "}}" }}.
     - name: homelab.observability
+      # Keep the scrape or emitter namespace on every rule here: Sherlock's
+      # route requires namespace!="", so aggregating it away sends the alert
+      # to Slack only.
       rules:
         - alert: AlloyDown
-          expr: min by (job) (up{job="alloy"}) < 1
+          expr: min by (job, namespace) (up{job="alloy"}) < 1
           for: 10m
           labels:
             severity: critical
@@ -41,7 +44,7 @@ spec:
             summary: Alloy is down
             description: The Alloy collector has been unreachable for more than 10 minutes.
         - alert: PyroscopeDown
-          expr: min by (job) (up{job="pyroscope"}) < 1
+          expr: min by (job, namespace) (up{job="pyroscope"}) < 1
           for: 10m
           labels:
             severity: critical
@@ -49,7 +52,7 @@ spec:
             summary: Pyroscope is down
             description: The Pyroscope API has been unreachable for more than 10 minutes.
         - alert: TempoComponentDown
-          expr: min by (job) (up{job=~"tempo-distributed/(compactor|distributor|ingester|metrics-generator|querier|query-frontend)"}) < 1
+          expr: min by (job, namespace) (up{job=~"tempo-distributed/(compactor|distributor|ingester|metrics-generator|querier|query-frontend)"}) < 1
           for: 10m
           labels:
             severity: critical
@@ -57,7 +60,7 @@ spec:
             summary: Tempo component is down
             description: Tempo job {{ "{{" }} $labels.job {{ "}}" }} has been unreachable for more than 10 minutes.
         - alert: LokiIngestErrors
-          expr: sum(increase(loki_write_dropped_entries_total[5m])) > 0
+          expr: sum by (namespace) (increase(loki_write_dropped_entries_total[5m])) > 0
           for: 5m
           labels:
             severity: warning
@@ -65,7 +68,7 @@ spec:
             summary: Loki ingestion is dropping log lines
             description: Alloy has dropped log entries while sending data to Loki during the last 5 minutes.
         - alert: TempoIngestErrors
-          expr: sum(increase(tempo_distributor_ingester_append_failures_total[5m])) > 0
+          expr: sum by (namespace) (increase(tempo_distributor_ingester_append_failures_total[5m])) > 0
           for: 5m
           labels:
             severity: warning
@@ -83,7 +86,9 @@ spec:
             summary: PersistentVolumeClaim is running out of space
             description: PVC {{ "{{" }} $labels.persistentvolumeclaim {{ "}}" }} in namespace {{ "{{" }} $labels.namespace {{ "}}" }} is above 85% utilization.
         - alert: NodeDiskPressure
-          expr: max by (node) (kube_node_status_condition{condition="DiskPressure",status="true"}) > 0
+          # job/namespace come from kube-state-metrics and route the alert to
+          # Sherlock's node profile.
+          expr: max by (node, job, namespace) (kube_node_status_condition{condition="DiskPressure",status="true"}) > 0
           for: 10m
           labels:
             severity: critical
@@ -91,7 +96,15 @@ spec:
             summary: Kubernetes node is under disk pressure
             description: Node {{ "{{" }} $labels.node {{ "}}" }} has reported DiskPressure for more than 10 minutes.
         - alert: LonghornVolumeDegraded
-          expr: max by (volume, pvc, pvc_namespace, node, state) (longhorn_volume_robustness{state!="healthy"}) > 0
+          # Longhorn reports detached volumes as robustness "unknown"; that is
+          # not degradation. Copy pvc_namespace/pvc into namespace and
+          # persistentvolumeclaim so the alert reaches Sherlock's PVC profile.
+          expr: |-
+            label_replace(label_replace(
+              max by (volume, pvc, pvc_namespace, node, state) (longhorn_volume_robustness{state!="healthy"} > 0)
+                unless on (volume) (longhorn_volume_state{state="detached"} == 1),
+              "namespace", "$1", "pvc_namespace", "(.+)"),
+              "persistentvolumeclaim", "$1", "pvc", "(.+)")
           for: 10m
           labels:
             severity: warning
