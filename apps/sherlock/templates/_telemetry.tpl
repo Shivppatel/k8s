@@ -6,6 +6,10 @@
 {{- $_ := set $sources .id . -}}
 {{- end -}}
 {{- end -}}
+{{- /* The Alertmanager reconciliation read is a source too: its ID keys a telemetryPeers egress grant. */ -}}
+{{- with $.Values.sherlock.config.alertmanager_reconcile -}}
+{{- $_ := set $sources .id . -}}
+{{- end -}}
 {{- $sources | toJson -}}
 {{- end -}}
 {{- define "sherlock.telemetry.alerts" -}}
