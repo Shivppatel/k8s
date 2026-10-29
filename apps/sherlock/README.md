@@ -34,6 +34,14 @@ Each investigation carries a derived `recent_changes` observation: image tag/dig
 
 Scrape-style alerts (TargetDown, TargetMissing, InstanceDown, Scrape* names) add a `prometheus_targets` observation from one fixed read of `/api/v1/targets?state=active`, filtered to the incident namespace and the alert's service, job and pod: health, redacted `last_error`, scrape age, duration and timeout for up to 12 targets. It is on by default; `target_health: false` on a Prometheus source disables it.
 
+## Firing-rule evidence (sherlock#43)
+
+Every Alertmanager incident adds an `alert_rule` observation. It makes three read-only calls: `GET /api/v1/rules?type=alert&rule_name[]=<alertname>`, matched to the alert's labels; a `query_range` of that rule's expression over the evidence window; and a `topk(10, …)` breakdown of up to three metrics the expression reads, keeping the rule's own selector plus the incident's labels. A per-instance or per-pod concentration hidden by the rule's aggregation becomes visible this way. It is on by default; `alert_rule: false` on a Prometheus source disables it.
+
+## Namespace change context (sherlock#44)
+
+An alert scoped only by namespace (custom rules on `homelab-unbound-alerts`) binds to the sole Argo Application targeting that namespace, if there is exactly one, so the normal app-bound change evidence runs. When several Applications target it (for example `observability`), Sherlock reads up to 8 by name. It adds an `argocd_namespace_changes` observation listing the most recent syncs within 7 days of the alert and the Applications with no sync, and `recent_changes` surfaces the syncs. It needs no new RBAC; discovery must list the connection in `discovery.alertmanager_connections`.
+
 ## Budget, feedback and persistence
 
 The service allows 50 service-managed AI attempts per America/New_York calendar day across all workers/connections. Failures and retries consume durable permits. Raising the limit does not reset permits already used that day or replay terminal overflow reports. Overflow incidents retain evidence and an explicit unknown-cause limit report; they are not automatically analyzed tomorrow. This cap does not limit incident storage, source reads, Slack posts or account-wide use. Runtime limits remain one request, 120 seconds and 100 KB input; incident lookback is 15 minutes. There is no API-billed fallback.
