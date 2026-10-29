@@ -24,7 +24,7 @@ kube-prometheus-stack:
       url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-node-alerts
       matchers:
       - job="kube-state-metrics"
-      - alertname=~"KubeNode.+"
+      - alertname=~"KubeNode.+|NodeDiskPressure"
       - node!=""
     - name: sherlock-pod
       url: http://sherlock.sherlock.svc.cluster.local:8080/webhooks/alertmanager/homelab-pod-alerts
