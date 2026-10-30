@@ -79,3 +79,13 @@ Evidence and operations (service pin from sherlock PRs [#22](https://github.com/
 ## HPA scaling evidence (sherlock#48)
 
 An alert labelled `horizontalpodautoscaler` (KubeHpaMaxedOut, KubeHpaReplicasMismatch) adds a `kubernetes_hpa` observation from one named GET of that HPA. It holds min/max/current/desired replicas, each metric's target next to its current value, conditions, behavior, and the scale target's container requests. A labelled `sherlock_arithmetic` block computes `ceil(current x current/target)` with tolerance and min/max bounds. RBAC: `sherlock-reader` grants `get` on `autoscaling/horizontalpodautoscalers` (k8s#835).
+
+## Evidence budget priority (sherlock#50)
+
+The model sees at most 70 KB of evidence per investigation. Sherlock now fills it by priority instead of collection order:
+1. The alert, coverage, change history, alert rule, and every Kubernetes, Argo and GitHub observation.
+2. Collected telemetry.
+3. Profiles, dashboards and traces.
+4. Empty or failed telemetry queries, already summarised in `source_coverage`.
+
+Admitted evidence keeps its collection order. Before this, the most specific evidence came last and was the first cut (KubeHpaMaxedOut 2026-10-29 lost its Argo and GitHub history).
