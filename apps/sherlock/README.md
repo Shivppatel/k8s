@@ -75,3 +75,7 @@ Evidence and operations (service pin from sherlock PRs [#22](https://github.com/
 ## Alertmanager reconciliation (sherlock#46)
 
 `alertmanager_reconcile` (`homelab-alertmanager`) reads `GET /api/v2/alerts` (active, silenced, inhibited, unprocessed) and `/api/v2/status` every 120s. An open Alertmanager incident whose alert is absent for at least 600s across two reads closes as `reconciled`, which covers resolves Alertmanager suppressed for inhibited warnings or lost. Nothing changes on an empty listing, a failed read, or an Alertmanager up for less than the grace period. At most 10 close per pass. Egress is the `homelab-alertmanager` telemetry peer: the Alertmanager pods on TCP/9093 only.
+
+## HPA scaling evidence (sherlock#48)
+
+An alert labelled `horizontalpodautoscaler` (KubeHpaMaxedOut, KubeHpaReplicasMismatch) adds a `kubernetes_hpa` observation from one named GET of that HPA. It holds min/max/current/desired replicas, each metric's target next to its current value, conditions, behavior, and the scale target's container requests. A labelled `sherlock_arithmetic` block computes `ceil(current x current/target)` with tolerance and min/max bounds. RBAC: `sherlock-reader` grants `get` on `autoscaling/horizontalpodautoscalers` (k8s#835).
