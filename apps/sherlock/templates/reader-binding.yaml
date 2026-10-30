@@ -1,4 +1,5 @@
-# Reuse the previously approved GET/LIST ClusterRole; no new resource scopes.
+# Reuse the approved read-only ClusterRole (apps/argocd/templates/sherlock-reader.yaml);
+# its only addition since approval is a named GET on HPAs for KubeHpa* evidence.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:

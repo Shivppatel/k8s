@@ -223,10 +223,14 @@ argo-cd:
       profiles.grafana.com/goroutine.scrape: "true"
       profiles.grafana.com/goroutine.port_name: "metrics"
     # Utilization-based HPA metrics require requests on every target container.
+    # 128Mi sat below the normal working set (avg 55Mi, p95 105Mi, max 154Mi over
+    # 7d), so memory hovered near 65% and ceil(5 x 65/80) kept the HPA pinned at
+    # maxReplicas (KubeHpaMaxedOut, 2026-10-29). 256Mi puts 80% (~205Mi) above
+    # observed peaks; there is no memory limit.
     resources:
       requests:
         cpu: 25m
-        memory: 128Mi
+        memory: 256Mi
     autoscaling:
       enabled: true
       minReplicas: 2
