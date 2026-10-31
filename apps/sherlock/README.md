@@ -64,7 +64,7 @@ Source, database, feedback and projected Kubernetes reader credentials mount onl
 
 Connection-bound NetworkPolicy peers grant only service egress to the configured telemetry pods and Alertmanager ingress to the service. Disabling a connection removes its added peer grants. Private HTTP is explicitly opted into with exact Service-IP CIDRs; it is unencrypted inside the cluster. Grafana and Alertmanager bearer transport need that explicit review. Calico enforcement and actual positive/negative connectivity must be verified after an approved rollout; manifests alone are not isolation proof.
 
-Public Traefik routes remain restricted to approved GET review paths, authenticated US5 Datadog intake and the separately protected feedback form. Alertmanager uses only the internal Service URL and its own bearer; no public Alertmanager route or Cloudflare exception is added. Model/config/admin/metrics/readiness routes stay private.
+Public Traefik routes remain restricted to approved GET review paths (since the 2026-10-31 UI release also the embedded `GET /static/app.css` and `/static/fonts/*.woff2` assets, approved by the owner), authenticated US5 Datadog intake and the separately protected feedback form. Alertmanager uses only the internal Service URL and its own bearer; no public Alertmanager route or Cloudflare exception is added. Model/config/admin/metrics/readiness routes stay private.
 
 ## Prior isolated identity experiment
 

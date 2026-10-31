@@ -66,7 +66,7 @@ metadata:
 spec:
   entryPoints: [websecure]
   routes:
-    - match: Host(`{{ .Values.ingress.host }}`) && Method(`GET`) && (Path(`/`) || Path(`/healthz`) || Path(`/api/v1/incidents`) || PathRegexp(`^/(incidents|api/v1/incidents)/[a-f0-9]{32}$`))
+    - match: Host(`{{ .Values.ingress.host }}`) && Method(`GET`) && (Path(`/`) || Path(`/healthz`) || Path(`/api/v1/incidents`) || PathRegexp(`^/(incidents|api/v1/incidents)/[a-f0-9]{32}$`) || PathRegexp(`^/static/(app\.css|fonts/[A-Za-z0-9._-]+\.woff2)$`))
       kind: Rule
       middlewares: [{name: sherlock-request-bounds}]
       services: [{name: sherlock, port: 8080}]
