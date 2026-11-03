@@ -15,6 +15,9 @@ radar:
   # Authentication is enforced upstream by Cloudflare, not by Radar.
   auth:
     mode: none
+  # Custom IngressRoute hosts are not auto-added by the upstream chart.
+  allowedHosts:
+    - radar.shivpatel.xyz
   rbac:
     create: true
     helm: false
