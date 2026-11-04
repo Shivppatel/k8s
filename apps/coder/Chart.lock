@@ -1,6 +1,6 @@
 dependencies:
 - name: coder
   repository: https://helm.coder.com/v2
-  version: 2.38.5
-digest: sha256:4669861b836c548bf797941d764ac411c71f320d4b7eba60224a191b87831f17
-generated: "2026-11-03T02:37:14.958635666Z"
+  version: 2.39.0
+digest: sha256:197f21d578f6e2c38c2c54ecead21313d6765ae1216dfa560c4a70f20f18bf56
+generated: "2026-11-04T03:06:38.365881474Z"
