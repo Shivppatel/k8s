@@ -698,7 +698,10 @@ kafka:
     existingSecretConfig: ""
     ## @param controller.heapOpts Kafka Java Heap configuration for controller-eligible nodes
     ##
-    heapOpts: -XX:InitialRAMPercentage=75 -XX:MaxRAMPercentage=75
+    # Percentage sizing in this image selects a ~45GiB heap from host RAM even
+    # with a 2Gi cgroup limit. Bound the heap explicitly, leaving 1Gi for
+    # metaspace, thread stacks, direct buffers, and the filesystem page cache.
+    heapOpts: "-Xms512m -Xmx1g"
     ## @param controller.command Override Kafka container command
     ##
     command: []

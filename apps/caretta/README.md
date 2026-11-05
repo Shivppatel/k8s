@@ -28,6 +28,8 @@ kubectl get pods,podmonitor --namespace caretta
 
 Verify one healthy collector per Linux node and no eBPF load/attach errors in collector logs. In the existing Prometheus UI, check the Caretta PodMonitor targets are UP and `count(caretta_links_observed)` is nonzero while TCP traffic is active. Open Radar Live Traffic, verify Caretta is available/selected, and confirm actual flows. A healthy collector alone is not proof that Prometheus is scraping it.
 
+When investigating memory, compare the container's `lastState.terminated.finishedAt` with the incident window and track increases in `restartCount` for the same pod UID. `lastState.terminated.reason: OOMKilled` persists after a successful restart; its continued presence alone is not a new OOM. Compare working-set/RSS trends and cgroup-limit pressure before changing the existing 320 MiB request/512 MiB limit, rather than increasing every collector's budget for an old termination.
+
 The existing Alloy/Beyla warning concerns a different collector and is not fixed by changing Caretta scraping; Caretta supplies Radar's requested flow source without changing Alloy instrumentation.
 
 Upstream references: [Caretta requirements and metric labels](https://github.com/groundcover-com/caretta), [chart repository](https://helm.groundcover.com/).
