@@ -459,13 +459,11 @@ trivy-operator:
     ignoreFileName: ""
 
     # -- configFile can be used to tell Trivy to use specific options available only in the config file (e.g. Mirror registries).
-    configFile: ~
-    # configFile:
-    #   registry:
-    #     mirrors:
-    #       index.docker.io:
-    #       - mirror.with.bad.auth
-    #       - mirror.without.image
+    # Parallel containers share the downloaded DB, but must not share a BoltDB
+    # scan-cache lock. Keep the DB on disk and scan results in process memory.
+    configFile:
+      cache:
+        backend: memory
 
     # -- ignorePolicy can be used to tell Trivy to ignore vulnerabilities by a policy
     # If multiple policies would match, then the most specific one has precedence over the others.
@@ -501,11 +499,12 @@ trivy-operator:
     resources:
       requests:
         cpu: 100m
-        memory: 100M
+        # Reserve the previous limit: DB downloads and large-image scans exceeded it.
+        memory: 512Mi
         # ephemeralStorage: "2Gi"
       limits:
         cpu: 500m
-        memory: 500M
+        memory: 1Gi
         # ephemeralStorage: "2Gi"
 
     # -- githubToken is the GitHub access token used by Trivy to download the vulnerabilities

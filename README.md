@@ -119,6 +119,51 @@ Updates briefly interrupt service while preserving the existing `pgadmin4`
 PVC and its SQLite configuration database; a rolling surge can otherwise
 stall when the replacement is scheduled on another node.
 
+### Kafka heap stays inside the container budget
+
+The three combined Kafka controller/brokers use explicit
+`-Xms512m -Xmx1g`, with a 1 GiB memory request and 2 GiB limit per container.
+Percentage-based heap sizing in the pinned image selects host RAM rather than
+the cgroup budget, producing a roughly 45 GiB maximum heap and recurring
+container OOMs. The explicit maximum leaves 1 GiB for native allocations,
+thread stacks, and other cgroup charges without increasing the resource limit.
+
+Merge [Kafka values](apps/kafka/values.yaml) through the existing GitOps path
+and retain the StatefulSet's rolling update. Never concurrently restart its
+three quorum members. After reconciliation, confirm a 1024 MiB maximum heap,
+healthy quorum and replication, stable GC, and no new OOM/restart increments
+under representative traffic; TCP readiness alone does not prove quorum health.
+
+### Trivy scan memory and report storage
+
+[Trivy values](apps/trivy/values.yaml) keep standalone scanning, ten concurrent
+jobs, slow scanning, and the existing vulnerability, secret, and SBOM coverage.
+The chart's inline Trivy configuration selects `cache.backend: memory` for
+process-local analysis results. Vulnerability databases remain on disk.
+Sibling image-scan processes otherwise contend for one filesystem/BoltDB
+analysis cache and time out on its lock.
+
+Scanner resources also apply to vulnerability-database download init
+containers: each requests 512 MiB and is limited to 1 GiB. Both DB downloads
+and image scans exceeded the previous 500M limit. Process-local caching uses
+memory, so confirm representative large-image scans complete within the new
+bound after Argo CD reconciliation; do not infer success from operator
+Deployment readiness alone. Check new reports, scan-job completion, cache-lock
+errors, and OOM/retry deltas.
+
+Kubernetes report-object size is a separate boundary. Compressed scan logs are
+decoded before the operator writes structured report CRs, so transport
+compression does not bypass API/etcd object limits. Large SBOMs can therefore
+fail to persist even when vulnerability and secret reports succeed. Preserve
+all report types and inspect each report's freshness rather than treating
+partial report creation as a complete scan.
+
+Moving to the operator's alternate report storage would replace report CRs
+with PVC-backed JSON. That requires a separately reviewed durable-storage,
+reader/metrics, retention, and secret-findings access-control migration; this
+chart does not silently switch storage or truncate findings. The cache/memory
+change does not resolve oversized report objects.
+
 ### Telemetry coverage is incremental
 
 [Prometheus and Grafana](apps/kube-prometheus-stack/) provide metrics,
@@ -126,6 +171,34 @@ dashboards, and alerting. [Alloy](apps/alloy/) centralizes logs and exposes
 receivers for traces; Tempo and Pyroscope support instrumented or annotated
 workloads. The repository describes the telemetry platform, not universal
 end-to-end instrumentation.
+
+#### Redis memory alert semantics
+
+The [Datadog Terraform root](https://github.com/Shivppatel/tf/tree/main/datadog)
+adopts existing monitor `18307497` in place through a declarative import,
+with destruction prevented. Its five-minute alert compares each shared Redis
+container's working set with its existing 192 MiB cgroup limit, grouped by
+namespace, pod, and container. Warning/critical thresholds remain 70%/90%.
+The provider targets the existing US5 Datadog site; API/application credentials
+remain externalized.
+
+`redis.mem.maxmemory=0` means the dataset has no configured maximum. Dividing
+by that value produces no meaningful capacity percentage even when Redis
+telemetry is healthy. This change does not set a Redis dataset cap or alter
+authentication, persistence, or eviction policy.
+
+Argo CD Redis and Immich Valkey have no container memory limits, so this
+percentage monitor explicitly excludes them. Existing host-memory (`18307496`),
+OOM (`18307525`), and restart (`18307527`) monitors provide distinct coverage,
+not equivalent per-container capacity alerts.
+
+Review the Atlantis plan before apply: expect one import and an in-place
+update of `18307497`, with no creates, deletes, or replacements. The configured
+Datadog backend had no workspace rows during adoption research; confirm there
+is no external IaC owner before applying. Only an approved Atlantis apply
+changes the monitor. Verify four finite per-container percentages and the
+existing monitor's evaluated groups after apply; a successful local query is
+not deployment evidence.
 
 #### Grafana admin credentials and persistence
 
