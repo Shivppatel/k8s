@@ -113,6 +113,12 @@ and an explicit one-replica class for data with a different durability/cost
 tradeoff. Large shared datasets use NAS-backed NFS. [MinIO](apps/minio/) is a
 single instance on NFS and is not described as a distributed object store.
 
+[pgAdmin](apps/pgadmin4/values.yaml) uses `Recreate` updates so the old pod
+releases its Longhorn ReadWriteOnce volume before the replacement starts.
+Updates briefly interrupt service while preserving the existing `pgadmin4`
+PVC and its SQLite configuration database; a rolling surge can otherwise
+stall when the replacement is scheduled on another node.
+
 ### Telemetry coverage is incremental
 
 [Prometheus and Grafana](apps/kube-prometheus-stack/) provide metrics,

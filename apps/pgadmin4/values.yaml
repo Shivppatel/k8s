@@ -1,4 +1,8 @@
 pgadmin4:
+  strategy:
+    # Release the existing Longhorn RWO volume before starting its replacement.
+    type: Recreate
+
   image:
     registry: registry-1.docker.io
     repository: dpage/pgadmin4
