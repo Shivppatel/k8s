@@ -81,4 +81,95 @@ spec:
           labels: {severity: warning}
           annotations:
             summary: Sherlock cannot read its queue and budget state from the database
+        - alert: SherlockWorkersSaturated
+          expr: sherlock_workers_busy >= sherlock_workers_configured and sherlock_workers_configured > 0
+          for: 15m
+          labels: {severity: warning}
+          annotations:
+            summary: Every Sherlock {{ "{{" }} $labels.kind {{ "}}" }} worker has been busy for 15 minutes
+            description: The pool on {{ "{{" }} $labels.pod {{ "}}" }} is pinned at its configured size. Raise workers.* or add a replica if sherlock_jobs_pending is also growing.
+        - alert: SherlockJobsWaitingForModelSlot
+          expr: sum by (kind) (sherlock_jobs_waiting_for_model) > 3
+          for: 15m
+          labels: {severity: warning}
+          annotations:
+            summary: More than 3 Sherlock {{ "{{" }} $labels.kind {{ "}}" }} jobs have waited for a model slot for 15 minutes
+            description: Collection and quick findings are done but the model is the bottleneck. Check model latency, quota and the configured model concurrency.
+        - alert: SherlockLeaseHeartbeatFailing
+          expr: sum by (kind, reason) (increase(sherlock_lease_heartbeat_failures_total{reason=~"lost|stale"}[30m])) > 0
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock {{ "{{" }} $labels.kind {{ "}}" }} job leases were {{ "{{" }} $labels.reason {{ "}}" }} in the last 30 minutes
+            description: "lost: another worker took over a lease (a worker was paused or partitioned longer than the lease). stale: this replica could not extend leases and cancelled the job (probably cut off from the database)."
+        - alert: SherlockLeaseRecoveryFailing
+          expr: sum(increase(sherlock_lease_recovery_errors_total[30m])) > 0
+          for: 5m
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock lease recovery passes are failing
+            description: Jobs held by crashed workers are not being recovered while the database is unavailable.
+        - alert: SherlockNoLeader
+          expr: sum by (name) (sherlock_leader_held) == 0
+          for: 10m
+          labels: {severity: warning}
+          annotations:
+            summary: No Sherlock replica leads the {{ "{{" }} $labels.name {{ "}}" }} background loop
+        - alert: SherlockMultipleLeaders
+          expr: sum by (name) (sherlock_leader_held) > 1
+          for: 5m
+          labels: {severity: warning}
+          annotations:
+            summary: More than one Sherlock replica claims the {{ "{{" }} $labels.name {{ "}}" }} background loop
+            description: The advisory lock should allow exactly one leader per singleton loop.
+        - alert: SherlockQuickFindingsSlow
+          expr: histogram_quantile(0.95, sum by (le) (rate(sherlock_quick_findings_seconds_bucket[1h]))) > 15
+          for: 15m
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock p95 time to quick findings is above 15 seconds
+            description: Quick findings should be saved within seconds of an incident being received. Check collection latency and the queue.
+        - alert: SherlockQuickFindingsSaveFailing
+          expr: sum(increase(sherlock_quick_findings_save_errors_total[30m])) > 0
+          for: 5m
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock could not save quick findings
+            description: Investigations continue without them. Check database health.
+        - alert: SherlockImpactSnapshotFailing
+          expr: max(sherlock_impact_snapshot_up) == 0
+          for: 15m
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock cannot refresh its impact metrics from the database
+        - alert: SherlockAuthFailureSpike
+          expr: sum by (mode, outcome) (increase(sherlock_auth_requests_total{outcome=~"invalid|forbidden|login_failed"}[15m])) > 10
+          labels: {severity: warning}
+          annotations:
+            summary: Many Sherlock requests ended {{ "{{" }} $labels.outcome {{ "}}" }} ({{ "{{" }} $labels.mode {{ "}}" }} auth) in 15 minutes
+            description: Expected unauthenticated redirects are excluded. Check for a misconfigured client, an expired session key or a login probe.
+        - alert: SherlockAuthTeamsTruncated
+          expr: sum by (mode) (increase(sherlock_auth_requests_total{outcome="teams_truncated"}[1h])) > 0
+          labels: {severity: info}
+          annotations:
+            summary: A Sherlock login carried more group claims than were evaluated
+            description: Role mapping may have ignored some groups.
+        - alert: SherlockAccessAuditFailing
+          expr: sum by (reason) (increase(sherlock_access_audit_failures_total[30m])) > 0
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock access audit rows were not written ({{ "{{" }} $labels.reason {{ "}}" }})
+            description: Requests still succeed, but views and admin actions are missing from the access audit log. error means the insert failed; dropped means the bounded queue was full.
+        - alert: SherlockPagerNoteFailing
+          expr: sum by (provider, outcome) (increase(sherlock_pager_notes_total{outcome=~"ambiguous|unauthorized|exhausted"}[1h])) > 0
+          labels: {severity: warning}
+          annotations:
+            summary: Sherlock {{ "{{" }} $labels.provider {{ "}}" }} notes ended {{ "{{" }} $labels.outcome {{ "}}" }} in the last hour
+            description: unauthorized means the pager credential is rejected. exhausted means retries ran out. ambiguous means the outcome is unknown and the note was deliberately not repeated. Fires only when pager.enabled is true.
+        - alert: SherlockRetentionNotRunning
+          expr: time() - sherlock_retention_last_run_timestamp_seconds > 3 * 3600
+          for: 15m
+          labels: {severity: warning}
+          annotations:
+            summary: The Sherlock retention sweeper has not completed a sweep in over 3 intervals
+            description: The threshold assumes the default 3600 second retention.interval_seconds; raise it if the interval is longer. Fires only when retention.enabled is true.
 {{- end }}
