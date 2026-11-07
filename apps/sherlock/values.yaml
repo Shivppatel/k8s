@@ -299,6 +299,14 @@ sherlock:
       model:
         max_analyzed_incidents: 8
     recovery: all_in_episode
+    # Parallel investigations (stage 1 + quick findings) with one cluster-wide
+    # model slot, matching runtime.max_concurrent below.
+    workers:
+      investigate: 4
+      slack: 1
+      model_slots: 1
+      lease_seconds: 60
+      drain_seconds: 25
   runtime:
     version: sherlock/runtime/v1alpha1
     deadline_seconds: 120
@@ -319,14 +327,33 @@ app-template:
       automountServiceAccountToken: false
   controllers:
     main:
-      replicas: 1
-      strategy: Recreate
+      # Two replicas: jobs are claimed with SKIP LOCKED, leases are heartbeated,
+      # singleton loops take an advisory-lock leadership and the schema is
+      # expand-only, so an old and a new pod can run side by side.
+      replicas: 2
+      strategy: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 0
+        maxSurge: 1
+      podDisruptionBudget:
+        minAvailable: 1
       serviceAccount:
         identifier: app
       pod:
         labels:
           sherlock-role: app
         automountServiceAccountToken: false
+        # Longer than the HTTP shutdown plus workers.drain_seconds.
+        terminationGracePeriodSeconds: 60
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  topologyKey: kubernetes.io/hostname
+                  labelSelector:
+                    matchLabels:
+                      sherlock-role: app
         securityContext:
           runAsNonRoot: true
           runAsUser: 65532
@@ -341,7 +368,7 @@ app-template:
         main:
           image:
             repository: ghcr.io/shivppatel/sherlock
-            tag: sha-7cabdd7b983df01a63cd7922e143b8b5a1bacf6f@sha256:e09c67c597e230f1054deff93c83bd00b45c3ab75324e811b856c052de86b8b9
+            tag: sha-39d6b933080d0e1e6f1879a8c3ae90cd99fbf22b@sha256:25cedec5df13f883242fe7fd21fe3bfe4679a0fd4074e6155fbbabc544b715ee
           args:
           - -config
           - /config/config.yaml
