@@ -1,4 +1,9 @@
 {{- if (index .Values "kube-prometheus-stack").sherlockReceiver.enabled }}
+# Known limitation: Sherlock creates labelled counters lazily at 1, so increase()
+# misses the first event of a label set (affects SherlockLeaseHeartbeatFailing,
+# SherlockAuthFailureSpike, SherlockAuthTeamsTruncated, SherlockAccessAuditFailing
+# and SherlockPagerNoteFailing). A Sherlock-side pre-initialisation fix is a
+# separate follow-up.
 # Sherlock self-observability rules, from sherlock docs/OPERATIONS.md.
 # SherlockNoSuccessfulInvestigation24h also fires if the model provider is
 # intentionally disabled; remove it for such installations.
@@ -109,7 +114,12 @@ spec:
             summary: Sherlock lease recovery passes are failing
             description: Jobs held by crashed workers are not being recovered while the database is unavailable.
         - alert: SherlockNoLeader
-          expr: sum by (name) (sherlock_leader_held) == 0
+          # sherlock_leader_held only exists once a replica has won the lock, so a
+          # leaderless loop exports nothing; absent() catches that. Only loops
+          # enabled in HomeLab values are listed (alertmanager-reconcile). The
+          # count(sherlock_workers_configured) guard keeps it silent on builds
+          # that predate the leadership metric.
+          expr: absent(sherlock_leader_held{name="alertmanager-reconcile"} == 1) and on() (count(sherlock_workers_configured) > 0)
           for: 10m
           labels: {severity: warning}
           annotations:
@@ -122,7 +132,7 @@ spec:
             summary: More than one Sherlock replica claims the {{ "{{" }} $labels.name {{ "}}" }} background loop
             description: The advisory lock should allow exactly one leader per singleton loop.
         - alert: SherlockQuickFindingsSlow
-          expr: histogram_quantile(0.95, sum by (le) (rate(sherlock_quick_findings_seconds_bucket[1h]))) > 15
+          expr: histogram_quantile(0.95, sum by (le) (rate(sherlock_quick_findings_seconds_bucket[1h]))) > 15 and sum(increase(sherlock_quick_findings_seconds_count[1h])) >= 3
           for: 15m
           labels: {severity: warning}
           annotations:
@@ -166,7 +176,7 @@ spec:
             summary: Sherlock {{ "{{" }} $labels.provider {{ "}}" }} notes ended {{ "{{" }} $labels.outcome {{ "}}" }} in the last hour
             description: unauthorized means the pager credential is rejected. exhausted means retries ran out. ambiguous means the outcome is unknown and the note was deliberately not repeated. Fires only when pager.enabled is true.
         - alert: SherlockRetentionNotRunning
-          expr: time() - sherlock_retention_last_run_timestamp_seconds > 3 * 3600
+          expr: time() - max(sherlock_retention_last_run_timestamp_seconds) > 3 * 3600
           for: 15m
           labels: {severity: warning}
           annotations:
