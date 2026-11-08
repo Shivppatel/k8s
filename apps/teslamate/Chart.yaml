@@ -11,4 +11,4 @@ appVersion: "4.0.1"
 dependencies:
   - name: teslamate
     repository: https://charts.egeback.se
-    version: 2.2.0
+    version: 3.0.0
