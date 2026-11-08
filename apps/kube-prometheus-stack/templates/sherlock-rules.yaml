@@ -1,9 +1,4 @@
 {{- if (index .Values "kube-prometheus-stack").sherlockReceiver.enabled }}
-# Known limitation: Sherlock creates labelled counters lazily at 1, so increase()
-# misses the first event of a label set (affects SherlockLeaseHeartbeatFailing,
-# SherlockAuthFailureSpike, SherlockAuthTeamsTruncated, SherlockAccessAuditFailing
-# and SherlockPagerNoteFailing). A Sherlock-side pre-initialisation fix is a
-# separate follow-up.
 # Sherlock self-observability rules, from sherlock docs/OPERATIONS.md.
 # SherlockNoSuccessfulInvestigation24h also fires if the model provider is
 # intentionally disabled; remove it for such installations.
