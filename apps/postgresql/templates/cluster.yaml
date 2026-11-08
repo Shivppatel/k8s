@@ -92,7 +92,9 @@ spec:
     roles:
       - name: sherlock
         ensure: present
-        connectionLimit: 16
+        # Two service replicas plus one rollout surge, each with a pool of 8,
+        # one model slot and two leader sessions (33), plus three for admin.
+        connectionLimit: 36
         inherit: false
         login: true
         superuser: false
