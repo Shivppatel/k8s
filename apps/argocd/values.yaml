@@ -9,8 +9,12 @@ argo-cd:
       applicationsetcontroller.profile.enabled: "true"
     cm:
       accounts.readonly: apiKey
+      # Radar reads Applications for its GitOps diff view (token in Vault).
+      accounts.radar: apiKey
     rbac:
-      policy.csv: "g, readonly, role:readonly"
+      policy.csv: |
+        g, readonly, role:readonly
+        g, radar, role:readonly
   redis-ha:
     enabled: true
     haproxy:
