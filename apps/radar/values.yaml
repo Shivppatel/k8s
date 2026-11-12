@@ -82,3 +82,8 @@ radar:
   mcp:
     enabled: true
     execTools: false
+  # Read-only Argo CD account token from Vault via ExternalSecret
+  # radar-argocd; argocd-server is auto-discovered in-cluster.
+  argocd:
+    existingSecret: radar-argocd
+    existingSecretKey: token
