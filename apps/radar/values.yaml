@@ -83,7 +83,9 @@ radar:
     enabled: true
     execTools: false
   # Read-only Argo CD account token from Vault via ExternalSecret
-  # radar-argocd; argocd-server is auto-discovered in-cluster.
+  # radar-argocd. argocd-server runs with server.insecure (TLS ends at
+  # Traefik), so auto-discovery's HTTPS probe fails; pin in-cluster HTTP.
   argocd:
     existingSecret: radar-argocd
     existingSecretKey: token
+    url: http://argocd-server.argocd.svc.cluster.local
