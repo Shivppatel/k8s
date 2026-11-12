@@ -53,6 +53,9 @@ radar:
   env:
     - name: GOMEMLIMIT
       value: "4GiB"
+    # MCP serves read-only tools only (no restart, scale, apply, drain or Helm).
+    - name: RADAR_MCP_READ_ONLY
+      value: "1"
 
   timeline:
     storage: sqlite
@@ -74,5 +77,8 @@ radar:
     enabled: false
   cloud:
     enabled: false
+  # Read-only MCP for AI agents. Not routed publicly (see radar-ingress.yaml);
+  # reach it with kubectl port-forward. exec_pod stays off.
   mcp:
-    enabled: false
+    enabled: true
+    execTools: false
