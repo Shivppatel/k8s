@@ -6,6 +6,14 @@ nextcloud:
       secretName: nextcloud-secret
       usernameKey: nextcloud-username
       passwordKey: nextcloud-password
+    # TLS terminates at Cloudflare/Traefik, so Nextcloud only sees plain HTTP.
+    # Without these it emits http:// redirects and non-Secure cookies, which
+    # breaks browser and mobile app login (endless spinner).
+    extraEnv:
+      - name: OVERWRITEPROTOCOL
+        value: https
+      - name: OVERWRITECLIURL
+        value: https://nextcloud.shivpatel.xyz
     extraVolumes:
       - name: apache-status
         configMap:
