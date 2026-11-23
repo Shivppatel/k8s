@@ -1,6 +1,10 @@
 immich:
   controllers:
     main:
+      # Shared by the server, machine-learning, and valkey controllers. Scaled
+      # to zero while Immich is unused; set to 1 and size `immich-library`
+      # (see templates/immich-library-pvc.yaml) to re-enable.
+      replicas: 0
       containers:
         main:
           image:
@@ -25,7 +29,7 @@ immich:
       library:
         # Automatically creating the library volume is not supported by this chart
         # You have to specify an existing PVC to use
-        existingClaim: immich-nfs
+        existingClaim: immich-library
     # configuration is immich-config.json converted to yaml
     # ref: https://immich.app/docs/install/config-file/
     #

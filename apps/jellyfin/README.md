@@ -1,10 +1,23 @@
 # Jellyfin storage
 
-Jellyfin uses Longhorn PVCs for configuration and cache, and separate NFS PVCs
-mounted at `/media/books`, `/media/shows`, `/media/movies`, and `/media/music`.
+Jellyfin uses Longhorn PVCs for configuration and cache, plus the shared
+`media-library` PVC (`ReadWriteMany`, 200 Gi, `longhorn-single-replica`,
+served by Longhorn's share manager). Its `Books`, `Shows`, `Movies`, and
+`Music` subdirectories are mounted with `subPath` at `/media/books`,
+`/media/shows`, `/media/movies`, and `/media/music`.
 The parent `/media` mount is an `emptyDir` with `persistence.media.enabled: false`
 and `persistence.media.readOnly: false`. Keep this temporary parent writable so
-the container runtime can create the nested NFS mountpoints during startup.
+the container runtime can create the nested library mountpoints during startup.
+
+The same `media-library` PVC is mounted by Radarr (`Movies`, `Downloads`),
+Sonarr (`Shows`, `Downloads`), and qBittorrent (`Downloads`, `Incomplete`) in
+the private `k8s-private` repository, so it must stay in the `media`
+namespace. The PVC is sync-wave `-2` with `Prune=false,Delete=false`; the
+`media-library-init` Sync hook (wave `-1`) creates the six directories and sets
+them `0777` because the consumers run as different UIDs. `Downloads` shares the
+volume with the media, so expand the PVC (Longhorn allows expansion) before
+large downloads. The volume is intentionally single replica because the
+content can be downloaded again; losing its node or disk loses the library.
 
 The public endpoint is `https://media.shivpatel.xyz`, routed through Traefik.
 The private route uses Traefik's shared `websecure` entrypoint. A separate

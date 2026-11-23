@@ -63,7 +63,4 @@ nextcloud:
       ]
   persistence:
     enabled: true
-    # using default storageclass (longhorn) for core files
-  nextcloudData:
-    enabled: true
-    existingClaim: nextcloud-nfs
+    # using default storageclass (longhorn) for core files and the data directory

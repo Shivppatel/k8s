@@ -1,0 +1,18 @@
+# Shared media library for Jellyfin, Radarr, Sonarr, and qBittorrent.
+# Longhorn serves this ReadWriteMany volume through its share manager, so all
+# four workloads can mount it from any node. Consumers select a subdirectory
+# with subPath: Movies, Shows, Books, Music, Downloads, and Incomplete.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-library
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn-single-replica
+  resources:
+    requests:
+      storage: 200Gi

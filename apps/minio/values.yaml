@@ -10,20 +10,16 @@ minio:
     registry: docker.io
     repository: bitnamilegacy/minio
     tag: 2025.7.23-debian-12-r3
+  # The data PVC is ReadWriteOnce; avoid a surge pod on another node failing
+  # with a Multi-Attach error.
+  updateStrategy:
+    type: Recreate
   persistence:
     enabled: true
-    existingClaim: minio-nfs
+    storageClass: longhorn
+    size: 20Gi
     accessModes:
       - ReadWriteOnce
-  # The NAS NFS export maps MinIO data to 977:988; matching it keeps S3
-  # listings consistent with objects written on disk.
-  podSecurityContext:
-    fsGroup: 988
-    supplementalGroups:
-      - 988
-  containerSecurityContext:
-    runAsUser: 977
-    runAsGroup: 988
   console:
     image:
       registry: docker.io

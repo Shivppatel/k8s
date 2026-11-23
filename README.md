@@ -15,7 +15,7 @@ Snapshot verified against both Git sources and the live cluster on 2026-08-06.
 
 | Area | Current state |
 |---|---|
-| Compute | Three bare-metal control-plane nodes with dedicated NAS storage |
+| Compute | Three bare-metal control-plane nodes with local NVMe storage |
 | GitOps inventory | 63 Argo CD Applications across the public and private repositories |
 | Packaging | 60 Helm chart directories: 47 public and 13 private |
 | Public source | Shared controllers, data services, observability, delivery tooling, and selected applications |
@@ -29,14 +29,14 @@ services, and workloads. It is not a claim of 63 user-facing services.
 | Role | Hardware | Capacity and connectivity |
 |---|---|---|
 | Compute | 3x Minisforum MS-A2 | AMD Ryzen 9 9955HX, 64 GB RAM, 1 TB NVMe, and 10 GbE per node |
-| Storage | UniFi UNAS Pro 8 | 56 TB usable RAID 6, 2 TB NVMe cache, and 10 GbE |
-| Network edge | UniFi USW Aggregation and Cloud Gateway Fiber | 10 GbE compute/storage fabric with a dedicated routing and firewall boundary |
+| Network edge | UniFi USW Aggregation and Cloud Gateway Fiber | 10 GbE compute fabric with a dedicated routing and firewall boundary |
 
-All compute nodes and the NAS connect through the 10 GbE aggregation switch.
-The NAS is dedicated to storage and does not run Kubernetes workloads.
-Latency-sensitive volumes use Longhorn-managed node storage, while bulk and
-shared datasets use NFS. Hardware and network provisioning remain outside this
-repository.
+All compute nodes connect through the 10 GbE aggregation switch. All
+persistent volumes use Longhorn-managed node storage with the default two
+replicas, except the replaceable media library, which is single replica. There is no
+external storage appliance, so usable capacity is bounded by the nodes' local
+disks. Hardware and network
+provisioning remain outside this repository.
 
 ## Desired-State Architecture
 
@@ -48,7 +48,7 @@ flowchart TB
   cluster["Three-node Kubernetes cluster"]
   platform["Platform services<br/>Ingress, secrets, data, delivery, observability"]
   workloads["Public and private workloads"]
-  storage["Longhorn block storage<br/>NAS NFS and standalone MinIO"]
+  storage["Longhorn block storage<br/>and standalone MinIO"]
 
   public --> argo
   private --> argo
@@ -79,7 +79,7 @@ deletions, while retaining `CreateNamespace=true` and `ServerSideApply=true`.
 | GitOps and delivery | [Argo CD App-of-Apps](apps/argocd-apps/), [Argo Rollouts](apps/argo-rollouts/), [canary](apps/canary-demo/), and [blue-green](apps/rollouts-demo/) examples |
 | Networking | [Traefik](apps/traefik/), [MetalLB](apps/metallb/), [cert-manager](apps/cert-manager/), and [Cloudflare Tunnel](apps/cloudflared/) |
 | Identity and secrets | [Vault with Raft storage](apps/vault/) and [External Secrets Operator](apps/external-secrets/) |
-| Data and storage | A [three-instance CloudNativePG cluster](apps/postgresql/templates/cluster.yaml), Redis, MongoDB, Kafka, RabbitMQ, Longhorn, NAS NFS, and standalone MinIO |
+| Data and storage | A [three-instance CloudNativePG cluster](apps/postgresql/templates/cluster.yaml), Redis, MongoDB, Kafka, RabbitMQ, Longhorn, and standalone MinIO |
 | Observability | Prometheus, Grafana, Alertmanager, Loki, Tempo, Pyroscope, Alloy, Datadog integrations, and [Radar](apps/radar/) with [Caretta](apps/caretta/) network flows |
 | Policy and scanning | Kyverno, Policy Reporter, and Trivy provide policy and vulnerability-reporting infrastructure; custom policy coverage is still being developed |
 | CI infrastructure | Autoscaling [GitHub Actions runners](apps/github-actions-runners/), isolated [Docker runners](apps/github-actions-docker-runners/), and repository-scoped [runners for private personal repositories](apps/github-actions-personal-runners/) managed with Actions Runner Controller |
@@ -110,8 +110,11 @@ broader claim about Kubernetes Secret or etcd storage.
 
 [Longhorn](apps/longhorn/) provides block storage with a two-replica default
 and an explicit one-replica class for data with a different durability/cost
-tradeoff. Large shared datasets use NAS-backed NFS. [MinIO](apps/minio/) is a
-single instance on NFS and is not described as a distributed object store.
+tradeoff. [MinIO](apps/minio/) is a single instance on a two-replica Longhorn
+volume and is not described as a distributed object store. The shared
+[media library](apps/jellyfin/README.md) is a 200 Gi single-replica Longhorn
+`ReadWriteMany` volume, sized for a few titles at a time. Immich is scaled to
+zero and holds only a placeholder volume.
 
 [pgAdmin](apps/pgadmin4/values.yaml) uses `Recreate` updates so the old pod
 releases its Longhorn ReadWriteOnce volume before the replacement starts.

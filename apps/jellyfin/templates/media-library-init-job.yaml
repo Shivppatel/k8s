@@ -1,0 +1,43 @@
+# Creates the media library directory layout and makes it writable for every
+# consumer (Jellyfin, Radarr, Sonarr, qBittorrent run as different UIDs).
+# Without it the kubelet would create each subPath directory as root:root 0755.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: media-library-init
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 900
+  template:
+    spec:
+      restartPolicy: OnFailure
+      automountServiceAccountToken: false
+      containers:
+        - name: init
+          image: busybox:1.37.0
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              cd /media
+              mkdir -p Movies Shows Books Music Downloads Incomplete
+              chmod 0777 . Movies Shows Books Music Downloads Incomplete
+          securityContext:
+            allowPrivilegeEscalation: false
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
+          volumeMounts:
+            - name: media-library
+              mountPath: /media
+      volumes:
+        - name: media-library
+          persistentVolumeClaim:
+            claimName: media-library
