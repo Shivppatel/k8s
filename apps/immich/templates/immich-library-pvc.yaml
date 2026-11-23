@@ -1,0 +1,17 @@
+# Immich is scaled to zero. The chart refuses to render without an existing
+# library claim, so this is a minimal placeholder. Expand it (Longhorn allows
+# volume expansion) before setting the controllers back to one replica.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-library
+  namespace: immich
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,21 +1,3 @@
-nfsShares:
-  books:
-    server: "192.168.10.195"
-    path: "/var/nfs/shared/Media/Books"
-    mountPath: /media/books
-  shows:
-    server: "192.168.10.195"
-    path: "/var/nfs/shared/Media/Shows"
-    mountPath: /media/shows
-  movies:
-    server: "192.168.10.195"
-    path: "/var/nfs/shared/Media/Movies"
-    mountPath: /media/movies
-  music:
-    server: "192.168.10.195"
-    path: "/var/nfs/shared/Media/Music"
-    mountPath: /media/music
-
 jellyfin:
   replicaCount: 1
   # -- Number of old ReplicaSets to retain for rollback history.
@@ -228,29 +210,24 @@ jellyfin:
 
   # -- Additional volumes to mount in the Jellyfin pod.
   volumes:
-    - name: nfs-books
+    - name: media-library
       persistentVolumeClaim:
-        claimName: jellyfin-nfs-books
-    - name: nfs-shows
-      persistentVolumeClaim:
-        claimName: jellyfin-nfs-shows
-    - name: nfs-movies
-      persistentVolumeClaim:
-        claimName: jellyfin-nfs-movies
-    - name: nfs-music
-      persistentVolumeClaim:
-        claimName: jellyfin-nfs-music
+        claimName: media-library
 
   # -- Additional volume mounts for the Jellyfin container.
   volumeMounts:
-    - name: nfs-books
+    - name: media-library
       mountPath: /media/books
-    - name: nfs-shows
+      subPath: Books
+    - name: media-library
       mountPath: /media/shows
-    - name: nfs-movies
+      subPath: Shows
+    - name: media-library
       mountPath: /media/movies
-    - name: nfs-music
+      subPath: Movies
+    - name: media-library
       mountPath: /media/music
+      subPath: Music
 
   # -- Node selector for pod scheduling.
   nodeSelector: {}
@@ -311,7 +288,7 @@ jellyfin:
     media:
       # -- set to false to use emptyDir
       enabled: false
-      # The emptyDir parent must allow the runtime to create the nested NFS mountpoints.
+      # The emptyDir parent must allow the runtime to create the nested media mountpoints.
       readOnly: false
       # -- Type of volume for media storage (pvc, hostPath, emptyDir). If 'enabled' is false, 'emptyDir' is used regardless of this setting.
       type: pvc

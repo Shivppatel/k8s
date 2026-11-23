@@ -35,8 +35,8 @@ self-healing, and pruning.
   Terraform changes before merging this workload. Kubernetes does not provision
   MinIO buckets or users.
 - Notes, users, and attachment metadata live in shared PostgreSQL. Attachment
-  bytes live in MinIO's existing NAS-backed `minio-nfs` PVC, statically bound
-  with an empty storage class. Memos needs no dedicated PVC: `/var/opt/memos`
+  bytes live in MinIO's chart-managed `minio` PVC (20 Gi, default
+  two-replica `longhorn` class). Memos needs no dedicated PVC: `/var/opt/memos`
   and `/tmp` are disposable `emptyDir` volumes. Coordinate PostgreSQL and bucket
   recovery.
 - A single non-root replica uses resource limits, health probes, a read-only
