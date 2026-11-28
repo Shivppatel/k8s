@@ -30,7 +30,7 @@ authentik:
       # -- If defined, a repository applied to all authentik deployments
       repository: ghcr.io/goauthentik/server
       # -- Overrides the global authentik whose default is the chart appVersion
-      tag: 2026.8.6
+      tag: 2026.8.7
       # -- If defined, an image digest applied to all authentik deployments
       digest: ""
       # -- If defined, an imagePullPolicy applied to all authentik deployments
@@ -1153,7 +1153,7 @@ authentik:
     image:
       registry: docker.io
       repository: library/redis
-      tag: "8.10.3"
+      tag: "8.12.0"
     architecture: standalone
     auth:
       enabled: false
