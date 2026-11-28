@@ -1,0 +1,49 @@
+name: Observability Regression
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "apps/longhorn/**"
+      - "apps/argocd/**"
+      - "apps/datadog/**"
+      - "tests/**"
+      - ".github/workflows/observability-regression.yaml"
+      - ".github/workflows/build-datadog-agent-emqx.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4.3.1
+        with:
+          version: v4.3.0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Build locked chart dependencies
+        run: |
+          helm repo add longhorn https://charts.longhorn.io
+          helm repo add argo-cd https://argoproj.github.io/argo-helm
+          helm repo add datadog https://helm.datadoghq.com
+          for app in longhorn argocd datadog; do
+            helm dependency build "apps/$app" --skip-refresh
+          done
+
+      - name: Verify rendered observability contracts and result parser
+        run: |
+          python -m pip install -r tests/requirements.txt
+          python -m unittest discover -s tests -v
